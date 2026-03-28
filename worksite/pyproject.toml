@@ -4,4 +4,11 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14.3"
-dependencies = []
+dependencies = [
+    "fastapi>=0.135.2",
+    "phonenumbers>=9.0.26",
+    "pycountry>=26.2.16",
+    "pydantic>=2.12.5",
+    "pymongo>=4.16.0",
+    "stringgenerator>=0.4.4",
+]
