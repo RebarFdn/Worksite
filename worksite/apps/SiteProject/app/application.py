@@ -1,26 +1,9 @@
 # This File is the Projects application controller. 
 # It's purpose is to manage all Project related operations and routes. 
-from fastapi import ( FastAPI, Request ) # pyright: ignore[reportMissingImports]
-from fastapi.responses import FileResponse # pyright: ignore[reportMissingImports]
-
-from config import (TEMPLATES)
-from core.utilities import ( check_paths, )
-
-from config import STATIC_PATH
+from fastapi import ( FastAPI) # pyright: ignore[reportMissingImports]
+from .routes.project_router import router as projectRouter
 
 
 app = FastAPI()
+app.mount("/", projectRouter)
 
-
-#app.include_router( projectRouter )
-
-
-
-@app.get("/projects")
-async def index_home(request:Request):
-    return TEMPLATES.TemplateResponse( request=request, name="appTemplates/project/index.html")
-
-
-def test_static_path():
-    assert STATIC_PATH.exists(), f"Static Path does not exist at {STATIC_PATH}"
-    print(f"Static Path: {STATIC_PATH}")

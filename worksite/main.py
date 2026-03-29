@@ -15,9 +15,6 @@ from apps.SiteSupplier.app.application import app as supplier_app
 from apps.SiteWorker.app.application import app as worker_app
 
 
-
-
-
 def startup():
     check_paths(paths=app_paths)
 
