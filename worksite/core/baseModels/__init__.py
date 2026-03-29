@@ -15,7 +15,9 @@ from .employee_models import ( Identity, Occupation, NextOfKin, EmployeeState, E
 
 from.eventstate_models import ( ComonActionModel, Event, StopWatchEvent, State, )
 
-from .jobtask_models import ( IndustryRateModel, JobCost, JobCrew, JobFees, JobModel, JobPayment, JobTask, JobTotal , JobPaymentResult)
+from .rate_models import ( IndustryRateModel,)
+                             
+from .jobtask_models import ( JobCost, JobCrew, JobFees, JobModel, JobPayment, JobTask, JobTotal , JobPaymentResult)
 
 
 from .measurments_models import ( MetricModel, ImperialModel, Output, EstimateItem, EstimateModel)

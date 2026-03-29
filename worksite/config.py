@@ -3,6 +3,8 @@ from starlette.config import Config # pyright: ignore[reportMissingImports]
 from starlette.datastructures import Secret # pyright: ignore[reportMissingImports]
 from fastapi.templating import Jinja2Templates # pyright: ignore[reportMissingImports]
 from pydantic_settings import BaseSettings # pyright: ignore[reportMissingImports]
+from core.utilities.utils import converTime, convert_timestamp, to_dollars, to_project_id, tally
+from core.baseModels import User
 
 # Directory Paths
 BASE_PATH:Path = Path(__file__).parent
@@ -51,16 +53,24 @@ THROTTLE:float = 0.01
 TEMPLATES = Jinja2Templates(TEMPLATES_PATH)
 
 template_env = TEMPLATES.env
+template_env.filters['to_dollars'] = to_dollars
+template_env.filters['convert_timestamp'] = convert_timestamp
+template_env.filters['to_date'] = converTime
+template_env.filters['to_project_id'] = to_project_id
+template_env.filters['tally'] = tally
+
 
 app_paths = [BASE_PATH, CORE_PATH, STATIC_PATH, TEMPLATES_PATH, DOCS_PATH,  SCRIPTS_PATH, STYLES_PATH, IMAGES_PATH, MAPS_PATH, ICONS_PATH, PROFILES_PATH, DATA_PATH, LOG_PATH]
 
-"""
+
 system_user:User=User(
     name='SYSTEM',
     username='system',
     
 )
-"""
+
+
+
 class Settings(BaseSettings):
     app_name: str = "Worksite"
     admin_email: str = "admin@worksite.com"

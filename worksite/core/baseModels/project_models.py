@@ -6,8 +6,9 @@ from core.baseModels import ( AccountTransactions, Bank, DayPay, InvoiceModel, S
     PayItem, Payment, PayStatement )
 from core.baseModels import ( Contact, ReportModel )
 from core.baseModels import ( Address, AddressLocation )
-from core.baseModels.employee_models import (DayWorkModel, WorkerPersonalModel, WorkerTask)
-from core.baseModels.jobtask_models import ( IndustryRateModel, JobModel, JobTask )
+from core.baseModels.employee_models import (DayWorkModel, WorkerTask, ProjectWorker)
+from core.baseModels.jobtask_models import ( JobModel, JobTask )
+from core.baseModels.rate_models import ( IndustryRateModel )
 from core.baseModels.eventstate_models import ( Event, State, ComonActionModel )
 from core.baseModels.measurments_models import ( EstimateModel )
 from core.baseModels.data_models import ( MetaData, )
@@ -127,8 +128,7 @@ class ProjectAccountRecords(BaseModel):
         if form_data: # Check for data
             if form_data.get('invoiceno') in self.invoice_numbers: # Check exists
                 pass
-            else:
-                        
+            else:                        
                 if form_data.get('supplier'): 
                     new_invoice.supplier.load_data(data=form_data.get('supplier', {}))
                 if form_data.get('invoiceno'):
@@ -146,35 +146,27 @@ class ProjectAccountRecords(BaseModel):
                     new_invoice.billed = form_data.get('billed', False)
                 
                 self.invoices.append(new_invoice)
-                ## Update suppliers record
-                
+                ## Update suppliers record                
                 record.inv_id = new_invoice.id
                 record.invoiceno = new_invoice.invoiceno
                 record.date = new_invoice.date
                 record.total = new_invoice.total
-                ## prepare withdrawal statement
-                
+                ## prepare withdrawal statement                
                 statement.date = new_invoice.date
                 statement.ref = f'{new_invoice.id}-{new_invoice.invoiceno}'
                 statement.amount = new_invoice.total
                 statement.recipient.name = new_invoice.supplier.name
-               
-             
-
                 return { 
                     "supplier_invoice_record": record,
                     "withdrawal_statement": statement 
                 }
-                        
-
                 # update project withdrawals
-
-          
         else:
             return { 
                     "supplier_invoice_record": record,
                     "withdrawal_statement": statement  
                 }
+        
 
 
     def get_paybill(self, bill_id:str='')->PaybillModel:
@@ -182,6 +174,7 @@ class ProjectAccountRecords(BaseModel):
             bill:PaybillModel = [ bill for bill in self.paybills if bill.id == bill_id ][0]
             return bill
         return PaybillModel()
+    
     
     # Manage Pay Statements
     @property
@@ -205,7 +198,7 @@ class ProjectAccountRecords(BaseModel):
     ## Remove Pay Statement
     def remove_pay_statement(self, pay_statement_id:str=''):
         if pay_statement_id in self.statement_ids:
-            pay_statement = self.get_pay_statement(pay_statement_id=pay_statement_id)
+            pay_statement:PayStatement = self.get_pay_statement(pay_statement_id=pay_statement_id) # type: ignore
             self.salary_statements.remove(pay_statement) #ignore type           
         else:
             pass
@@ -309,7 +302,7 @@ class ProjectAccount(BaseModel):
 
     def get_paybill(self, id:str=''):
         ''''''
-        bill = [ bill for bill in self.records.paybills if bill.get('id') == id ]
+        bill = [ bill for bill in self.records.paybills if bill.get('id') == id ] # type: ignore
         if bill:
             return bill[0]
         return {}
@@ -419,72 +412,6 @@ class ProjectProgress(BaseModel):
 
 
 
-class ProjectWorker(BaseModel):
-    id:str = Field(default='')
-    key:str = Field(default='')
-    value:WorkerPersonalModel = WorkerPersonalModel()
-    assigned:int = timestamp()
-    tasks:list[WorkerTask] = []
-    model_config = {
-        "extra": "allow" 
-    }
-
-    @property
-    def task_id_index(self)->list[str]:
-        return [task.id for task in self.tasks]
-    
-
-    def load_data(self, data:dict={} ):
-        if data:
-
-            for key, value in data.items():
-                if key == 'id':
-                    if value:
-                        self.id = str(value)
-                if key == 'key':
-                    if value:
-                        self.key = str(value)
-                
-                if key == 'value':
-                    if value:
-                        self.value.load_data(data=value) 
-                if key == 'assigned':
-                    if value:
-                        if type(value) == str:
-                            self.assigned = timestamp(date=value)
-                        else:
-                            self.assigned = int(value)
-                if key == 'tasks':
-                    if value:
-                        for wtask in value:
-                            task = WorkerTask()
-                            task.load_data(data=wtask) # type: ignore
-                            self.tasks.append(task) 
-        else:
-            pass
-   
-
-    def add_task(self, task:WorkerTask):
-        if task.id in self.task_id_index:
-            pass
-        else:
-            self.tasks.append(task)
-
-    def get_task(self, task_id:str)->WorkerTask:
-        if task_id in self.task_id_index:
-            return [task for task in self.tasks if task.id == task_id][0]
-        else:
-            return WorkerTask()
-
-    def remove_task(self, task_id:str):
-        task = self.get_task(task_id=task_id)
-        if task.id:            
-            self.tasks.remove(task)
-        else:
-            pass
-
-
-
 
 class Project(BaseModel):
     id:str = Field(default='')
@@ -555,26 +482,13 @@ class Project(BaseModel):
     def unload_extensions(self)->None:
         '''Removes all extensions from the model
          call before saving or updating the data.'''
-        try:
-            if hasattr(self, 'employees'):
-                del self.employees
-        except (AttributeError, ValueError):
-            pass
-        try:
-            if hasattr(self, 'suppliers'):
-                del self.suppliers
-        except (AttributeError, ValueError):
-            pass
+        
         try:
             if hasattr(self, 'industry_rates'):
-                del self.industry_rates
+                del self.industry_rates # pyright: ignore[reportAttributeAccessIssue]
         except (AttributeError, ValueError):
             pass
-        try:
-            if hasattr(self, 'rate_categories'):
-                del self.rate_categories
-        except (AttributeError, ValueError):
-            pass
+        
 
     ## Workers Index
     @property
@@ -667,7 +581,7 @@ class Project(BaseModel):
         if data:
             pass
         else:
-            data:dict = job_collection.find_one({"_id": self.id}) # type: ignore
+            data = job_collection.find_one({"_id": self.id}) # type: ignore
 
         if data.get('jobs'):
             for item in data.get('jobs', []):
@@ -712,7 +626,7 @@ class Project(BaseModel):
         if data:
             pass
         else:
-            data:dict = inventory_collection.find_one({"_id": self.id}) # type: ignore
+            data = inventory_collection.find_one({"_id": self.id}) # type: ignore
         if data.get('inventorys'):            
                 self.inventories = data.get('inventorys', {})
         if data.get('inventories'):            
@@ -725,7 +639,7 @@ class Project(BaseModel):
         if data:
             pass
         else:
-            data = account_collection.find_one({"_id": self.id})
+            data = account_collection.find_one({"_id": self.id}) # type: ignore
         if data.get('account'):
             self.account.load_data(data=data.get('account', {}))
         else:
@@ -736,7 +650,7 @@ class Project(BaseModel):
         if data:
             pass
         else:
-            data = logs_collection.find_one({"_id": self.id})
+            data = logs_collection.find_one({"_id": self.id}) # type: ignore
         if data.get('activity_logs'):
             for item in data.get('activity_logs', []):
                 log_item:ActivityLog = ActivityLog()
@@ -751,7 +665,7 @@ class Project(BaseModel):
         if data:
             pass
         else:
-            data = report_collection.find_one({"_id": self.id})
+            data = report_collection.find_one({"_id": self.id}) # type: ignore
         if data.get('reports'):
             for item in data.get('reports', []):
                 report:ReportModel = ReportModel()
@@ -765,7 +679,7 @@ class Project(BaseModel):
         if data:
             pass
         else:
-            data = estimate_collection.find_one({"_id": self.id})
+            data = estimate_collection.find_one({"_id": self.id}) # type: ignore
         if data.get('estimates'):
             for item in data.get('estimates', []):
                 estimate:EstimateModel = EstimateModel()
@@ -979,7 +893,7 @@ class Project(BaseModel):
     def get_industry_rate(self, rate_id:str=''):
         '''Retrieves a rate object from the industry rates index '''
         if rate_id:
-            return [rate for rate in self.industry_rates if rate.id == rate_id ][0]
+            return [rate for rate in self.industry_rates if rate.id == rate_id ][0] # pyright: ignore[reportAttributeAccessIssue]
         
     ## Get project rate .
     def get_rate(self, rate_id:str=''):

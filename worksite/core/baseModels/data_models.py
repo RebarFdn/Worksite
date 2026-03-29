@@ -5,7 +5,7 @@
 from enum import Enum
 
 from pydantic import BaseModel, Field, AliasChoices
-from modules.utils import generate_id, timestamp
+from core.utilities.utils import generate_id, timestamp
 
 #from models.supplier_models import Supplier
 
@@ -51,6 +51,7 @@ class Database(BaseModel):
 
 class MetaData(BaseModel):
     created: int = Field(default=0)
+    updated: int = Field(default=0)
     database:Database = Database()
     created_by:str = Field(default='')
     model_config = {
@@ -73,7 +74,7 @@ class MetaData(BaseModel):
             if data.get('cloned'):
                 self.cloned =  data.get('cloned')
             if data.get('updated'):
-                self.updated = data.get('updated')
+                self.updated = data.get('updated', 0)
         else:
             pass
 

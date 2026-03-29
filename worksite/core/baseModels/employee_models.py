@@ -1,11 +1,11 @@
 from typing import ( List, Any )
 from pydantic import ( BaseModel, EmailStr, Field )
 from pydantic_extra_types.phone_numbers import ( PhoneNumber, )
-from modules.utils import ( generate_id, timestamp )
-from models.addresslocation_models import ( Address, )
-from models.comunication_modules import ( Contact, ReportModel )
-from models.accounting_models import ( Bank,DayPay,  Loan, Payment, PayStatement )
-from models.data_models import ( MetaData, )
+from core.utilities.utils import ( generate_id, timestamp )
+from core.baseModels.addresslocation_models import ( Address, )
+from core.baseModels.comunication_modules import ( Contact, ReportModel )
+from core.baseModels.accounting_models import ( Bank,DayPay,  Loan, Payment, PayStatement )
+from core.baseModels.data_models import ( MetaData, )
 
 
 class DayWorkModel(BaseModel):
@@ -486,6 +486,73 @@ class WorkerTask(BaseModel):
                             self.assignment_date = timestamp(date=value)
                         else:
                             self.assignment_date = int(value)
+        else:
+            pass
+
+
+
+
+class ProjectWorker(BaseModel):
+    id:str = Field(default='')
+    key:str = Field(default='')
+    value:WorkerPersonalModel = WorkerPersonalModel()
+    assigned:int = timestamp()
+    tasks:list[WorkerTask] = []
+    model_config = {
+        "extra": "allow" 
+    }
+
+    @property
+    def task_id_index(self)->list[str]:
+        return [task.id for task in self.tasks]
+    
+
+    def load_data(self, data:dict={} ):
+        if data:
+
+            for key, value in data.items():
+                if key == 'id':
+                    if value:
+                        self.id = str(value)
+                if key == 'key':
+                    if value:
+                        self.key = str(value)
+                
+                if key == 'value':
+                    if value:
+                        self.value.load_data(data=value) 
+                if key == 'assigned':
+                    if value:
+                        if type(value) == str:
+                            self.assigned = timestamp(date=value)
+                        else:
+                            self.assigned = int(value)
+                if key == 'tasks':
+                    if value:
+                        for wtask in value:
+                            task = WorkerTask()
+                            task.load_data(data=wtask) # type: ignore
+                            self.tasks.append(task) 
+        else:
+            pass
+   
+
+    def add_task(self, task:WorkerTask):
+        if task.id in self.task_id_index:
+            pass
+        else:
+            self.tasks.append(task)
+
+    def get_task(self, task_id:str)->WorkerTask:
+        if task_id in self.task_id_index:
+            return [task for task in self.tasks if task.id == task_id][0]
+        else:
+            return WorkerTask()
+
+    def remove_task(self, task_id:str):
+        task = self.get_task(task_id=task_id)
+        if task.id:            
+            self.tasks.remove(task)
         else:
             pass
 

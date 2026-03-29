@@ -1,11 +1,12 @@
 
 from typing import Any
 from pydantic import BaseModel, Field, AliasChoices
-from modules.utils import generate_id, timestamp
-from models.addresslocation_models import Address
-from models.comunication_modules import Contact
-from models.accounting_models import CommercialAccount, SupplierInvoiceRecord
-from models.data_models import ( SupplierStub )
+from core.utilities.utils import generate_id, timestamp
+from core.baseModels.addresslocation_models import Address
+from core.baseModels.comunication_modules import Contact
+from core.baseModels.accounting_models import CommercialAccount, SupplierInvoiceRecord
+from core.baseModels.data_models import ( SupplierStub )
+
 
 
 class Supplier(BaseModel):

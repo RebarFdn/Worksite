@@ -3,7 +3,7 @@ from pydantic import (BaseModel, EmailStr, Field)
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
 
-from modules.utils import ( generate_id, timestamp )
+from core.utilities.utils import ( generate_id, timestamp )
 
 
 # Contact and Communication

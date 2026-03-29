@@ -1,9 +1,10 @@
 
 from datetime import ( datetime, )
 from pydantic import ( BaseModel, Field )
-from modules.utils import ( timestamp, convert_timestamp )
+from core.utilities.utils import ( timestamp, convert_timestamp )
 
-# Events and States
+
+# States
 class State(BaseModel):
     active:bool = False
     complete:bool = False

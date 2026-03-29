@@ -1,10 +1,10 @@
 from typing import ( Any, )
 
 from pydantic import ( BaseModel, Field, AliasChoices )
-from modules.utils import ( generate_id, timestamp, tally )
+from core.utilities.utils import ( generate_id, timestamp, tally )
 
-from models.measurments_models import (MetricModel, ImperialModel)
-from models.data_models import ( SupplierStub )
+from core.baseModels.measurments_models import (MetricModel, ImperialModel)
+from core.baseModels.data_models import ( SupplierStub )
 
 
 

@@ -9,7 +9,7 @@ from config import (STATIC_PATH, TEMPLATES, FAVICON_FILE, CERT_PATH, HOST, PORT,
 from core.utilities import ( check_paths, )
 # Importing Applications
 from apps.SiteUser.app.application import app as user_app
-from apps.SiteProject.app.application import app as project_app
+from apps.SiteProject.application import app as project_app
 from apps.SiteRate.app.application import app as rate_app
 from apps.SiteSupplier.app.application import app as supplier_app
 from apps.SiteWorker.app.application import app as worker_app

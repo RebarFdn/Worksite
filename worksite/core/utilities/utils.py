@@ -36,7 +36,7 @@ def today()->str:
     
 
 # Timestamp 
-def timestamp(date:str='')->int:
+def timestamp(date:typing.Any=None)->int:
     """Timestamp returns an integer representation of the current or requested time.
    
     Args:
@@ -50,11 +50,11 @@ def timestamp(date:str='')->int:
     >>> timestamp()
     1673633512000
     """
-    if date:
-        if type(date) == int:
-            return date
-        else:
-            element = datetime.datetime.strptime(date,"%Y-%m-%d")        
+    
+    if type(date) == int:
+        return date
+    elif type(date) == str:
+        element = datetime.datetime.strptime(date,"%Y-%m-%d")        
         return int(datetime.datetime.timestamp(element)) * 1000     
     else:
         return  int(datetime.datetime.now().timestamp()) * 1000

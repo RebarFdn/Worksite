@@ -1,15 +1,4 @@
-from typing import List, Any
-
-from pydantic import BaseModel, EmailStr, Field,  SecretStr, AliasChoices, ValidationError
-from pydantic_extra_types.country import CountryShortName 
-from pydantic_extra_types.phone_numbers import PhoneNumber
-
-try:
-    from modules.utils import generate_id, timestamp, datimestamp, convert_timestamp, tally, convert_price_by_unit,convert_unit
-except ImportError:
-    from utils import generate_id, timestamp, datimestamp, convert_timestamp, tally, convert_price_by_unit,convert_unit
-
-
+from pydantic import (BaseModel, Field)
 
 # Address and Location 
 class Address(BaseModel):
@@ -19,7 +8,6 @@ class Address(BaseModel):
     city_parish: str = Field(default='', min_length=5, max_length=20)
     country:str = Field(default= '')
     zip: str = Field(default='', min_length=3, max_length=6)
-
     model_config = {
         "extra": "allow" 
     }

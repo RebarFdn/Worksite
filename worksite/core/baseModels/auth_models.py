@@ -5,7 +5,7 @@ from pydantic_extra_types.country import CountryShortName
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
 try:
-    from modules.utils import generate_id, timestamp, datimestamp, convert_timestamp, tally, convert_price_by_unit,convert_unit
+    from core.utilities.utils import generate_id, timestamp, datimestamp, convert_timestamp, tally, convert_price_by_unit,convert_unit
 except ImportError:
     from utils import generate_id, timestamp, datimestamp, convert_timestamp, tally, convert_price_by_unit,convert_unit
 
