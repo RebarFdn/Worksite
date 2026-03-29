@@ -16,9 +16,9 @@ app = FastAPI()
 
 
 
-@app.get("/")
+@app.get("/projects")
 async def index_home(request:Request):
-    return TEMPLATES.TemplateResponse( request=request, name="index.html")
+    return TEMPLATES.TemplateResponse( request=request, name="appTemplates/project/index.html")
 
 
 def test_static_path():

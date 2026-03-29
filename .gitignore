@@ -211,4 +211,5 @@ __marimo__/
 
 # logs
 logs/
-core/static
+/static
+node_modules/

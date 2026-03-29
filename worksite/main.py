@@ -7,7 +7,15 @@ from fastapi.middleware.cors import CORSMiddleware # pyright: ignore[reportMissi
 
 from config import (STATIC_PATH, TEMPLATES, FAVICON_FILE, CERT_PATH, HOST, PORT, app_paths, settings)
 from core.utilities import ( check_paths, )
-from apps.SiteProject.app.application import test_static_path
+# Importing Applications
+from apps.SiteUser.app.application import app as user_app
+from apps.SiteProject.app.application import app as project_app
+from apps.SiteRate.app.application import app as rate_app
+from apps.SiteSupplier.app.application import app as supplier_app
+from apps.SiteWorker.app.application import app as worker_app
+
+
+
 
 
 def startup():
@@ -34,6 +42,11 @@ app.add_middleware(
 # Serve Static Files
 app.mount("/static", StaticFiles(directory=STATIC_PATH), name="static")
 #app.include_router( projectRouter )
+app.mount("/user", user_app)
+app.mount("/project", project_app)
+app.mount("/rate", rate_app)
+app.mount("/supplier", supplier_app)
+app.mount("/worker", worker_app)
 
 
 
@@ -61,7 +74,7 @@ if __name__ == '__main__':
     from uvicorn import run # pyright: ignore[reportMissingImports]
     # startup the application
     #startup()
-    test_static_path()
+   
 
     key_path = CERT_PATH / 'site.key'
     cert_path = CERT_PATH / 'site.crt' 

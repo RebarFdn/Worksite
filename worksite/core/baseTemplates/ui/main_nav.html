@@ -198,7 +198,7 @@
           <span><img src="/static/imgs/icons/favicon.svg" alt="Favicon" width="30px"> </span>
         </div>
         <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-          <li><a>Homepage</a></li>
+          <li><a href="/">Homepage</a></li>
           <li><a>Portfolio</a></li>
           <li><a>About</a></li>
         </ul>
@@ -209,12 +209,12 @@
     <div class="navbar-center">
       <ul class="menu menu-horizontal px-1">
       
-        <li hx-get="/project/index/i/i" hx-target="#left-bar" trigger="click">
+        <li hx-get="/project/projects" hx-target="#app" trigger="click">
           <label for="my-drawer" class="uk-button uk-button-default uk-button-small drawer-button">
             <span class="fa fa-cubes"></span> Projects</label>
         </li>
         <li>
-          <a class="uk-button uk-button-default uk-button-small" hx-get="/employee/index/all/i" hx-target="#main-display"
+          <a class="uk-button uk-button-default uk-button-small" hx-get="/worker/workers" hx-target="#app"
             hx-trigger="click">
             <span class="fa fa-users">
             </span> Team
@@ -222,14 +222,14 @@
         </li>
       
         <li>
-          <a class="uk-button uk-button-default uk-button-small" hx-get="/rate/index/all/i" hx-target="#main-display"
+          <a class="uk-button uk-button-default uk-button-small" hx-get="/rate/rates" hx-target="#app"
             hx-trigger="click">
             <span class="fa fa-dollar">
             </span> Industry Rates
           </a>
         </li>
       
-        <li><a class="uk-button uk-button-default uk-button-small" hx-get="/supplier/index/all/i" hx-target="#main-display"
+        <li><a class="uk-button uk-button-default uk-button-small" hx-get="/supplier/suppliers" hx-target="#app"
             hx-trigger="click">
             <span class="fa fa-truck"></span> Suppliers</a>
         </li>
