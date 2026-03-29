@@ -208,3 +208,7 @@ __marimo__/
 
 # Keys
 .keys
+
+# logs
+logs/
+core/static

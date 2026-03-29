@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@source "../../baseTemplates";
+@source "../../../apps";
+@plugin "daisyui";
+
+
+
+
+

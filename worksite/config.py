@@ -2,7 +2,7 @@ from pathlib import Path
 from starlette.config import Config # pyright: ignore[reportMissingImports]
 from starlette.datastructures import Secret # pyright: ignore[reportMissingImports]
 from fastapi.templating import Jinja2Templates # pyright: ignore[reportMissingImports]
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings # pyright: ignore[reportMissingImports]
 
 # Directory Paths
 BASE_PATH:Path = Path(__file__).parent
@@ -42,7 +42,7 @@ ADMIN_ACCESS:Secret  = __config('DB_SECRET',  cast=Secret)
 
 # Network
 ALLOWED_HOSTS:list = ['127.0.0.1', 'localhost']
-PORT:int = 9090
+PORT:int = 9095
 HOST:str = '0.0.0.0'
 
 THROTTLE:float = 0.01

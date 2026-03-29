@@ -1,11 +1,14 @@
 # This File is the main application controller. 
 # It's purpose is to manage all application in the apps directory 
 from fastapi import ( FastAPI, Request ) # pyright: ignore[reportMissingImports]
+from fastapi.responses import FileResponse # pyright: ignore[reportMissingImports]
 from fastapi.staticfiles import StaticFiles # pyright: ignore[reportMissingImports]
 from fastapi.middleware.cors import CORSMiddleware # pyright: ignore[reportMissingImports]
 
-from config import (STATIC_PATH, TEMPLATES, CERT_PATH, HOST, PORT, app_paths, settings)
+from config import (STATIC_PATH, TEMPLATES, FAVICON_FILE, CERT_PATH, HOST, PORT, app_paths, settings)
 from core.utilities import ( check_paths, )
+from apps.SiteProject.app.application import test_static_path
+
 
 def startup():
     check_paths(paths=app_paths)
@@ -48,10 +51,17 @@ async def info():
     }
 
 
+@app.get("/favicon.ico")
+async def favicon(): 
+    """ Serves The Site Favicon file."""   
+    return FileResponse(FAVICON_FILE)
+
+
 if __name__ == '__main__':
-    from uvicorn import run
+    from uvicorn import run # pyright: ignore[reportMissingImports]
     # startup the application
-    startup()
+    #startup()
+    test_static_path()
 
     key_path = CERT_PATH / 'site.key'
     cert_path = CERT_PATH / 'site.crt' 
