@@ -1,0 +1,85 @@
+
+<form 
+    hx-post="/project/{{project._id}}/addjob/a" 
+    hx-target="#jobs-index"
+    class="form"
+    >
+    <div uk-grid>
+        <div class="uk-width-auto@m"></div>
+        <div class="uk-width-1-3@m">
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Job Title</legend>
+                <input type="text" class="input input-xs validator" name="title" placeholder="Job Title" required />
+    
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Description</legend>
+                <input type="text" class="input input-xs validator" name="description" placeholder="Description" required />
+    
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Project Phase</legend>
+                <input type="text" class="input input-xs validator" name="project_phase" placeholder="Project Phase" required />
+            
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Crew Name</legend>
+                <input type="text" class="input input-xs" name="crew_name" placeholder="Crew Name" />
+            
+            </fieldset>
+            <fieldset class="fieldset">
+                <button class="btn btn-secondary btn-sm"  type="submit">Submit
+                </button>
+            </fieldset>
+        </div>
+        <div class="uk-width-expand@m">
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Date</legend>
+                <input type="date" class="input input-xs" name="date" placeholder="Date" />
+            
+            </fieldset>
+            
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Contractor Fees</legend>
+                <input 
+                    type="range" 
+                    min="5" 
+                    max="50" 
+                    step="1" 
+                    value="20" 
+                    class="range range-xs" 
+                    name="fees_contractor" 
+                    oninput="this.form.contractorFee.value=this.value" />
+                    <span class="mx-2"><output id="contractorFee" name="contractorFee" for="fees_contractor">20</output>% </span>
+            
+            </fieldset>
+            <fieldset class="fieldset">
+                <label class="label">
+                    <span class="fieldset-legend">Misc. Fees</span>
+                    <input type="range" min="0" max="30" step="1" value="8" class="range range-xs" name="fees_misc"
+                        oninput="this.form.miscFee.value=this.value" />
+                    <span class="mx-2"><output id="miscFee" name="miscFee" for="fees_misc">8</output>% </span>
+                </label>
+            </fieldset>
+            <fieldset class="fieldset">
+                <label class="label">
+                    <span class="fieldset-legend">Inscurance Fees</span>
+                    <input type="range" min="0" max="30" step="1" value="2" class="range range-xs" name="fees_insurance"
+                        oninput="this.form.insFee.value=this.value" />
+                    <span class="mx-2"><output id="insFee" name="insFee" for="fees_insurance">2</output>% </span>
+                </label>
+            </fieldset>
+            <fieldset class="fieldset">
+                <label class="label">
+                    <span class="fieldset-legend">Overhead Fees</span>
+                    <input type="range" min="0" max="30" step="1" value="5" class="range range-xs" name="fees_overhead"
+                        oninput="this.form.ovrFee.value=this.value" />
+                    <span class="mx-2"><output id="ovrFee" name="ovrFee" for="fees_overhead">5</output>% </span>
+                </label>
+            </fieldset>
+        </div>
+
+    </div>
+</form>
+     
+   

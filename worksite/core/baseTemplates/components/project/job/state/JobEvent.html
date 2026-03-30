@@ -1,0 +1,141 @@
+
+
+<ul class="timeline timeline-vertical">
+    <li>
+        <div class="timeline-start timeline-box">{{ job.event.created | convert_timestamp }}</div>
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Job Created</div>
+        <hr />
+    </li>
+
+    <li>
+        <hr />
+        {% if job.event.started and job.event.started > 0 %}
+        <div class="timeline-start timeline-box">{{ job.event.started | convert_timestamp }}</div>
+        {% else %}
+        <div class="timeline-start">
+            <button class="btn btn-soft btn-accent btn-xs mx-2 tooltip tooltip-info"
+                data-tip="Activate this Job!">Start Job</button>
+        </div>
+        {% endif %}
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Job Started</div>
+        <hr />
+    </li>
+
+    <li>
+        <hr />
+        {% if job.event.paused %}
+        <div class="timeline-start">
+
+            <ul class="timeline">
+                {% for event in job.event.paused %}
+                <li>
+                    <div class="timeline-start timeline-box">{{ event | convert_timestamp }}</div>
+                    <hr />
+                </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+        {% else %}
+        <div class="timeline-start">
+            <button class="btn btn-soft btn-accent btn-xs mx-2 tooltip tooltip-info"
+                data-tip="Pause this Job!">Pause Job</button>
+        </div>
+        {% endif %}
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Job Paused</div>
+        <hr />
+    </li>
+    {% if job.event.paused %}
+    <li>
+        <hr />
+        {% if job.event.restart %}
+        <div class="timeline-start">
+            <ul class="timeline">
+                {% for event in job.event.restart %}
+                <li>
+                    <div class="timeline-start timeline-box">{{ event | convert_timestamp }}</div>
+                    <hr />
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <div class="timeline-start">
+            <button class="btn btn-soft btn-accent btn-xs mx-2 tooltip tooltip-info"
+                data-tip="Restart this Job!">Restart
+                Job</button>
+        </div>
+        {% endif %}
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Job Resumed</div>
+        <hr />
+    </li>
+    {% endif %}
+    <li>
+        <hr />
+        {% if job.event.completed and job.event.completed > 0 %}
+        <div class="timeline-start timeline-box">{{ job.event.completed | convert_timestamp }}</div>
+        {% else %}
+        <div class="timeline-start">
+            <button class="btn btn-soft btn-accent btn-xs mx-2 tooltip tooltip-info"
+                data-tip="Finish this Job!">Finish Job</button>
+        </div>
+        {% endif %}
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Job Completed</div>
+        <hr />
+    </li>
+    <li>
+        <hr />
+        {% if job.event.terminated and job.event.terminated > 0 %}
+        <div class="timeline-start timeline-box">{{ job.event.terminated | convert_timestamp }}</div>
+        {% else %}
+        <div class="timeline-start">
+            <button class="btn btn-soft btn-error btn-xs mx-2 tooltip tooltip-info"
+                data-tip="Terminate this Job!">Terminate
+                Job</button>
+        </div>
+        {% endif %}
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Terminated Job</div>
+    </li>
+</ul>

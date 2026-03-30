@@ -1,0 +1,85 @@
+<div class="">
+    <div class="uk-child-width-expand@s uk-text-center" uk-grid>
+        <div class="uk-width-auto@m">
+            <span class="text-sm text-blue-700 font-semibold p-1">Paybill - {{paybill.mainTitle}}</span>
+        </div>
+    
+    <div class="uk-width-expand@m">  
+    <nav class="uk-navbar-container uk-navbar-transparent">
+        <div class="uk-container">
+            <div uk-navbar>
+
+                <div class="uk-navbar-left">
+                    <ul class="menu menu-horizontal bg-base-200 rounded-box">
+                        <li><a href="#add_bill_item" uk-toggle>Add Item</a></li>
+                        <li><a href="#add_day_item" uk-toggle>Add Daywork Item</a></li>                        
+                        <li><a href="#" onclick="worker_salary_modal.showModal()">Process Salaries</a></li>
+                        <li><a href="#">Pay out Bill</a></li>   
+                        <li><button class="btn btn-sm btn-ghost" hx-get="/project/{{paybill.project_id}}/printbill/{{paybill.id}}"
+                            hx-target="#message">Print bill</button>
+                        </li>    
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+    </div>
+</div>
+<div class="text-xs">
+<ul>
+    <li><strong>Project</strong> {{paybill.project_id}}</li>   
+    <li><strong>Bill Refference.</strong> {{paybill.id}}/{{paybill.ref}}</li>
+    <li><strong>Date</strong> {{paybill.date | convert_timestamp}}</li>
+    <li><strong>For Period </strong> Begining {{paybill.date_starting | convert_timestamp}}  Ending {{paybill.date_ending | convert_timestamp}} </li>
+    <li><strong>Bill Total</strong> {{paybill.total | to_dollars}}</li>
+
+
+</ul>
+</div>
+<div id="bill-items">
+    {% include 'components/project/account/PaybillItems.html' %}
+</div>
+
+<!-- Add Item Modal-->
+<div id="add_bill_item" class="uk-modal-container" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <p class="text-sm font-semibold">Add Bill Item</p>
+        <div id="add-item">
+            {% include 'components/project/account/UnpaidTasks.html' %}
+        
+        </div>
+    </div>
+</div>
+
+<!-- Add Daywork Item Modal-->
+<div id="add_day_item" class="uk-modal-container" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <h2 class="uk-modal-title">Add Days Worked </h2>
+        <div id="bill-days">
+            {% if paybill.days_work %}
+            {{paybill.days_work}}
+        
+            {% else %}
+            <span class="text-lg text-gray-500 text-center">There are no day work records! </span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<dialog id="worker_salary_modal" class="modal">
+    <div class="modal-box  w-11/12 max-w-5xl">
+        <p class="text-sm font-bold">Processing Workers Salary for {{project.name}} Paybill {{paybill.ref}} </p>
+        {% include '/components/project/account/PaymentRecord.html' %}
+        
+        <div class="modal-action">
+            <form method="dialog">
+                <!-- if there is a button, it will close the modal -->
+                <button class="btn">Close</button>
+            </form>
+        </div>
+    </div>
+</dialog>

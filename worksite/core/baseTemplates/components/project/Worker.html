@@ -1,0 +1,29 @@
+<div class="navbar bg-base-100 shadow-sm">
+    <div class="flex-1">
+      <a class="btn btn-ghost text-xl">{{worker.name}}</a>
+    </div>
+    <div class="navbar-start">
+        <ul class="menu menu-horizontal px-1">
+        
+        <li>
+            <details>
+              <summary>Filter</summary>
+              <ul class="bg-base-100 rounded-t-none p-2">
+                <li><a>Link 1</a></li>
+                <li><a>Link 2</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><button class="btn btn-info btn-sm" hx-get="/Project/{{worker.id | to_project_id}}/workers/i" hx-target="#workers-console" hx-trigger="click"><span class="fa fa-chevron-left"></span>Back to workers</button>
+        </li>
+        <li><button class="btn" ><span class="fa fa-print"></span>Print</button></li>        
+        
+      </ul>
+    </div> 
+   
+  </div>
+  {{worker}}

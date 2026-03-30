@@ -1,0 +1,175 @@
+
+<div class="breadcrumbs text-sm">
+    <ul class="animation: uk-animation-fade">
+      <li>
+        <a hx-get="/project/{{project._id}}/daywork/i" hx-target="#daywork-index">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </svg>
+          Day Work <span class="badge badge-primary badge-xs">{{ project.days | length }}</span>
+        </a>
+      </li>
+      <li>
+        <span class="inline-flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </svg>
+          <button class="btn btn-ghost btn-xs" popovertarget="popover-4" style="anchor-name:--anchor-4">
+            Filter by Worker
+          </button>
+          <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-sm" popover id="popover-4"
+            style="position-anchor:--anchor-4">
+            <li><a>Day workers</a></li>
+            {% for item in project.days %}
+            <li><a hx-get="/project/{{project._id}}/daywork/{{ item.worker_name  }}" hx-target="#daywork-index" hx-trigger="click">
+                <span class="text-xs bg-base-200 flex flex-row">{{ item.worker_name }} <span
+                    class="badge badge-xs badge-ghost mx-2">2</span></span>
+              </a></li>
+            {% endfor %}
+          </ul>
+        </span>
+      </li>
+      <li>
+        <span class="inline-flex items-center gap-2">
+          <span class="fa fa-search h-4 w-4 stroke-current job">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </span>
+          <input type="search" name="search-daywork" placeholder="Search"
+            class="input-xs rounded-sm input-info" />
+        </span>
+      </li>
+      <li>
+        <span class="inline-flex items-center gap-2" onclick="add_daywork.showModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
+          </svg>
+          Assign Daywork
+        </span>
+      </li>
+      <li>
+        <span class="inline-flex items-center gap-2">
+          <span class="fa fa-print job"></span>
+          Print 
+        </span>
+      </li>
+    </ul>
+</div>
+
+ {% if project.state.active or project.state.complete or project.state.pause or project.state.terminate %}
+  <div id="daywork-index" class="overflow-y-auto sm:overflow-x-auto h-96 p-5">
+    <table class="table table-zebra table-xs md:table-lg">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>
+           Date
+          </th>          
+          <th>Worker Name</th>
+          <th>Start Time</th>
+          <th>Draw Off</th>
+          <th>Description</th>          
+          <th>State</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- row 1 -->
+        {% for row in project.days  %}
+        <tr>
+          <td>
+            <span class="text-sm">{{row.date}}</span>
+          </td>
+          <td>
+                <div class="font-bold text-sm cursor-pointer" onclick="edit_daywork.showModal()">{{ row.worker_name }}</div>
+               
+          </td>
+          <td>           
+           {{ row.start }}
+          </td>
+          <td>{{ row.end }} <span class="text-xs mx-10"></span></td>
+          <td><p class="text-sm">{{row.description}}</p></td>
+          <td>
+            {% if row.payment.paid %}
+                <div class="badge badge-outline badge-success">Resolved</div>
+            {% else %}            
+            <div class="badge badge-outline badge-error">Unresolved</div>
+            {% endif %}
+        </td>
+          
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+<dialog id="add_daywork" class="modal">
+  <div class="modal-box w-11/12 max-w-5xl">
+    <h3 class="text-lg font-bold">Add Days Work</h3>
+    <h2 class="text-xl text-center font-semibold mb-5">{{ project.name }} Days Work Record</h2>
+    <form hx-post="project/{{project._id}}/add_daywork" hx-target="#daywork-index" hx-trigger="submit" class="uk-grid-small"
+      uk-grid>
+      <div class="uk-width-1-1 text-xs">
+        <p class="text-xs">Select Worker</p>
+        <select class="uk-select" placeholder="Worker's Name" name="worker_name">
+          {% for worker in project.workers %}
+          <option>{{ worker.value.name }}_{{worker.id}}</option>
+          {% endfor %}
+    
+        </select>
+      </div>
+      <div class="uk-width-1-2@s">
+        <label for="date" class="text-xs">Work Day:</label>
+        <input id="date" class="uk-input" type="date" placeholder="Date" aria-label="Date" name="date">
+      </div>
+      <div class="uk-width-1-4@s">
+    
+        <label for="start" class="text-xs">Work Start at:</label>
+        <input class="uk-input" type="time" id="start" name="start" min="08:00" max="18:00" required />
+        <small>Work hours are 8am to 6pm</small>
+    
+      </div>
+      <div class="uk-width-1-4@s">
+        <label for="end" class="text-xs">Draw Off:</label>
+        <input class="uk-input" type="time" id="end" name="end" min="08:00" max="18:00" required />
+        <small>Work hours ends at 6pm</small>
+      </div>
+      <div class="uk-width-2@s">
+        <input class="uk-input" type="textarea" placeholder="Description" name="description">
+      </div>
+    
+      <p class="uk-text-right">
+        
+        <button class="uk-button uk-button-primary" type="submit" uk-modal-close>Save</button>
+      </p>
+    </form>
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- if there is a button, it will close the modal -->
+        <button class="btn">Close Portal</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+ 
+<dialog id="edit_daywork" class="modal">
+  <div class="modal-box w-11/12 max-w-5xl">
+    <h3 class="text-lg font-bold">Edit Days Work</h3>
+    
+    {% include 'components/project/daywork/Day.html' %}
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- if there is a button, it will close the modal -->
+        <button class="btn">Close</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+{% else %}
+{% include '/components/project/daywork/DayworkIntroduction.html' %}
+{% endif %}

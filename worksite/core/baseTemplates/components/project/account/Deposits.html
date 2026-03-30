@@ -1,0 +1,90 @@
+
+{% if project.account.transactions.deposit %}
+ <a href="#deposit-modal" uk-toggle><span class="text-lg text-blue-500 font-semibold">Deposits </span></a>
+ <div id="deposit-result"></div>
+<div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
+
+    <table class="uk-table uk-table-small uk-table-responsive font-medium text-gray-800 uppercase">
+        <thead>
+            <tr>                   
+                <th>Date</th>
+                <th>Ref</th>
+                <th>Payee</th>
+                <th>Amount</th>                    
+                <th>Manage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in project.account.transactions.deposit |reverse %}                      
+
+                <tr>              
+                    <td>{{ d.date | convert_timestamp }}</td>
+                    <td>{{ d.ref }} </td>
+                    <td>{{ d.payee }} </td>
+                    <td>{{ d.amount | to_dollars }}</td>
+                    <td>
+                         <span
+                        class="tooltip cursor-pointer"                       
+                        data-tip="Delete deposit?"
+                        hx-delete="/Project/{{project._id}}/deposit/{{d.id}}"
+                        hx-confirm="Are you shure you want to delete deposit {{d.ref}}?"
+                        hx-target="#account-deposits"
+                        hx-trigger="click"
+                        ><span class="fa fa-trash"></span></span>
+                                                    
+                    </td>
+                </tr>
+            {% endfor %}
+                <tr> 
+                    <td>Total Deposits to Date</td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>{{ project.account.transactions.deposit | tally | to_dollars }}</strong></td>
+
+                    <td></td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+<p class="text-lg">You Need To Fund This Project! </p><br>
+<a href="#deposit-modal" uk-toggle>Deposit Funds</a>
+{% endif %}
+
+<!-- This is the Deposit modal -->
+<div id="deposit-modal" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body rounded-lg">
+        <p class="text-lg text-center font-semibold">Project Account Deposit</p>
+        <form 
+            hx-post="/Project/{{project._id}}/deposit/i"
+            hx-target="#account-deposits"
+            hx-trigger="submit"                        
+            class="uk-grid-small" 
+            uk-grid
+            >
+            <div class="uk-width-1-1">
+                <input class="uk-input" type="date" placeholder="Date" name="date" aria-label="Date">
+            </div>
+            <div class="uk-width-1-2@s">
+                <input class="uk-input" type="text" placeholder="Transaction Type" value="deposit" name="type" aria-label="Deposit">
+            </div>
+            <div class="uk-width-1-4@s">
+                <input class="uk-input" type="text" placeholder="Refference" name="ref" aria-label="Ref">
+            </div>
+            <div class="uk-width-1-4@s">
+                <input class="uk-input" type="number" step="0.01" placeholder="Amount" name="amount" aria-label="$">
+            </div>
+            <div class="uk-width-1-2@s">
+                <input class="uk-input" type="text" placeholder="Payee" name="payee" aria-label="Payee">
+            </div>
+            
+    
+            <p class="uk-text-right">
+                <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                <button class="uk-button uk-button-primary rounded-md uk-modal-close" type="submit" >Deposit Funds</button>
+            </p>
+        </form>
+       
+    </div>
+</div>

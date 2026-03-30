@@ -1,0 +1,58 @@
+<table class="uk-table uk-table-small uk-table-responsive text-gray-800">
+    <thead>
+        <tr>
+            <th>Supplier</th>
+            <th>Invoice No.</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Tax</th>
+            <th>Total</th>
+
+            <th>Manage</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invoice in project.account.records.invoices |reverse %}
+
+        <tr>
+            <td>{{ invoice.supplier.name }}</td>
+            <td>{{ invoice.invoiceno }}</td>
+            <td>{{ invoice.date | convert_timestamp }}</td>
+            <td>
+                {% if invoice.get('items') | length > 0 %}
+                {{ invoice.get('items') | length }}
+                {% else %}
+                <span class="badge badge-info badge-sm">record</span>
+                {% endif %}
+            </td>
+            <td>{{ invoice.tax | to_dollars }} </td>
+            <td>{{ invoice.total | to_dollars }}</td>
+
+            <td>
+                
+                <span class="tooltip cursor-pointer" data-tip="Edit Invoice record?"
+                        hx-get="/project/{{project._id}}/invoice/{{invoice.inv_id}}"
+                         hx-target="#account-invoices"
+                        hx-trigger="click"><span class="fa fa-pencil"></span></span>
+                <span class="tooltip cursor-pointer" data-tip="Print Invoice?"
+                            hx-get="/project/{{project._id}}/print/invoice-{{invoice.inv_id}}"
+                            hx-target="#message"
+                            hx-trigger="click"><span class="fa fa-print mx-2"></span></span>
+                <span class="tooltip cursor-pointer" data-tip="Delete record?"
+                    hx-delete="/project/{{project._id}}/invoice/{{invoice.inv_id}}"
+                    hx-confirm="Are you shure you want to delete invoice {{invoice.invoiceno}}?" hx-target="#account-invoices"
+                    hx-trigger="click"><span class="fa fa-trash"></span></span>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td>Total purchases to Date</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><strong>{{ tax_tally | to_dollars }}</strong></td>
+            <td><strong>{{ project.account.records.invoices | tally | to_dollars }}</strong></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>

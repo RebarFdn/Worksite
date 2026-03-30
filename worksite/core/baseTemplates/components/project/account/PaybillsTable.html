@@ -1,0 +1,42 @@
+<table class="uk-table uk-table-small uk-table-responsive font-medium text-gray-800">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Ref</th>
+            <th>Title</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Manage</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for bill in project.account.records.paybills |reverse %}
+
+        <tr>
+            <td>{{ bill.date | convert_timestamp }}</td>
+            <td>{{ bill.ref }} </td>
+            <td><a hx-get="/project/{{project._id}}/paybill/{{bill.id}}" hx-target="#paybill_index"
+                    hx-trigger="click">{{ bill.mainTitle }}</a> </td>
+
+            <td>{{ bill.get('items') | length }} </td>
+            <td>{{ bill.total | to_dollars }}</td>
+            <td>
+                <span class="tooltip cursor-pointer" data-tip="Delete paybill?"
+                    hx-delete="/Project/{{project._id}}/paybill/{{bill.id}}"
+                    hx-confirm="Are you shure you want to delete Paybill {{bill.mainTitle}}?"
+                    hx-target="#account-paybills" hx-trigger="click"><span class="fa fa-trash"></span></span>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td>paybills Total to Date</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><strong>{{ project.account.records.paybills | tally | to_dollars }}</strong></td>
+
+            <td></td>
+        </tr>
+    </tbody>
+</table>

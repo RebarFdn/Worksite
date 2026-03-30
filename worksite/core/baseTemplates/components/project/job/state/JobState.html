@@ -1,0 +1,44 @@
+{% if job.state.active %}
+
+<div>
+    <div class="uk-button-group">
+        <span class="text-md text-green-500 font-semibold mr-2" style="color: green;">Active</span>
+        <button class="btn btn-soft btn-info btn-xs tooltip tooltip-bottom tooltip-info" data-tip="Pause this Project!"
+            hx-post="/project/{{ project._id }}/jobstate/{{job.id}}-pause" hx-target="#project-eventstate">Pause</button>
+        <button class="btn btn-soft btn-primary btn-xs mx-2 tooltip tooltip-info" data-tip="Complete this Project!"
+            hx-post="/project/{{ project._id }}/jobstate/{{job.id}}-complete" hx-target="#project-eventstate">Complete</button>
+        <button class="btn btn-soft btn-error btn-xs tooltip tooltip-error" data-tip="Terminate this Project!"
+            hx-post="/project/{{ project._id }}/jobstate/{{job.id}}-terminate" hx-target="#project-eventstate">Terminate</button>
+
+    </div>
+</div>
+{% elif job.state.complete %}
+<span class="text-md text-green-500 font-semibold" style="color: rgba(15, 135, 233, 0.973);">Completed</span>
+{% elif job.state.pause %}
+
+<div>
+    <div class="uk-button-group">
+        <span class="text-md text-green-500 font-semibold" style="color: rgba(25, 21, 248, 0.979);">Paused</span>
+        <button class="btn btn-soft btn-accent btn-xs mx-2 tooltip tooltip-info"
+            data-tip="Resume this Project's activity!" hx-post="/project/{{ project._id }}/jobstate/{{job.id}}-resume"
+            hx-target="#project-eventstate">Resume</button>
+        <button class="btn btn-soft btn-error btn-xs tooltip tooltip-error" data-tip="Terminate this Project!"
+            hx-post="/project/{{ project._id }}/jobstate/{{job.id}}-terminate" hx-target="#project-eventstate"
+            hx-confirm="You are about to Terminate this Project.">Terminate</button>
+    </div>
+</div>
+{% elif job.state.terminate %}
+<span class="text-md text-green-500 font-semibold" style="color: rgba(241, 5, 5, 0.973);">Terminated</span>
+{% else %}
+
+<div>
+    <div class="uk-button-group">
+        <span class="text-xs text-gray-500 font-semibold" style="color: rgba(36, 31, 31, 0.973);">Ready</span>
+        <button class="btn btn-soft btn-accent btn-xs mx-2 tooltip tooltip-info" data-tip="Activate this Project."
+            hx-post="/project/{{ project._id }}/jobstate/{{job.id}}-activate" hx-target="#project-eventstate"
+            hx-confirm="You are about to Start this Project's activities.">Activate
+        </button>
+
+    </div>
+</div>
+{% endif %}

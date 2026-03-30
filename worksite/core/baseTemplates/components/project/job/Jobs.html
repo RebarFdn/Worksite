@@ -1,0 +1,98 @@
+<div class="breadcrumbs text-sm">
+  <ul class="animation: uk-animation-fade">
+    <li>
+      <a hx-get="/project/{{project._id}}/jobs/i" hx-target="#project_console">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+        </svg>
+        Jobs <span class="badge badge-primary badge-xs">{{ project.jobs | length }}</span>
+      </a>
+    </li>
+    <li>
+      <span class="inline-flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+        </svg>
+        <button class="btn btn-ghost btn-xs" popovertarget="popover-1" style="anchor-name:--anchor-1">
+          Filter Jobs
+        </button>
+        <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-sm" popover id="popover-1"
+          style="position-anchor:--anchor-1">
+          <li><a>Project Jobs</a></li>
+          {% for job in project.jobs %}
+          <li><a hx-get="/project/{{project._id}}/job/{{ job.id }}" hx-target="#jobs-index" hx-trigger="click">
+           <span class="text-xs bg-base-200 flex flex-row">{{ job.title }} <span class="badge badge-xs badge-ghost mx-2">{{job.tasks|length}}</span></span> 
+          </a></li>   
+          {% endfor %}
+        </ul>
+      </span>
+    </li>
+    <li>
+      <span class="inline-flex items-center gap-2">
+        <span class="fa fa-search h-4 w-4 stroke-current job">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+        </span>
+        <input type="search" name="search-project-jobs" placeholder="Search Jobs" class="input-xs rounded-sm input-info" />
+      </span>
+    </li>
+    <li>
+      <span class="inline-flex items-center gap-2" onclick="new_job.showModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+          </path>
+        </svg>
+        Create New Job
+      </span>
+    </li>
+    <li>
+      <span 
+      class="inline-flex items-center gap-2"
+      >
+        <span class="button fa fa-print job" hx-get="/project/{{project._id}}/print/jobs"
+        hx-target="#message"
+        hx-trigger="click"></span>
+        Print Jobs Report
+      </span>
+    </li>
+    <li>
+      <span class="inline-flex items-center gap-2">
+        <span class="button fa fa-print job" hx-get="/project/{{project._id}}/print/jobsmetric" hx-target="#message"
+          hx-trigger="click"></span>
+        Print Metric Report
+      </span>
+    </li>
+    <li>
+      <span class="inline-flex items-center gap-2">
+        <span class="button fa fa-print job" hx-get="/project/{{project._id}}/print/jobsimperial" hx-target="#message"
+          hx-trigger="click"></span>
+        Print Imperial Report
+      </span>
+    </li>
+  </ul>
+</div>
+{% if project.state.active or project.state.complete or project.state.pause or project.state.terminate %}
+<div  id="jobs-index" class="overflow-y-auto sm:overflow-x-auto h-lvh ">
+  
+    {% include 'components/project/job/JobsTable.html' %}
+   
+</div>
+  
+<dialog id="new_job" class="modal">
+    <div class="modal-box w-11/12 max-w-5xl">
+      <h3 class="text-md font-bold">Create New Job</h3>
+      {% include 'components/project/job/newJobForm.html' %}
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button, it will close the modal -->
+          <button class="btn">Close Portal</button>
+        </form>
+      </div>
+    </div>
+</dialog>
+{% else %}
+{% include '/components/project/job/JobIntroduction.html' %}
+{% endif %}

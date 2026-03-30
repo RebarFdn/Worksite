@@ -1,0 +1,51 @@
+
+
+<div id="job-tasks-queue" class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
+<p class="text-xs">add task to Job {{ job.id }}</p>
+
+    <table class="uk-table uk-table-small uk-table-striped uk-table-responsive text-gray-800">
+        <thead>
+            <tr>   
+                <th></th>                
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Category</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in project.rates %}                      
+
+                <tr>    
+                     <td class="bg-gray-200">                         
+                        
+                        <button class="btn btn-xs btn-ghost"
+                            hx-post="/project/{{job.project_id}}/addtask/{{ job.id }}_{{task.id}}"                           
+                            hx-target="#job_tasks"
+                            hx-trigger="click"
+                        >            
+                            Add
+                        </button>
+                                                    
+                    </td>          
+                    <td>{{ task.id }}</td>
+                    <td>{{ task.title }} </td>
+                    <td>{{ task.description }} </td>
+                    <td>{{ task.category }}</td>
+                     
+                   
+                </tr>
+            {% endfor %}
+                <tr > 
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                    <td></td>
+                </tr>
+        </tbody>
+    </table>
+    
+</div>

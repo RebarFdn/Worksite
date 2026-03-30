@@ -1,0 +1,77 @@
+{% from 'components/macros.html' import activeState %}
+{% from 'components/macros.html' import projectState %}
+
+<div id="job-home" class="grid grid-flow-row grid-row-2 md:grid-cols-4 gap-4"> 
+    <div id="job-home-left" class="md:col-span-2 bg-gray-100 border-blue-200 rounded-sm p-5">
+        <ul class="list text-sm">
+            <li><strong>Job Id.</strong> {{ job.id }}</li>
+            <li> <strong>Creation Date </strong> {{ job.event.created | convert_timestamp}} </li>
+            <li>  <strong>Start Date </strong> {{ job.event.started | convert_timestamp }} </li>
+            <li> <strong>Crew </strong> {{ job.get('crew').get('name') }}</li>
+            <li> <strong>Crew Members</strong> {{ crew_members }} </li>
+            <li class="text-lg font-semibold">Job Specifications</li>
+            <li> <strong>Project Phase</strong> {{ job.projectPhase  }} </li>
+            <li><strong>State</strong> {{activeState(job.state)}}</li>
+            <li><strong>Tasks</strong> <span class="uk-badge font-semibold">{{ job.tasks | length }} </span> </li>
+            <li class="my-2"><p class="flex flex-row "><strong>Progress</strong><progress class="progress progress-secondary" value="{{ job.progress }}" max="100"></progress>
+                <span class="uk-badge font-semibold">{{ job.progress }}% </span>
+                </p>
+            </li>
+            <li class="text-lg font-semibold">Job Description</li>
+            <li>
+                <p class="flex flex-row">{{ job.description }}</p>
+            </li>
+        </ul>
+    </div>
+
+    <div id="job-home-right" class="md:col-span-2 bg-gray-100 border-gray-200 rounded-sm p-5">
+        <ul class="list text-sm"> 
+            <li> <strong>Total Job Cost</strong> {{ job['cost']['total']['metric'] | to_dollars }}</li>
+            <li><strong>Settlement </strong></li>
+            <li><strong>Paid </strong> {{ job['result']['paid'] }}</li>
+            {% if job['result']['paid'] %}
+            <li>
+                <strong>Amount Paid </strong> <span>{{ job['result']['paydate'] }}</span>
+                    {{ job['result']['payamount'] | to_dollars }}
+            </li>
+            {% endif %} 
+            <li><strong>job Fees</strong></li>
+            <li>
+                <ul>
+                    <li><strong>contractor</strong> {{ job.get('fees').get('contractor')}}<span class="text-lg font-semibold">%</span></li>
+                    <li><strong>miscellaneous</strong> {{ job.get('fees').get('misc')}}<span class="text-lg font-semibold">%</span></li>
+                    <li><strong>insurance</strong> {{ job.get('fees').get('insurance')}}<span class="text-lg font-semibold">%</span></li>
+                    <li><strong>overhead</strong> {{ job.get('fees').get('overhead')}}<span class="text-lg font-semibold">%</span></li>
+                </ul>  
+            </li>  
+            <li><strong>Job Costs </strong></li>            
+            <li>
+                <ul>
+                    <li><strong>tasks</strong> {{ job['cost']['task'] | to_dollars }}</li>
+                    <li><strong>contractor</strong> {{ job['cost']['contractor'] | to_dollars }}</li>
+                    <li><strong>miscellaneous</strong> {{ job['cost']['misc'] | to_dollars }} </li>
+                    <li><strong>insurance</strong> {{ job['cost']['insurance'] | to_dollars }} </li>
+                    <li><strong>overhead</strong> {{ job['cost']['overhead'] | to_dollars }} </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+</div>
+Costs Settlement
+<div id="job-settlement" class="grid grid-flow-row grid-row-2 md:grid-cols-4 gap-4"> 
+    <div class="md:col-span-2 bg-gray-100 border-gray-300 rounded-sm m-2">
+        <ul class="list text-sm bg-base-100 rounded-box shadow-md px-2"> 
+            
+            
+        </ul>       
+    </div>
+    <div class="md:col-span-2 bg-gray-100 border-gray-300 rounded-sm m-2">
+        <ul class="list text-sm bg-base-100 rounded-box shadow-md px-2">                   
+            
+            
+        </ul>       
+    </div>
+</div>
+
+  

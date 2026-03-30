@@ -1,0 +1,20 @@
+
+<form id="project-leader-form" hx-post="/project/{{ project._id }}/admin/leader" hx-target="#project-leader" class="space-y-4">
+    <ul>
+
+        <li>
+
+            {% if project.admin.leader %}
+            <strong>{{ project.admin.leader }}</strong>
+            {% else %}
+
+
+            <div class="flex flex-row">
+                <input type="text" placeholder="Leader's Name" name="leader" class="input input-accent input-xs" />
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+
+    </ul>
+</form>

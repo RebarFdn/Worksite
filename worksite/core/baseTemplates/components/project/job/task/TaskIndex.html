@@ -1,0 +1,126 @@
+{% from 'components/macros.html' import activeState %}
+<table class="uk-table uk-table-small uk-table-divider uk-table-responsive">
+
+    <thead>
+        <tr>
+            <th>Manage</th>
+            
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            
+            <th>Metric
+                
+            </th>
+            <th>Imperial</th>
+            <th>Progress</th>
+            <th>State</th>
+            
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in job.tasks %}
+        <tr>
+            <td>
+                <div class="uk-inline">
+                    <div class="flex flex-row">
+                        <button class="btn btn-xs btn-accent" type="button" uk-toggle="target: #edit-task-modal"
+                        hx-get="/project/{{job.project_id}}/edittask/{{job.id}}_{{task.id}}" 
+                        hx-target="#edit-task"><span class="fa fa-edit" uk-tooltip="Edit Task"></span></button>
+
+                        
+                   
+                        <a href="#" hx-delete="/project/{{job.project_id}}/deletetask/{{job.id}}_{{task.id}}"
+                            hx-target="#job_tasks" hx-confirm="Are you sure you want to remove this task from the job?"
+                           >
+                            <span class="fa fa-trash mx-5" uk-tooltip="Remove from Job"></span></span>
+                        </a>
+                        
+                        </div>
+            
+                </div>
+                
+            </td>
+           
+
+            <td id="task">{{ task.id }} </td>
+            <td id="title">{{ task.title }}</td>
+            <td>{{ task.description }}</td>
+            <td>
+                <div class="flex flex-col">
+                    <span class="mx-2">{{ task.metric.quantity }} {{ task.metric.unit }} at  {{ task.metric.price | to_dollars }} </span>                   
+                       
+                        <span class="mx-2 text-green-600 font-semibold">{{ task.metric.total | to_dollars }}</span>
+                    
+                </div>
+               
+
+            </td>
+            <td>
+                <div class="flex flex-col">
+                    <span class="mx-2">{{ task.imperial.quantity }} {{ task.imperial.unit }} at {{ task.imperial.price | to_dollars }} </span>
+                
+                    <span class="mx-2 text-green-600 font-semibold">{{ task.imperial.total | to_dollars }}</span>
+                
+                </div>
+            </td>
+            <td>{{task.progress}}%</td>
+            <td>
+                {{ activeState(task.state)}}
+                
+            </td>
+            
+
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+
+<!-- Edit Task modal -->
+<div id="edit-task-modal" class="uk-modal-container" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button 
+            type="button" 
+            hx-get="/project/{{job.project_id}}/tasks/{{job.id}}"
+            hx-target="#job-tasks" 
+            class="uk-modal-close-default task" 
+        
+            uk-close>
+        </button>
+        <button type="button" hx-get="/project/{{job.project_id}}/tasks/{{job.id}}" hx-target="#job_tasks"
+            class="btn btn-sm uk-modal-close">Close Portal</button>
+        
+            <div id="edit-task">
+               
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button 
+                type="button" 
+                hx-get="/project/{{job.project_id}}/tasks/{{job.id}}" 
+                hx-target="#job_tasks"
+                class="btn btn-sm uk-modal-close"
+            >Close Portal</button>  </div>
+                
+    </div>
+    
+</div>
+{% block extra_scripts %}
+<script>
+        function updateTaskField(field, value) {
+            const attr = document.querySelector(`#${field}`);
+            const output = document.querySelector(`#${field}-output`);
+            output.value = value;
+
+            attr.addEventListener("input", () => {
+                output.value = value;
+            });
+      };
+
+      function alerted(){
+        alert("Alerted")
+      }
+</script>
+{% endblock %}

@@ -3,7 +3,9 @@ from fastapi.responses import HTMLResponse # pyright: ignore[reportMissingImport
 from config import (STATIC_PATH, TEMPLATES, TEMPLATES_PATH)
 
 
-from apps.SiteProject.project import ( create_project, read_project, delete_project, get_workers , get_worker, all_projects)
+from apps.SiteProject.project import ( create_project, read_project, delete_project, get_workers , get_worker, all_projects, suppliers)
+
+from core.utilities.data_lib import ( get_job_categories, project_phases, rate_categories )
 
 
 router = APIRouter()
@@ -12,7 +14,7 @@ router = APIRouter()
 @router.get("/projects")
 async def index_home(request:Request):
 
-    return TEMPLATES.TemplateResponse( request=request, name="appTemplates/project/index.html", context={'projects': await all_projects()})
+    return TEMPLATES.TemplateResponse( request=request, name="components/project/index.html", context={'projects': await all_projects()})
 
 
 @router.post("/project/")
@@ -23,7 +25,16 @@ async def save_project(data:dict={}):
 
 @router.get("/project/{item_id}")
 async def read_item(request:Request, item_id: str, q: str | None = None):
-    return TEMPLATES.TemplateResponse( request=request, name="appTemplates/project/Project.html", context={'project':await read_project(id= item_id)})
+    return TEMPLATES.TemplateResponse( 
+        request=request, 
+        name="components/project/ProjectPage.html", 
+        context={
+            'project':await read_project(id= item_id),
+            "suppliers":suppliers,                    
+            "project_phases": project_phases(),
+            "rate_categories": rate_categories().keys()
+        }
+    )
 
 
 @router.delete("/project/{item_id}")

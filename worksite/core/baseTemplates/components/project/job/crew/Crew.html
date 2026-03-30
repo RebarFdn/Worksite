@@ -1,0 +1,75 @@
+
+{% from 'components/macros.html' import activeState %}
+{% from 'components/macros.html' import ratings %}
+
+
+<ul class="menu  menu-horizontal bg-base-200 rounded-box crew">
+    <li>
+        <a>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Crew
+            <span class="badge badge-xs crew">{{job.crew.members | length }}+</span>
+        </a>
+    </li>
+    <li>
+        <a>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ job.crew.name }}
+            {% if job.crew.rating %}
+                <span class="badge badge-xs crew">{{ ratings(job.crew.rating, 'crew') }}</span>
+            {% endif %}
+        </a>
+    </li>
+    <li>
+        <a>
+            State
+            <span class="badge badge-xs">{{activeState(job.crew.state)}}</span>
+        </a>
+    </li>
+    <li>
+        <a onclick="add_crew_modal.showModal()">
+            Add Crew
+            <span class="fa fa-plus fa-fade crew"></span>
+        </a>
+    </li>
+    <li>
+        <span class="inline-flex items-center gap-2">
+            <span class="button fa fa-print job" hx-get="/project/{{job.project_id}}/printcrew/{{job.id}}" hx-target="#message"
+                hx-trigger="click"></span>
+            Print Job Crew
+        </span>
+    </li>
+</ul>
+
+<div id="crew-members" class="overflow-x-auto">
+    {% include '/components/project/job/crew/CrewMembers.html' %}
+</div>
+
+<!-- Add crew -->
+<dialog id="add_crew_modal" class="modal">
+    <div class="modal-action">
+
+        <div class="modal-box w-11/12 max-w-5xl">
+            <form method="dialog">
+                <!-- if there is a button, it will close the modal -->
+                <button class="btn">Close Portal</button>
+            </form>
+            <p class="text-sm font-bold">Add Crew member to Job: {{job.title}}</p>
+            {% include 'components/project/job/crew/AddCrew.html' %}
+            <div class="modal-action">
+                <form method="dialog">
+
+                    <button class="btn">Close Portal</button>
+                </form>
+            </div>
+        </div>
+
+</dialog>

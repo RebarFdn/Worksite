@@ -1,0 +1,87 @@
+
+ 
+  <div class="breadcrumbs text-sm">
+    <ul>
+      <li>
+        <a hx-get="/project/{{project._id}}/order/i" hx-target="#project_orders">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </svg>
+          Purchase Order <span class="badge badge-primary badge-xs">{{ project.account.records.purchase_orders | length }}</span>
+        </a>
+      </li>
+      <li>
+        <span class="inline-flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </svg>
+          <button class="btn btn-ghost btn-xs" popovertarget="popover-7" style="anchor-name:--anchor-7">
+            Filter 
+          </button>
+          <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-sm" popover id="popover-7"
+            style="position-anchor:--anchor-7">
+            <li><a>Purchase Orders</a></li>
+            {% for item in project.account.records.purchase_orders %}
+            <li><a hx-get="/project/{{project._id}}/order/{{ item.id  }}" hx-target="#project_orders"
+                hx-trigger="click">
+                <span class="text-xs bg-base-200 flex flex-row">{{ item.title }} <span
+                    class="badge badge-xs badge-ghost mx-2">2</span></span>
+              </a></li>
+            {% endfor %}
+          </ul>
+        </span>
+      </li>
+      <li>
+        <span class="inline-flex items-center gap-2">
+          <span class="fa fa-search h-4 w-4 stroke-current job">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </span>
+          <input type="search" name="search-rates" placeholder="Search" class="input-xs rounded-sm input-info" />
+        </span>
+      </li>
+      
+      <li>
+        <span class="inline-flex items-center gap-2" onclick="new_order_modal.showModal()">
+          <svg xmlns=" http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
+          </svg>
+          Create Order
+        </span>
+      </li>
+      <li>
+        <span class="inline-flex items-center gap-2">
+          <span class="fa fa-print job"></span>
+          Print Order
+        </span>
+      </li>
+    </ul>
+  </div>
+  
+  {% if project.state.active or project.state.complete or project.state.pause or project.state.terminate%}
+  
+  <div id="project_orders" class="overflow-y-auto sm:overflow-x-auto h-96 p-5">
+    {% include '/components/project/purchase_order/OrderTable.html' %}
+  
+  </div>
+
+  
+<dialog id="new_order_modal" class="modal">
+    <div class="modal-box w-11/12 max-w-5xl">
+      <h3 class="text-lg font-bold">New Materials Purchase Order</h3>
+      <p class="py-4">Click the button below to close</p>
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button, it will close the modal -->
+          <button class="btn">Close</button>
+        </form>
+      </div>
+    </div>
+</dialog>
+{% else %}
+  {%include '/components/project/purchase_order/OrderIntroduction.html' %}
+{% endif %}

@@ -1,0 +1,48 @@
+
+<div class="uk-grid">
+    <div id="account-banking" class="uk-width-1-4@m">
+        <p class="text-lg text-blue-500 font-semibold"
+        hx-get="/Project/{{project._id}}/stats/i" 
+        hx-target="#account-statistics" 
+        hx-trigger="load delay:1s"
+        >Banking </p>
+
+    <div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
+    <ul  id="project-account-bank">  
+
+        {% if project.account.bank.name %} 
+            {% for key, val in project.account.bank.items()%}                          
+            <li>
+                <strong>{{ key | capitalize }}</strong> {{ val }}
+            </li>
+            {% endfor %}
+        {% else %}
+        <li>Please Provide Banking Information</li>
+        {% endif %}
+        
+        <li>
+                <strong>Budget</strong> {{ project.account.budget | to_dollars }}
+        </li>
+        <li>
+            <div id="project_running_cost">
+                <p class="text-sm font-semibold">Project Running Costs</p>  
+                   
+                <ul>
+                    {% for key,val in project.labour_cost.items() %}
+                    <li>
+                        <strong>{{ key | capitalize }}</strong> {{ val | to_dollars }}
+                    </li>
+                    {% endfor %}
+                </ul> 
+            </div>
+        </li>
+    </ul>
+   </div>
+   
+   </div>
+
+   <div id="account-statistics">
+    
+
+   </div>
+</div>

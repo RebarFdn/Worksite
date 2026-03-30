@@ -1,0 +1,392 @@
+ {% from 'components/macros.html' import taskState %}
+<p class="text-sm">Editing {{task.title}}</p>
+<div class="text-sm"><span class="badge badge-sm badge-info mr-5">Task Id</span> {{task._id}} </div>
+<form class="form">
+    <div uk-grid>
+    
+        <div class="uk-width-1-3@m">
+            <p class="text-sm">Task Properties</p>
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Title</legend>
+                    <input id="title" type="text" placeholder="Title" name="title" value="{{task.title}}"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Description</legend>
+                    <input id="description" type="text" placeholder="Description" name="description" value="{{task.description}}"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Task Category</legend>
+                    <input id="category" type="text" placeholder="Category" name="category" value="{{task.category}}"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% if task.phase %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Job Phase</legend>
+                    <input id="phase" type="text" placeholder="Job Phase" name="phase" value="{{task.phase}}"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% else %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Job Phase</legend>
+                    <input id="phase" type="text" placeholder="Job Phase" name="phase" 
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% endif %}
+            <div class="my-2">
+                <fieldset class="fieldset">
+                    <div class="flex flex-row">
+                        <button 
+                            class="btn btn-primary btn-sm" 
+                            type="submit" 
+                            value="Update Task"
+                            hx-post="/project/{{project._id}}/edittask/{{job.id}}_{{task.id}}_property" hx-target="#edit-task"
+                         >Update Task Properties</button>
+
+                        
+            
+                    </div>
+                </fieldset>
+            </div>
+            
+
+        </div>
+        <div class="uk-width-1-3@m">
+            <p class="text-sm">Assignment</p>
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Assigned</legend>
+                    <input id="assigned" type="text" placeholder="assigned" name="assigned" value="{{task.assigned}}"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% if task.assignedto %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Assigned to</legend>
+                   
+                    <div class="uk-inline">
+                        <button class="btn btn-xs btn-ghost" type="button">
+                            <span>Workers{% if task.assignedto %}<span class="badge badge-xs mx-2">{{task.assignedto | length }}+</span>{% endif %}</span>
+                        </button>
+                        <div class="uk-width-large" uk-dropdown="mode: click">
+                            <ul class="list bg-base-50 rounded-box shadow-sm">
+                                <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Workers assigned to this Task</li>
+                                {% for worker in job.crew.members if worker.id.split('-')[1] in task.assignedto %}
+                                <li class="list-row">
+                                    <div><img class="size-10 rounded-box" src="{{worker.value.imgurl}}" alt="{{worker.value.oc}}" /></div>
+                                    <div>
+                                        <div>{{worker.value.name}}</div>
+                                        <div class="text-xs uppercase font-semibold opacity-60">{{ worker.value.oc }} | {{ worker.value.occupation }}</div>
+                                    </div>
+                                    
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>              
+                    </div>
+                    
+                    
+                        
+                </label>
+                <select class="select select-primary" name="assignedto">
+                    <option disabled selected>Assign more workers </option>
+                    {% for worker in job.crew.members %}
+                    <option value="{{worker.id}}">{{ worker.value.name }} {{worker.id}}</option>
+                    {% endfor %}
+                
+                </select>
+            </fieldset>
+            {% else %}
+                {% if job.crew.members %}
+                    <fieldset class="fieldset">
+                        <label class="label">
+                            <legend class="fieldset-legend">Assign to</legend>                            
+                            <select class="select select-ghost" name="assignedto">
+                                <option disabled selected>Crew</option>
+                                {% for worker in job.crew.members %}
+                                <option value="{{worker.id}}">{{ worker.value.name }}</option>
+                                {% endfor %}
+                    
+                            </select>
+                        </label>
+                    </fieldset>
+                    {% else %}
+                    <p class="text-sm text-red-400 font-semibold">You need to add workers to the Job's Crew in order to make a selection.</p>
+                    {% endif %}
+            {% endif %}
+            <hr>
+            {% if task.progress %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Progress</legend>
+                       
+                        <input id="progress" type="range" min="0" max="100"  value="{{task.progress}}" name="progress" class="range range-accent range-xs" oninput="updateTaskField('progress')" />
+                        <span id="progress-output" class="uk-badge font-semibold">{{ task.progress }}% </span>
+                </label>
+            </fieldset>
+            {% else %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Progress</legend>
+            
+                    <input id="progress" type="range" min="0" max="100" value="1" name="progress" class="range range-accent range-xs" oninput="updateTaskField('progress')" />
+                    <span id="progress-output" class="uk-badge font-semibold"></span>
+                </label>
+            </fieldset>
+            {% endif %}
+
+        </div>
+        <div class="uk-width-1-3@m">
+            <p class="text-sm">Revenue</p>
+            {% if task.paid.paid %}
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn m-1">Payments</div>
+                <table tabindex="-1" class="dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                    <thead>
+                        <th>Date</th>
+                        <th>Amt</th>
+                        <th>Deducted</th>
+                        <th>Total</th>
+                        <th>Percent</th>
+                    </thead>
+                    <tbody>
+                        {% for item in task.paid.payments %}
+                        <tr>
+                            <td>{{ item.date | convert_timestamp }}</td>
+                            <td>{{ item.amount | to_dollars }}</td>
+                            <td>{{ item.deduction | to_dollars }} </td>
+                            <td>{{ item.total | to_dollars }}</td>
+                            <td>{{ item.percent }}%</td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% else %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Pay Date</legend>
+                    <input id="paydate" type="date" name="payment_date"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Pay Amount</legend>
+                    <input id="payamount" type="number" step="0.01" placeholder="Pay Amount" name="payamount" 
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Deduction</legend>
+                    <input id="deduction" type="number" step="0.01" placeholder="Pay Deduction" name="deduction"
+                         class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% endif %}
+            <div class="my-2">
+                <fieldset class="fieldset">
+                    <div class="flex flex-row">
+                        <button class="btn btn-primary btn-sm" type="submit" value="Update Task"
+                            hx-post="/project/{{project._id}}/edittask/{{job.id}}_{{task.id}}_revenue"
+                            hx-target="#edit-task">Update Task Revenue</button>
+            
+            
+            
+                    </div>
+                </fieldset>
+            </div>
+            <hr>
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">State</legend>
+                    <div id="task-state">{% include '/components/project/job/task/TaskState.html' %}</div>
+                </label>
+            </fieldset>
+            
+        </div>
+    </div>
+    <hr>
+    <div uk-grid>
+    
+        <div class="uk-width-1-3@m">
+            <p class="text-sm">Metric Properties</p>
+            {% for mkey, mval in task.metric.items() %}
+            {% if mkey == 'unit' %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">{{mkey}}</legend>
+                    <input id="{{mkey}}" type="text" placeholder="{{mkey|capitalize}}" name="m{{mkey}}" value="{{mval}}"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% elif mkey == 'price' %}
+            <fieldset class="fieldset">
+               
+                <label class="input">
+                    <legend class="fieldset-legend">{{mkey}}</legend>
+                    <span class="fa fa-dollar fa-xs"></span>
+                    
+                    <input id="{{mkey}}" type="text" placeholder="{{mkey|capitalize}}" name="m{{mkey}}" value="{{mval}}"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% else %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">{{mkey}}</legend>
+                    <input id="{{mkey}}" type="number" step="0.01" placeholder="{{mkey|capitalize}}" name="m{{mkey}}"
+                        value="{{mval}}" class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% endif %}
+            {% endfor %}
+            {% if task.get('output',{}).get('metric') %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Output</legend>
+                    <input id="moutput" type="number" step="0.01" placeholder="metric output" name="moutput"
+                        value="{{task.output.metric}}" class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% else %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Output</legend>
+                    <input id="moutput" type="number" step="0.01" placeholder="metric output" name="moutput"
+                         class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% endif %}
+            <div class="my-2">
+                <fieldset class="fieldset">
+                    <div class="flex flex-row">
+                        <button class="btn btn-primary btn-sm" type="submit" 
+                            hx-post="/project/{{project._id}}/edittask/{{job.id}}_{{task.id}}_metric" hx-target="#edit-task">Update
+                            Metric Properties</button>
+            
+            
+            
+                    </div>
+                </fieldset>
+            </div>
+            {% if task.timestamp %}
+            <p class="text-xs font-light text-gray-400">
+                Data source SiteLite&reg; Rate Sheet .Created
+                {{task.timestamp|convert_timestamp}}
+            </p>
+            {% endif %}
+        </div>
+        <div class="uk-width-1-3@m">
+            <p class="text-sm">Imperial Properties</p>
+            {% for ikey, ival in task.imperial.items() %}
+            {% if ikey == 'unit' %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">{{ikey}}</legend>
+                    <input id="{{ikey}}" type="text" placeholder="{{ikey|capitalize}}" name="{{ikey}}" value="{{ival}}"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% elif ikey == 'price' %}
+            <fieldset class="fieldset">
+            
+                <label class="input">
+                    <legend class="fieldset-legend">{{ikey}}</legend>
+                    <span class="fa fa-dollar fa-xs"></span>
+            
+                    <input id="{{ikey}}" type="text" placeholder="{{ikey|capitalize}}" name="{{ikey}}" value="{{ival}}"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% else %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">{{ikey}}</legend>
+                    <input id="{{ikey}}" type="number" step="0.01" placeholder="{{ikey|capitalize}}" name="{{ikey}}"
+                        value="{{ival}}" class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% endif %}
+            {% endfor %}
+            {% if task.get('output',{}).get('imperial') %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Output</legend>
+                    <input id="ioutput" type="number" step="0.01" placeholder="imperial output" name="ioutput"
+                        value="{{task.output.imperial}}" class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% else %}
+            <fieldset class="fieldset">
+                <label class="label">
+                    <legend class="fieldset-legend">Output</legend>
+                    <input id="ioutput" type="number" step="0.01" placeholder="imperial output" name="ioutput"
+                        class="input input-xs input-primary" />
+                </label>
+            </fieldset>
+            {% endif %}
+            <div class="my-2">
+                <fieldset class="fieldset">
+                    <div class="flex flex-row">
+                        <button class="btn btn-primary btn-sm" type="submit"
+                            hx-post="/project/{{project._id}}/edittask/{{job.id}}_{{task.id}}_imperial" hx-target="#edit-task">Update
+                            Imperial Properties</button>
+            
+            
+            
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="uk-width-1-3@m">
+            <p class="text-sm">Task Event Timeline</p>
+            <div class="flex flex-col">
+                
+                <div id="task-event">{% include '/components/project/job/task/TaskEvent.html' %}</div>
+            </div>
+            
+        </div>
+    </div>
+</form>
+    
+
+    <!--ul class="text-xs text-gray-700">
+        {% for key, val in task.items() %}
+        <li class="my-2"><span class="badge badge-sm badge-info mr-5">{{key}}</span> {{val}} </li>
+        {% endfor %}
+    </!--ul-->
+   
+{% block extra_scripts %}
+<script>
+    async function updateTaskField(field) {
+        const attr = document.querySelector(`#${field}`);
+        const output = document.querySelector(`#${field}-output`);
+            
+
+        attr.addEventListener("input", () => {
+            output.innerHTML = `${attr.value}%`
+                
+        });
+    };
+
+        function alerted() {
+            alert("Alerted")
+        }
+</script>
+{% endblock %}

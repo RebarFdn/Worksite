@@ -1,0 +1,102 @@
+<div class="uk-child-width-expand@s uk-text-center" uk-grid>
+    <div>
+        <div class="uk-card uk-card-default uk-card-body">
+            <form hx-post="/project/{{project._id}}/invoice/p" hx-target="#account-invoices" hx-trigger="submit"
+                class="uk-grid-small" uk-grid>
+                <div class="uk-width-1-2@s">
+                    
+                    <fieldset class="fieldset">
+                        <label class="label">
+                            <legend class="fieldset-legend">Date</legend>
+                            <input id="date" type="date" placeholder="Date of Purchase" name="date" 
+                                class="input input-xs input-primary" />
+                        </label>
+                    </fieldset>
+                </div>
+                <div class="uk-width-1-2@s">
+                   
+                    <fieldset class="fieldset">
+                        <label class="label">
+                            <legend class="fieldset-legend">Invoice Number</legend>
+                            <input id="invoiceno" type="text" placeholder="Invoice no." name="invoiceno" class="input input-xs input-primary" />
+                        </label>
+                    </fieldset>
+                </div>
+
+                <div class="uk-width-1-2@s">
+                   
+                    <fieldset class="fieldset">
+                        <label class="label">
+                            <legend class="fieldset-legend">Supplier</legend>
+                            <input id="supplier-name" type="text" placeholder="Supplier" name="supplier_name"
+                                class="input input-xs input-primary" />
+                        </label>
+                    </fieldset>
+                </div>
+                <div class="uk-width-1-2@s">
+                    
+                    <fieldset class="fieldset">
+                        <label class="label">
+                        <legend class="fieldset-legend">Select Supplier</legend>
+                        <select class="select" id="supplier-name" name="supplier_name">
+                            <option disabled selected>Suppliers</option>
+                            <option>Supplier</option>
+                            {% for supplier in suppliers %}
+                            <option>{{supplier}}</option>
+                            {% endfor %}
+                        </select>
+                        </label>
+                        <span class="label">Optional</span>           
+                    </fieldset>
+                </div>
+
+                <div class="uk-width-1-2@s">
+                    
+                    <fieldset class="fieldset">
+                        <label class="label">
+                            <legend class="fieldset-legend">Tax</legend>
+                            <input id="tax" type="number" step="0.01" placeholder="Gct" name="tax"
+                                class="input input-xs input-primary" />
+                        </label>
+                    </fieldset>
+                </div>
+                <div class="uk-width-1-2@s">
+                    
+                    <fieldset class="fieldset">
+                        <label class="label">
+                            <legend class="fieldset-legend">Total</legend>
+                            <input id="total" type="number" step="0.01" placeholder="Total." name="total" class="input input-xs input-primary" />
+                        </label>
+                    </fieldset>
+                </div>
+                <div class="uk-width-1-2@s">
+                    <div class="uk-margin">
+                        <a href="/Project/{{project._id}}/reset_invoice/c"
+                            class="btn btn-default uk-modal-close" type="button">Cancel</a>
+                    </div>
+                </div>
+                <div class="uk-width-1-2@s">
+                    <div class="uk-margin">
+                        <button class="btn btn-primary rounded-md uk-modal-close" type="submit">Save
+                            Invoice</button>
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div>
+        <!--button 
+        class="btn btn-primary btn-sm" 
+        hx-get="/Project/invoice_items/i/i" 
+        hx-target="#invoice-items" 
+        hx-trigger="click"
+        >Items</!--button-->
+        <div id="invoice-items">
+            {% include 'components/project/account/InvoiceItems.html' %}
+
+        </div>
+    </div>
+
+</div>

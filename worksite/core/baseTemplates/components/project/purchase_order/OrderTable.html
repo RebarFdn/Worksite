@@ -1,0 +1,41 @@
+<table class="table table-zebra table-xs md:table-lg">
+    <!-- head -->
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Date</th>
+            <th>Title</th>
+            <th>State</th>
+            <th>Manage</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- row 1 -->
+        {% for row in project.account.records.purchase_orders %}
+        <tr>
+            <td>
+                <span class="text-sm">{{row._id}}</span>
+            </td>
+            <td>
+                <span class="text-sm">{{row.date}}</span>
+            </td>
+            <td>
+                <div class="font-bold text-sm cursor-pointer">{{ row.title }}</div>
+
+            </td>
+            <td>
+                {% if row.resolved %}
+                <div class="badge badge-outline badge-success">Resolved</div>
+                {% else %}
+                <div class="badge badge-outline badge-error">Unresolved</div>
+                {% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+        <!-- row 1 -->
+
+
+    </tbody>
+
+</table>

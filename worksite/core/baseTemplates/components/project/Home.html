@@ -1,0 +1,60 @@
+{% from 'components/macros.html' import activeState %}
+<div id="project-home" class="grid grid-flow-row grid-row-2 md:grid-cols-4 gap-4">
+    <!--left-display-->
+    <div id="project-left-display" class="md:col-span-2 bg-blue-100 border-blue-200 rounded-sm ml-2">
+        <p class="text-lg font-semibold p-2">Project Basic Information</p> 
+       
+        <div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
+            <ul>
+                             
+                <li id="project-name"><strong>Name.</strong></li>  
+                <li><div id="project-name">{% include 'components/project/Name.html' %}</div></li>                         
+                <li id="project-id"><strong>project Id.</strong> {{ project._id }}</li>
+                <li class="text-md font-semibold py-2">Address</li>
+                <li><div id="project-address">{% include 'components/project/Address.html' %}</div></li>
+                <li class="text-md font-semibold py-2">Owner</li>
+                <li><div id="project-owner">{% include 'components/project/owner/Owner.html' %}</div></li> 
+                <li class="text-lg font-semibold py-2">Project Status</li>
+                <li>{{activeState(project.state) }}</li>
+            </ul>
+
+        </div>
+        
+    </div>
+    <!--right-display-->
+    <div id="project-right-display" class="md:col-span-2 bg-gray-100 border-gray-300 rounded-sm ml-2">
+        <span class="text-lg font-semibold p-2">Project Properties</span> 
+              
+        <div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto p-1">
+            <ul>                             
+               <li id="project-category"><strong>Category </strong> {{ project.category }}</li>
+                <li id="project-standard"><strong>Standard </strong> {{ project.standard }}</li>
+                                    
+                <li id="project-state"><strong>State </strong> {{activeState(project.state) }}</li>
+                <li id="project-progress"><strong>Progress </strong> 
+
+                            <ul>
+                                {% for key, val in project.progress.items() if val if key not in ['overall', 'unit'] %}  
+                                <li id="project-{{key}}" class="my-2"><strong>{{key}} </strong><span class="uk-badge ml-2"> {{val }}</span>{{project.progress.unit}}</li>                           
+                                {% endfor %}
+
+                            </ul>
+                                    
+                </li>
+                <li><span class="text-lg font-semibold py-2">Administration</span> </li> 
+                <li>
+                    <ul>
+                        <li ><strong>Lead </strong> </li>
+                        <li><div id="project-leader">{% include 'components/project/admin/Leader.html' %}</div></li>
+                        <li><strong>Staff </strong></li>
+                        <li><div id="project-staff">{% include 'components/project/admin/Staff.html' %}</div></li>
+                            
+                    </ul>
+                </li>           
+            </ul>
+        </div>
+    </div>
+</div>
+ <div id="project-location" class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
+    {% include 'components/project/Location.html' %}
+ </div>

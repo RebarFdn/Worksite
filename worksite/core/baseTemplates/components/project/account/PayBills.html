@@ -1,0 +1,218 @@
+
+
+ 
+<div class="breadcrumbs text-sm">
+    <ul class="animation: uk-animation-fade">
+        <li>
+            <a hx-get="/project/{{project._id}}/paybills/i" hx-target="#paybill_index">
+                <span class="fa fa-dollar"></span>
+                Paybills <span class="badge badge-primary badge-xs">{{ project.account.records.paybills | length }}</span>
+            </a>
+        </li>
+      
+        <li>
+            <span class="inline-flex items-center gap-2">
+                <span class="fa fa-search h-4 w-4 stroke-current job">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                </span>
+                <input type="search" name="search-project-jobs" placeholder="Search Bills"
+                    class="input-xs rounded-sm input-info" />
+            </span>
+        </li>
+        <li>
+            <a href="#paybill-modal" uk-toggle><span>Create Paybill</span></a>
+        </li>
+        <li>
+            <a hx-get="/project/{{project._id}}/paystatements/i" hx-target="#paybill_index">
+                <span class="fa fa-handshake"></span>
+                Pay Statements <span class="badge badge-primary badge-xs">{{ project.account.records.salary_statements | length }}</span>
+            </a>
+        </li>
+        
+    </ul>
+</div>
+ {% if project.account.records.paybills  %}
+ <div id="paybill-result"></div>
+<div id="paybill_index" class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-11/12 p-1">
+
+   {% include '/components/project/account/PaybillsTable.html' %}
+</div>
+
+{% else %}
+<p class="text-lg">You have'nt created any Paybill as yet! </p><br>
+<a href="#paybill-modal" uk-toggle>Create Your First Paybill</a>
+{% endif %}
+
+<!-- This is the Deposit modal -->
+<div id="paybill-modal" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body bg-blue-500 rounded-lg">
+        <p class="text-lg text-center font-semibold">Pay paybill</p>
+        <form class="uk-form-stacked"
+            hx-post="/Project/{{project._id}}/paybill/i"
+            hx-target="#account-paybills""
+            hx-trigger="submit" 
+        >
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-text">Date</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" id="form-stacked-text" type="date" placeholder="Bill Date" name="date">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-text">Period Start</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" id="form-stacked-text" type="date" placeholder="Bill Date" name="date_starting">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-text">Period Ending</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" id="form-stacked-text" type="date" placeholder="Bill Date" name="date_ending">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-text">Reference</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" id="form-stacked-text" type="text" placeholder="Bill-01" name="ref" value="">
+                </div>
+            </div>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-text">Title</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" id="form-stacked-text" type="text" placeholder="Bill Title" name="mainTitle">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-text">SubTitle</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" id="form-stacked-text" type="text" placeholder="Bill SubTitle" name="subTitle"
+                    >
+                </div>
+            </div>
+            <div class="uk-child-width-expand@s" uk-grid >
+
+                 <div class="uk-width-1-3@s">
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-stacked-text">
+                        Contractor's Fee  
+                        <output class="contractor-output" for="contractor"></output>%
+                    </label>
+                    <div class="uk-form-controls">
+                        <input
+                            type="range"
+                            name="contractor"
+                            id="contractor"
+                            min="0"
+                            max="50"
+                            step="1"
+                            value="0" />
+                        
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-stacked-text">
+                        Insurance Fee  
+                        <output class="insurance-output" for="insurance"></output>%
+                    </label>
+                    <div class="uk-form-controls">
+                        <input
+                            type="range"
+                            name="insurance"
+                            id="insurance"
+                            min="0"
+                            max="20"
+                            step="1"
+                            value="0" />
+                        
+                    </div>
+                </div>
+                </div>
+                <!-------------------->
+                 <div class="uk-width-1-3@s">              
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-stacked-text">
+                        Miscellaneous Fee  
+                        <output class="misc-output" for="misc"></output>%
+                    </label>
+                    <div class="uk-form-controls">
+                        <input
+                            type="range"
+                            name="misc"
+                            id="misc"
+                            min="0"
+                            max="20"
+                            step="1"
+                            value="0" />
+                        
+                    </div>
+                </div>
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-stacked-text">
+                        Overhead Fee  
+                        <output class="overhead-output" for="overhead"></output>%
+                    </label>
+                    <div class="uk-form-controls">
+                        <input
+                            type="range"
+                            name="overhead"
+                            id="overhead"
+                            min="0"
+                            max="20"
+                            step="1"
+                            value="0" />
+                        
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+            </div>
+             <p class="uk-text-right">
+                <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                <button class="uk-button uk-button-primary rounded-md uk-modal-close" type="submit" >Create Paybill</button>
+            </p>
+            
+        
+        </form>
+        
+       
+    </div>
+</div>
+
+<div id="editpaybill-modal" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body rounded-lg">
+        <p class="text-lg text-center font-semibold">Pay paybill</p>
+     
+    </div>
+</div>
+
+
+
+{% block extra_scripts %}
+<script type="module">
+    function updateField(field){
+        const attr = document.querySelector(`#${field}`);
+        const output = document.querySelector(`.${field}-output`);
+        output.textContent = attr.value;
+
+        attr.addEventListener("input", () => {
+        output.textContent = attr.value;
+        });
+    };
+    updateField("contractor");
+    updateField("insurance");
+    updateField("misc");
+    updateField("overhead");
+  
+</script>
+
+{% endblock %} 
+
+

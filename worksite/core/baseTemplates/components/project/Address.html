@@ -1,0 +1,26 @@
+{% if project.address %}
+<form id="project-address-form" hx-post="/project/{{ project._id }}/address/i" hx-target="#project-address"
+    class="space-y-4">
+    <ul>
+
+        {% for key,val in project.address.items() %}
+        <li>
+            <strong>{{key}}.</strong>
+            {% if val %}
+            {{ val }}
+            {% else %}
+
+            <div class="flex flex-row">
+                <input type="text" placeholder="{{key}}" name="{{key}}" class="input input-accent input-xs" />
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</form>
+{% else %}
+<p class="text-xl text-center text-gray-500 font-bold">
+    There is no Address information for this Project!
+</p>
+{% endif %}

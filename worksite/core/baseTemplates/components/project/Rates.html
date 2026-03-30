@@ -1,0 +1,119 @@
+
+<div class="breadcrumbs text-sm">
+  <ul>
+    <li>
+      <a hx-get="/project/{{project._id}}/rates/i" hx-target="#project_rates">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+        </svg>
+        Project Rates <span class="badge badge-primary badge-xs">{{ project.rates | length }}</span>
+      </a>
+    </li>
+    <li>
+      <span class="inline-flex items-center gap-2">
+        <span  fill="none"  class="fa fa-filter h-4 w-4 stroke-current job">         
+        </span>
+        <button class="btn btn-ghost btn-xs" popovertarget="popover-4" style="anchor-name:--anchor-4">
+          Filter by Category
+        </button>
+        <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-sm" popover id="popover-4"
+          style="position-anchor:--anchor-4">
+          <li><a>Rate Categories</a></li>
+          {% for item in project.rates %}
+          <li><a hx-get="/project/{{project._id}}/rates/{{ item.category  }}" hx-target="#project_rates"
+              hx-trigger="click">
+              <span class="text-xs bg-base-200 flex flex-row">{{ item.category }} <span
+                  class="badge badge-xs badge-ghost mx-2">2</span></span>
+            </a></li>
+          {% endfor %}
+        </ul>
+      </span>
+    </li>
+    <li>
+      <span class="inline-flex items-center gap-2">
+        <span class="fa fa-search h-4 w-4 stroke-current job">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+        </span>
+        <input type="search" name="search-rates" placeholder="Search" class="input-xs rounded-sm input-info" />
+      </span>
+    </li>
+    <li>
+      <span class="inline-flex items-center gap-2" onclick="add_rate_modal.showModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+          </path>
+        </svg>
+        Add Industry Rate
+      </span>
+    </li>
+    <li>
+      <span class="inline-flex items-center gap-2" onclick="create_projectrate_modal.showModal()">
+            <span fill="none" class="fa fa-file-text h-4 w-4 stroke-current job">
+        </span>
+        Create Project Rate
+      </span>
+    </li>
+    <li>
+      <span class="inline-flex items-center gap-2">
+        <span class="fa fa-print job"></span>
+        Print Rates
+      </span>
+    </li>
+  </ul>
+</div>
+
+{% if project.state.active or project.state.complete or project.state.pause or project.state.terminate %}
+  <div id="project_rates" class="overflow-y-auto sm:overflow-x-auto h-96 p-5">
+   
+   {% include '/components/project/ProjectRatesTable.html' %}
+   
+  </div>
+  
+<dialog id="add_rate_modal" class="modal  modal-top sm:modal-middle">
+  
+  <div class="modal-box  w-11/12 max-w-5xl h-vh">
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- if there is a button, it will close the modal -->
+        <button class="btn btn-xs btn-info">Close Portal</button>
+      </form>
+      </div>
+    
+    {% include '/components/project/rate/IndustryRates.html' %}
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- if there is a button, it will close the modal -->
+        <button class="btn">Close Portal</button>
+      </form>
+    </div>
+  </div>
+  
+</dialog>
+
+<dialog id="create_projectrate_modal" class="modal">
+  
+    <div class="modal-box w-11/12 max-w-5xl">
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button, it will close the modal -->
+          <button class="btn">Close Portal</button>
+        </form>
+      </div>
+     
+      {% include '/components/project/rate/ProjectRateForm.html' %}
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button, it will close the modal -->
+          <button class="btn">Close Portal</button>
+        </form>
+      </div>
+    </div>
+
+</dialog>
+
+{% else %}
+{% include '/components/project/rate/RateIntroduction.html' %}
+{% endif %}

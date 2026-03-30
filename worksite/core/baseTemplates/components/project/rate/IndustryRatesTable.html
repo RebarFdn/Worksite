@@ -1,0 +1,38 @@
+<table class="table table-xs">
+    <thead>
+        <tr>
+
+            <th>Title</th>
+            <th>Description</th>
+            <th>
+                <div class="flex flex-col">
+                    <span>Category</span>
+                    <span>{{filter }} <span class="badge badge-xs badge-accent">{{ project.industry_rates|length }}</span></span>
+                </div>
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for rate in project.industry_rates %}
+        <tr>
+
+            <td class="cursor-pointer" hx-get="/Project/{{project._id}}/rates/{{ rate._id }}" hx-target="#rates-console"
+                hx-trigger="click">{{
+                rate.get('title') }} </td>
+            <td>{{ rate.get('description') }}
+            </td>
+            <td>{{ rate.get('category') }}
+            </td>
+
+            <td>
+                <button" class="btn btn-sm" hx-get="/addProjectRate/{{project._id}}/{{rate._id}}"
+                    hx-target="#project_rates">Add</button>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>

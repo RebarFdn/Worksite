@@ -1,0 +1,39 @@
+<div class="overflow-y-auto h-96 p-5 m-2">
+    {% if invoices %}
+     {% include 'components/project/account/InvoiceItemForm.html' %}
+     
+    <ul>
+         {% for item in invoices %}
+            <li><strong>{{ item.iid }}</strong> < ------ > {{ item.quantity }} {{ item.unit }} {{ item.description }} @ {{ item.price }} per {{item.unit }} </li>
+               
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <span class="text-center text-gray-500 text-bold">Add Item </span>
+     {% include 'components/project/account/InvoiceItemForm.html' %}
+   
+               
+    {% endif %}
+</div>
+
+
+{% block extra_scripts %}
+
+<script type="module">
+    function updateInputField(field){
+        const attr = document.querySelector(`#${field}`);
+        const output = document.querySelector(`#${field}-output`);
+        output.value = attr.value;
+
+        attr.addEventListener("input", () => {
+        output.value = attr.value;
+        });
+    };
+   updateInputField("invoiceno")
+  
+   
+  
+</script>
+{% endblock %}

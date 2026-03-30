@@ -8,11 +8,11 @@ from fastapi.middleware.cors import CORSMiddleware # pyright: ignore[reportMissi
 from config import (STATIC_PATH, TEMPLATES, FAVICON_FILE, CERT_PATH, HOST, PORT, app_paths, settings)
 from core.utilities import ( check_paths, )
 # Importing Applications
-from apps.SiteUser.app.application import app as user_app
+from apps.SiteUser.application import app as user_app
 from apps.SiteProject.application import app as project_app
-from apps.SiteRate.app.application import app as rate_app
-from apps.SiteSupplier.app.application import app as supplier_app
-from apps.SiteWorker.app.application import app as worker_app
+from apps.SiteRate.application import app as rate_app
+from apps.SiteSupplier.application import app as supplier_app
+from apps.SiteWorker.application import app as worker_app
 
 
 def startup():

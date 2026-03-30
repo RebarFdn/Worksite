@@ -33,6 +33,8 @@ _databases:dict = { # Project Databases
 # connection to site-projects database 
 db_connection:Coroutine = local_db(db_name=_databases.get('local', '')) 
 
+suppliers: list = [ ] #item.get('name') for item in await supplier_name_index()]
+
 # Project CRUD operations 
 def crunch_data(id:str,flag:str, data:Any=None):
     return {
@@ -98,7 +100,7 @@ async def read_project(id:str='', conn:Coroutine=db_connection):
         #project.load_jobs()
         #project.load_rates()
         #save_project(data=project_data)
-        return project
+        return project.project
     except Exception as ex:
         return {'error': str(ex) } #HTTPStatus(404).description}
 

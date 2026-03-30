@@ -1,0 +1,63 @@
+{% from 'components/macros.html' import ratings %}
+<div id="job-tasks-queue" class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
+    <p class="text-xs">Add Crew members to Job {{ job.id }}</p>
+    <table class="table table-sm text-gray-800">
+        <thead>
+            <tr>
+                <th>
+                    <label>
+                        <input type="checkbox" class="checkbox" />
+                    </label>
+                </th>
+                <th>Name</th>
+                <th>Occupation</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for worker in project.workers %}
+
+            <tr>
+                <th class="bg-gray-50">
+
+                    <button class="btn btn-xs btn-secondary"
+                        hx-post="/project/{{job.project_id}}/jobcrew/{{ job.id }}_{{ worker.id }}"
+                        hx-target="#job_crew" hx-trigger="click">
+                        Add
+                    </button>
+
+                </th>
+                <td>
+                    <div class="flex items-center gap-3">
+                        <div class="avatar">
+                            <div class="mask mask-squircle h-12 w-12">
+                                <img src="{{ worker.value.imgurl }}" alt="{{ worker.value.oc }}" />
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-bold">{{ worker.value.name }}</div>
+                            <div class="text-sm opacity-50">{{ worker.value.oc }}</div>
+                        </div>
+                        </div>
+                </td>
+                <td>{{ worker.value.occupation }}</td>
+                <td>
+                    <span class="badge badge-ghost badge-xs">{{ ratings(worker.value.rating|int) }}</span>
+                </td>
+               
+
+
+            </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

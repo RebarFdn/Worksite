@@ -1,0 +1,51 @@
+<div class="items-center">
+    <div class="card w-96 bg-base-100 shadow-sm">
+        <div class="card-body">
+            
+            
+            <span class="badge badge-xs badge-primary">Project Ready</span>
+            <div class="flex justify-between">
+                <p class="text-sm text-gray-500 font-semibold">Avtivate Project to start creating and managing materials inventories.
+                </p>
+
+            </div>
+            <ul class="mt-6 flex flex-col gap-2 text-xs">
+                <li><span class="fa fa-check size-4 me-2 mx-1 inventory"></span>
+                    <span>On demand materials inventory creation</span>
+                </li>
+                <li>
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+                
+                    </span>
+                    <span>Materials delivery timelines</span>
+                </li>
+                <li>
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+
+                    </span>
+                    <span>Track material usage and availability </span>
+                </li>
+                
+                
+                
+                <li >
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+
+                    </span>
+                    <span>Generate Statistical reports </span>
+                </li>
+                <li>
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+                
+                    </span>
+                    <span>Automatic updates on Purchase Invoice input</span>
+                </li>
+            </ul>
+            <div class="mt-6">
+                <button class="btn btn-secondary btn-block tooltip tooltip-info" data-tip="Activate this Project."
+                    hx-post="/project/{{ project._id }}/readystate/activate" hx-target="#main-display"
+                    hx-confirm="You are about to Start this Project's activities.">Activate Project</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+<table class="table table-xs">
+    <thead>
+        <tr>
+
+            <th>Title</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Metric</th>
+            <th>Imperial</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+
+        {% for rate in project.rates %}
+        <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
+
+            <td class="cursor-pointer"
+                hx-get="/Project/{{project._id}}/rates/{{ rate._id }}" hx-target="#rates-console" hx-trigger="click">{{
+                rate.get('title') }} </td>
+            <td>{{ rate.get('description') }}
+            </td>
+            <td>{{ rate.get('category') }}
+            </td>
+            <td>{{ rate.metric.price |
+                to_dollars }} /{{ rate.metric.unit }} </td>
+            <td>{{ rate.imperial.price |
+                to_dollars }} /{{ rate.imperial.unit }} </td>
+            <td>
+                <button class="btn btn-xs btn-secondary">Delete</button>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>

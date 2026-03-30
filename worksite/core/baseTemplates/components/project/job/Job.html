@@ -1,0 +1,80 @@
+
+<p class="text-sm text-center"> {{job.title}}</p>
+
+<div class="uk-grid">
+    <div class="uk-width-1-6@m overflow-y-auto h-96">
+        <div id="job_nav">
+            <ul class="uk-nav uk-nav-default uk-nav-divider bg-blue-50 uk-border-rounded uk-padding-small uk-margin" uk-switcher="connect: #project-job; animation: uk-animation-fade">
+                <li><a href="#"><span class="fa fa-home checked" ></span> Home</a></li>
+                <li><a href="#"><span class="fa fa-tasks task"></span> Tasks</a></li>
+                <li><a href="#"><span class="fa fa-dollar bill"></span> Bill</a></li>
+                <li><a href="#" 
+                    hx-get="/project/{{job.project_id}}/crew/{{job.id}}"
+                    hx-target="#job_crew"
+                    ><span class="fa fa-users crew"></span> Crew</a></li>
+                <li><a href="#"><span class="fa fa-clock event"></span> Event State</a></li>            
+                
+                <li></li>
+            </ul>
+        </div>
+        <div id="jobs_nav">
+            <ul class="uk-nav uk-nav-default uk-nav-divider bg-blue-50 uk-border-rounded uk-padding-small uk-margin animation: uk-animation-fade"
+               >
+                <li><a href="#"><span class="fa fa-home checked"></span> Jobs {{project.jobs | length }}</a>
+                </li>  
+                {% for item in project.jobs %}
+                <li>
+                    <span class="cursor-pointer text-xs py-2 " hx-get="/project/{{project._id}}/job/{{ item.id }}" hx-target="#jobs-index"
+                    hx-trigger="click">{{ item.title }}</span>
+                </li>
+                {% endfor %}
+        
+                <li></li>
+            </ul>
+        </div>
+    </div>
+    <div class="uk-width-expand@m">
+
+        <div id="project-job" class="uk-switcher">
+            <div id="job-home " uk-switcher-item="0"><div>{% include 'components/project/job/Home.html' %}</div></div>
+            <div id="job_tasks"><div>{% include 'components/project/job/task/Tasks.html' %}</div></div>
+            <div id="job-bill"><div>{% include 'components/project/job/bill/Bill.html' %}</div></div>
+            <div id="job_crew"><div>{% include 'components/project/job/crew/Crew.html' %}</div></div>
+            <div id="job-eventstate"><div>{% include 'components/project/job/state/EventState.html' %}</div></div>            
+            
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<div id="edit-task-modal" class="uk-modal-container" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <!--button 
+            type="button" 
+            hx-get="/project/{{job.project_id}}/tasks/{{job.id}}"
+            hx-target="#job-tasks" 
+            class="uk-modal-close-default task" 
+        
+            uk-close>
+        </!--button-->
+        <button type="button" hx-get="/project/{{job.project_id}}/tasks/{{job.id}}" hx-target="#job_tasks"
+            class="btn btn-sm uk-modal-close">Close Portal</button>
+
+        <div id="edit-task">
+
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button type="button" hx-get="/project/{{job.project_id}}/tasks/{{job.id}}" hx-target="#job_tasks"
+                class="btn btn-sm uk-modal-close">Close Portal</button>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+

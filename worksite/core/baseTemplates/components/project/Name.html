@@ -1,0 +1,21 @@
+
+<form id="project-name-form" hx-post="/project/{{ project._id }}/name/u"
+    hx-target="#project-name" class="space-y-4">
+    <ul>
+
+        <li>
+           
+            {% if project.name %}
+            <strong>{{ project.name }}</strong> 
+            {% else %}
+        
+
+            <div class="flex flex-row">
+                <input type="text" placeholder="Project Name" name="name" class="input input-accent input-xs" />
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+        
+    </ul>
+</form>

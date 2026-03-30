@@ -1,0 +1,91 @@
+
+{% if project.account.records.invoices %}
+
+ 
+    <div class="breadcrumbs text-sm">
+        <ul>
+            <li><a href="#invoice-modal" uk-toggle><span class="text-lg text-blue-500 font-semibold tooltip tooltip-info"
+                    data-tip="Record purchase invoice ">
+                    Purchase Invoices</span><span class="badge badge-primary badge-xs">{{ project.account.records.invoices | length
+                    }}</span></a>
+            </li>
+            
+            <li>
+                <span class="inline-flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                    </svg>
+                    <button class="btn btn-ghost btn-xs" popovertarget="popover-10" style="anchor-name:--anchor-10">
+                        Filter supplier
+                    </button>
+                    <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-sm" popover id="popover-10"
+                        style="position-anchor:--anchor-10">
+                        <li><a>Supplier</a></li>
+                        {% for supplier in supplier_filter %}
+                        <li>
+                            <a hx-get="/project/{{project._id}}/invoices/{{ supplier }}" hx-target="#account-invoices" hx-trigger="click">
+                                <span class="text-xs bg-base-200 flex flex-row">{{ supplier }} </span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </span>    
+             </li>
+            <li>
+                <span class="inline-flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                    </svg>
+                    <button class="btn btn-ghost btn-xs" popovertarget="popover-11" style="anchor-name:--anchor-11">
+                        Filter period
+                    </button>
+                    <ul class="dropdown menu w-96 rounded-box bg-base-100 shadow-sm" popover id="popover-11"
+                        style="position-anchor:--anchor-11">
+                        <li><a>Dates</a></li>
+                        
+                        <li>
+                            <form hx-post="/project/{{project._id}}/invoices/dates" hx-target="#account-invoices">
+                            <div class="flex flex-col">
+                                <span class="text-xs">start</span>
+                            <input class="input input-xs input-primary" type="date" name="start_date" />
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-xs">end</span>
+                            <input class="input input-xs input-primary" type="date" name="end_date" />
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-xs">process</span>
+                            <button class="btn btn-xs btn-primary" type="submit">sort</button>
+                            </div>
+                            </form>
+                              
+                        </li>
+                        
+                    </ul>
+                </span>
+            </li>
+
+            <li><a hx-get="/project/{{project._id}}/printinvoices/{{invoice_filter}}" hx-target="#message"
+                hx-trigger="click"><span class="fa fa-print"></span>Print statement</a></li>
+        </ul>
+    </div>
+ <div id="invoice-result"></div>
+<div id="account-invoices" class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-vh p-1">
+{% include '/components/project/account/InvoiceTable.html' %}
+</div>
+
+{% else %}
+<p class="text-lg">There are no Recorded Invoices to  date! </p><br>
+<a href="#invoice-modal" uk-toggle>Record Purchase Invoice</a>
+{% endif %}
+
+<!-- This is the Invoice modal -->
+<div id="invoice-modal" class="uk-modal-container" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body rounded-lg">
+        <p class="text-lg text-center font-semibold">Purchase Invoice </p>
+        {% include '/components/project/account/InvoiceRecordForm.html' %}
+       
+    </div>
+</div>

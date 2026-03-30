@@ -1,0 +1,319 @@
+<p class="text-sm text-center text-grey-800">Processing {{worker.name}}'s Salary</p>
+<form action="">
+<div class="breadcrumbs text-sm">
+    <ul>
+        <li>
+            <a onclick="add_payitem_modal.showModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                </svg>
+                Add Item
+            </a>
+        </li>
+        <li>
+            <a onclick="add_paybill_item_modal.showModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                </svg>
+                Add Bill Item
+            </a>
+        </li>
+        <li>
+            <span class="inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                    </path>
+                </svg>
+                <button 
+                    class="btn btn-xs my-2" 
+                    type="submit" 
+                    hx-post="/project/{{project._id}}/salary/{{paybill.id}}-{{worker.id}}" 
+                    hx-target="#salary-statement"
+                    >Save Pay Statement</button>
+            </span>
+        </li>
+    </ul>
+    </div>
+
+<div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
+    <ul class="uk-list uk-list-divider uk-list-striped uk-list-collapse">
+        
+        <li>Date: <input id="date" class="input input-xs" type="date" name="date" value="{{ statement.date | convert_timestamp }}"><span class="mx-2">Payments: {{worker.account.payments | length }}</span>
+        </li>
+        <li>
+            <div class="flex flex-row">
+                <div class="flex flex-row">
+                <span class="mx-2">Employee:</span>
+                <input id="employee" class="input input-xs" type="text" name="employee"
+                    value="{{worker.name}}">
+                </div>
+                
+                <div class="flex flex-row">
+                <span class="mx-2">Id:</span>
+                    <input id="employee-id" class="input input-xs" type="text" name="employee_id" value="{{statement.employee_id}}">
+                </div>
+            </div>
+        </li>
+        <li> 
+            <div class="flex flex-row">
+                <span class="mx-2">Occupation:</span>
+                <input id="occupation" class="input input-xs" type="text" name="occupation" value="{{worker.occupation}}">
+            </div>
+        </li>
+        <li>Project Id: <input id="project" class="input input-xs" type="text" name="project" aria-label="Prj" value="{{ statement.project }}"></li>
+        <li>Bill Ref: <input id="bill-ref" class="input input-xs" type="text" 
+                name="bill_ref" value="{{statement.bill_ref}}" aria-label="Bill" onfocusout="loadPayStatement()">
+                
+            </li>
+        <li>
+            
+            <div class="overflow-x-auto">
+                <table id="tally-table" class="table table-xs">
+                    <thead>
+                        <tr>
+                        
+                            <th>
+                                <button class="btn btn-xs" onclick="updateAmount()">Amount</button>
+                            </th>
+                            <th>
+                                <button class="btn btn-xs" onclick="updateDeductions()">Deductions</button>
+                            </th>
+                            <th><button class="btn btn-xs">Total</button></th>
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input id="amount" class="input input-xs" type="text" name="bill_amount"
+                                value="{{statement.payment.amount | to_dollars}}" onfocusout="updateAmount()">
+                            </td>
+                            <td>
+                                <input id="deduction" class="input input-xs" type="text" name="bill_amount"
+                                    value="{{statement.payment.deductions | to_dollars}}" onfocusout="updateDeductions()">
+                            </td>
+                            <td>
+                                <input id="total" class="input input-xs" type="text" name="bill_amount"
+                                    value="{{statement.payment.total | to_dollars}}">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+           
+        </li>
+        <li>
+          <p class="text-xxs">{{statement}}</p>
+        </li>
+                    
+    </ul>
+</div>
+</form>
+<div id="payment-items" class="text-xs text-blue-300 my-2">
+        {% include '/components/project/account/employeePaymentTable.html' %}
+</div> 
+ 
+
+
+<dialog id="add_payitem_modal" class="modal">
+    <div class="modal-box">
+        <h5>Pay Item</h5>
+
+        <div class="overflow-x-auto">
+            <table id="item-table" class="table table-xs">
+                <thead>
+        
+                    <tr>
+        
+                                <th>
+                                    <button class="btn btn-xs" onclick="updateTitle()">Title</button>
+                                </th>
+                                <th>
+                                    <button class="btn btn-xs" onclick="updateDescription()">Description</button>
+                                </th>
+        
+        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                                <td>
+                                    <input id="title" class="input input-xs" type="text" name="title">
+                                </td>
+                                <td>
+                                    <input id="description" class="input input-xs" type="text" name="description">
+                                </td>
+        
+                    </tr>
+                    <tr>
+        
+        
+                                <th><button class="btn btn-xs" onclick="updateMetric()">Metric</button></th>
+                                <th><button class="btn btn-xs" onclick="updateImperial()">Imperial</button></th>
+        
+                    </tr>
+                            <tr>
+                                <td id="metric-data">
+                                    <div class="flex flex-col">
+                                        <span>Unit <input id="m-unit" class="input input-xs" type="text"
+                                                name="metric-unit"></span>
+                                        <span>Price <input id="m-price" class="input input-xs" type="number" step="0.01"
+                                                name="metric-price"></span>
+                                        <span>Quantity <input id="m-quantity" class="input input-xs" type="number" step="0.01"
+                                                name="metric-quantity" onfocusout="convertMetric()"></span>
+                                    </div>
+        
+                                </td>
+                                <td id="imperial-data">
+                                    <div class="flex flex-col">
+                                        <span>Unit <input id="i-unit" class="input input-xs" type="text"
+                                                name="imperial-unit"></span>
+                                        <span>Price <input id="i-price" class="input input-xs" type="number" step="0.01"
+                                                name="imperial-price"></span>
+                                        <span>Quantity <input id="i-quantity" class="input input-xs" type="number" step="0.01"
+                                                name="imperial-quantity" onfocusout="convertImperial()"></span>
+                                    </div>
+        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-xs" onclick="addBillItem()">Submit Data</button>
+                                </td>
+                                <td>
+                                    <div class="modal-action">
+                                        <form method="dialog">
+                                            <!-- if there is a button in form, it will close the modal -->
+                                            <button class="btn">Close</button>
+                                        </form>                  
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+            </table>
+        </div>
+        <p class="text-xs text-blue-600"><strong>Note:</strong> This Item will be automatically added to the associated Paybill.</p>
+    </div>
+</dialog>
+
+<dialog id="add_paybill_item_modal" class="modal">
+    <div class="modal-box w-11/12 max-w-5xl">
+        <h5>{{paybill.ref}} Items assigned to {{ worker.name }} {{paybill.id}}</h5>
+
+        <div class="overflow-y-auto h-96">
+           
+            <table id="billitem-table" class="table table-xs">
+                <thead>
+
+                    <tr>
+                        <th>
+                           Id
+                        </th>
+                        <th>
+                            Title
+                        </th>
+                       <th>Payout</th>
+                       <th>Metric</th>
+                       <th>Imperial</th>
+                        <th></th>
+
+
+                    </tr>
+                </thead>
+                </table>
+                <ul>              
+               
+                    {% for item in paybill.get('items', []) %}
+                    <li class="my-2">
+                        <form>
+                        <table>
+                   
+                    <tr>
+                        
+                        
+                        <td width="14%">
+                            
+                            <input type="text" class="input input-xs input-ghost" placeholder="Id" name="id" value="{{ item.id }}"
+                                >
+                        </td>
+                        <td width="20%">
+                           <input type="text" class="input input-xs input-ghost" placeholder="Title" name="title" value="{{ item.title }}" disabled>
+                        </td>
+                        <td width="8%">
+                            <label class="input input-xs input-accent">
+                            <input type="text"  placeholder="Progress" name="progress" value="{{ item.progress }}">%
+                            </label>
+                        </td>
+                        <td width="26%">
+                           
+                            <table width="100%" >
+                                <tr>
+                                    <td width="30%">
+                                    <label class="input input-xs input-accent w-24">
+                                        <input type="text" placeholder="Quantity" name="m_quantity" value="{{ item.metric.quantity }}">
+                                        {{ item.metric.unit }}
+                                    </label> 
+                                    </td>
+                                    <td >
+                                    <label class="input input-xs input-accent w-24">
+                                        $
+                                        <input type="text" placeholder="Quantity" name="m_price" value="{{ item.metric.price }}">
+                                        
+                                    </label>
+                                    
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width="26%">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label class="input input-xs input-accent w-24">
+                                            <input type="text" placeholder="Quantity" name="i_quantity" value="{{ item.imperial.quantity }}">
+                                            {{ item.imperial.unit }}
+                                        </label> 
+                                    </td>
+                                    <td>
+                                        <label class="input input-xs input-accent w-24">
+                                            $
+                                            <input type="text" placeholder="Quantity" name="i_price" value="{{ item.imperial.price }}">
+                                            
+                                            </label>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                        </td>
+                        <td >
+                            <button 
+                                class="btn btn-secondary btn-xs" 
+                                type="submit" 
+                                hx-post="/project/{{project._id}}/payitem/{{paybill.id}}-{{worker.id}}" 
+                                hx-target="#salary-statement"
+                                >Add</button></td>
+                            
+                    </tr>
+                
+                   
+                
+            </table>
+        </form>
+        </li>
+        {% endfor %}
+        </ul>
+        
+        </div>
+        <p class="text-xs text-blue-600"><strong>Note:</strong> </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Close</button>
+            </form>
+        </div>
+    </div>
+</dialog>
+

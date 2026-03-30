@@ -1,0 +1,130 @@
+{% if project.action.locked %}
+<div id="project-navbar" class="navbar bg-base-100 shadow-sm">
+    <div class="navbar-start">
+        <span hx-get="/project/index/i/i" hx-target="#right-bar"
+            hx-trigger="load delay:5s">{% if project.name|length > 20%}{{ project.name[:20] }}...{% else %}{{ project.name }}{% endif %}
+        </span>-<span class="badge badge-info badge-xs">{{project.category}}</span>{{ project.name|length }}
+    </div>
+    <div class="navbar-center hidden lg:flex">
+       
+        <p class="text-sm font-semibold">This project is currently locked.</p>
+       
+    </div>
+    <div class="navbar-end">
+        <div class="flex-none">
+
+           
+            <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Unlock Project"
+                hx-get="/project/{{ project._id }}/unlock/d" hx-target="#main-display"
+                hx-confirm="You are about to reveal the project's data to public viewing.">
+                <span class="fa fa-lock task"></span>
+            </button>
+            
+            <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Collaborate with others"
+                hx-post="/project/{{ project._id }}/share/d" hx-target="#project_console"
+                hx-confirm="You are about to give access to this project's sensitive information and management with another user. Are you shure you want to do that? This action can be undone.">
+                <span class="fa fa-share-alt task"></span>
+            </button>
+            <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Archive Project"
+                hx-get="/project/{{ project._id }}/archive/d" hx-target="#project_console"
+                hx-confirm="Are you sure you want to put this project in the Archives? You can recover the project at a later time if desired.">
+                <span class="fa fa-archive task"></span>
+            </button>
+            <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Clone Project"
+                hx-post="/project/{{ project._id }}/clone/d" hx-target="#project_console"
+                hx-confirm="Are you sure you want to Clone this project? This action cannot be undone.">
+                <span class="fa fa-clone fa-fade project"></span>
+            </button>
+            <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Delete this Project!"
+                hx-delete="/project/{{ project._id }}/delete/d" hx-target="#project_console"
+                hx-confirm="Are you sure you want to delete this project? This action cannot be undone.">
+                <span class="fa fa-trash delete"></span>
+            </button>
+        </div>
+    </div>
+</div>
+<div id="project_console" class="bg-base-100 border-base-300 p-5 uk-animation-scale-up">
+    
+    {% include '/components/project/action/Locked.html' %}
+
+</div>
+
+{% else %}
+<div id="project-navbar" class="navbar bg-base-100 shadow-sm">
+    <div class="navbar-start">
+        <span hx-get="/project/index/i/i" hx-target="#right-bar" hx-trigger="load delay:5s">{% if project.name|length >
+            20 %}{{ project.name[:20] }}{% else %}{{ project.name }}{% endif %}
+        </span>-<span class="badge badge-info badge-xs">{{project.category}}</span>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+        
+        <ul class="menu menu-horizontal px-1">
+
+            <li><a hx-get="/project/{{ project._id }}/home/page" hx-target="#project_console"><span
+                        class="fa fa-home"></span> Home</a></li>
+            <li><a hx-get="/project/{{ project._id }}/account/page" hx-target="#project_console"><span
+                        class="fa fa-bank"></span> Account</a></li>
+            <li><a hx-get="/project/{{ project._id }}/workers/page" hx-target="#project_console"><span
+                        class="fa fa-users"></span> Workers</a></li>
+            <li>
+                <a hx-get="/project/{{ project._id }}/jobs/page" hx-target="#project_console">
+                    <span class="fa fa-briefcase"></span>Jobs</a>
+            </li>           
+            
+            <li><a hx-get="/project/{{ project._id }}/dayswork/page" hx-target="#project_console"><span
+                        class="fa fa-calendar"></span> Dayswork</a></li>
+            <li><a hx-get="/project/{{ project._id }}/rates/page" hx-target="#project_console"><span
+                        class="fa fa-money"></span> Rates</a></li>
+            <li><a hx-get="/project/{{ project._id }}/inventory/page" hx-target="#project_console"><span
+                        class="fa fa-box"></span> Inventory</a></li>
+            <li><a hx-get="/project/{{ project._id }}/state/page" hx-target="#project_console"><span
+                        class="fa fa-box"></span>
+                    Event/State</a></li>
+            <li><a hx-get="/project/{{ project._id }}/logs/page" hx-target="#project_console"><span
+                        class="fa fa-history"></span> Activity Logs</a></li>
+
+
+        </ul>
+       
+    </div>
+    <div class="navbar-end">
+        <div class="flex-none">
+
+           
+            <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Lock down Project"
+                hx-get="/project/{{ project._id }}/lock/d" hx-target="#main-display"
+                hx-confirm="You are about to temporary lock down this project. This action can be undone.">
+                <span class="fa fa-unlock-alt task"></span>
+            </button>
+           
+            <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Collaborate with others"
+                hx-post="/project/{{ project._id }}/share/d" hx-target="#project_console"
+                hx-confirm="You are about to give access to this project's sensitive information and management with another user. Are you shure you want to do that? This action can be undone.">
+                <span class="fa fa-share-alt task"></span>
+            </button>
+            <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Archive Project"
+                hx-get="/project/{{ project._id }}/archive/d" hx-target="#project_console"
+                hx-confirm="Are you sure you want to put this project in the Archives? You can recover the project at a later time if desired.">
+                <span class="fa fa-archive task"></span>
+            </button>
+            <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Clone Project"
+                hx-post="/project/{{ project._id }}/clone/d" hx-target="#project_console"
+                hx-confirm="Are you sure you want to Clone this project? This action cannot be undone.">
+                <span class="fa fa-clone fa-fade project"></span>
+            </button>
+            <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Delete this Project!"
+                hx-delete="/project/{{ project._id }}/delete/d" hx-target="#project_console"
+                hx-confirm="Are you sure you want to delete this project? This action cannot be undone.">
+                <span class="fa fa-trash delete"></span>
+            </button>
+        </div>
+    </div>
+</div>
+<div id="project_console" class="bg-base-100 border-base-300 p-5 uk-animation-scale-up">
+   
+
+    {% include 'components/project/Home.html' %}
+
+  
+</div>
+{% endif %}

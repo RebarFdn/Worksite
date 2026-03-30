@@ -1,0 +1,35 @@
+{% if worker.account.payments | length > 0 %}
+    <h5><strong>Payment Records</strong></h5>
+    <div class="overflow-x-auto">
+        <table class="table table-xs text-xs">
+            <thead>
+                <tr>
+                
+                    <th>Project</th>
+                    <th>Bill Ref</th>
+                    <th>Date</th>
+                    <th>Items Count</th>
+                    <th>Bill Amount</th>
+                    <th>Deduction</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in worker.account.payments %}
+                <tr>
+                    <th>{{item.project}} </th>
+                    <td>{{item.bill_ref}}</td>
+                    
+                    <td>{{item.date | to_date }}</td>   
+                    <td>{{item['items'] | length }}</td>             
+                    <td>{{item.payment.amount | to_dollars }}</td>
+                    <td>{{item.payment.deductions | to_dollars}}</td>
+                    <td>{{item.payment.total | to_dollars}}</td>
+                </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p class="text-xs text-gray-400 italic">No payment records found.</p>
+{% endif %}

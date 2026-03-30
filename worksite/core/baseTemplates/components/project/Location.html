@@ -1,0 +1,23 @@
+<p class="text-lg text-center font-semibold p-2">Project Location</p> 
+{% if project.address.coords  %}
+<span><strong>Coordinates</strong></span>
+<div class="flex flex-row">
+
+    <form id="project-location-form" class="flex flex-row" hx-post="/project/{{ project._id }}/location/u"
+        hx-target="#project-location">
+        <input type="number" step="0.01" placeholder="Latitude" name="lat" value="{{ project.address.coords.lat }}" class="input input-sm" />
+        <input type="number" step="0.01" placeholder="Longitude" name="lon" value="{{ project.address.coords.lon }}" class="input input-sm" />
+        <input type="submit" class="btn btn-primary btn-sm mx-2" value="Update Location" />
+    </form>
+</div>
+{% else %}
+<p>Enter Project's Location Co-ordinates.</p>
+<div class="flex flex-row">
+               
+    <form id="project-location-form" class="flex flex-row"  hx-post="/project/{{ project._id }}/location/u" hx-target="#project-location">
+        <input type="number" step="0.01" placeholder="Latitude" name="lat" class="input input-sm" />
+        <input type="number" step="0.01" placeholder="Longitude" name="lon" class="input input-sm" />
+        <input type="submit" class="btn btn-primary btn-sm mx-2" value="Update Location" />
+    </form>
+</div>
+{% endif %}

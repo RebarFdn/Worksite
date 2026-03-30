@@ -1,0 +1,123 @@
+
+ 
+
+<div class="breadcrumbs text-sm">
+    <ul class="animation: uk-animation-fade">
+      <li>
+        <a hx-get="/project/{{project._id}}/workers/i" hx-target="#project-workers">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current worker">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </svg>
+          Project Workers <span class="badge badge-primary badge-xs">{{ project.workers | length }}</span>
+        </a>
+      </li>
+      <li>
+        <span class="inline-flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current worker">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </svg>
+          <button class="btn btn-ghost btn-xs" popovertarget="popover-5" style="anchor-name:--anchor-5">
+            Filter by Occupation
+          </button>
+          <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-sm" popover id="popover-5"
+            style="position-anchor:--anchor-5">
+            <li><a>Worker Occupations</a></li>
+            {% for item in project.workers %}
+            <li><a hx-get="/project/{{project._id}}/workers/{{ item.value.occupation  }}" hx-target="#project-workers"
+                hx-trigger="click">
+                <span class="text-xs bg-base-200 flex flex-row">{{ item.value.occupation }} <span
+                    class="badge badge-xs badge-ghost mx-2">2</span></span>
+              </a></li>
+            {% endfor %}
+          </ul>
+        </span>
+      </li>
+      <li>
+        <span class="inline-flex items-center gap-2">
+          <span class="fa fa-search h-4 w-4 stroke-current worker">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </span>
+          <input type="search" name="search-rates" placeholder="Search" class="input-xs rounded-sm input-info"/>
+        </span>
+      </li>
+      <li>
+        <span class="inline-flex items-center gap-2" onclick="add_worker.showModal()">
+            <svg xmlns=" http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current worker">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+          </path>
+          </svg>
+          Add Worker
+        </span>
+      </li>
+      
+      <li>
+        <span class="inline-flex items-center gap-2">
+          <span class="fa fa-print worker"></span>
+          Print Workers
+        </span>
+      </li>
+    </ul>
+</div>
+  
+{% if project.state.active or project.state.complete or project.state.pause or project.state.terminate %}
+
+<div id="project-workers" class="overflow-y-auto sm:overflow-x-auto h-96 p-5">
+        {% include 'components/project/worker/WorkersTable.html' %}
+</div>
+  
+<dialog id="add_worker" class="modal">
+  <div class="modal-box w-8/12 max-w-5xl">
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- if there is a button, it will close the modal -->
+        <button class="btn">Close</button>
+      </form>
+    </div>
+    <h3 class="text-lg font-bold">Add Worker To Project {{project._id}}</h3>
+    <ul class="list bg-base-100 rounded-box shadow-md">
+      <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Workers Pool</li>
+    {% for worker in project.employees %}  
+    <li class="list-row">
+       
+      <div><img class="size-10 rounded-box" src="{{ worker.value.imgurl }}"
+        alt="{{ worker.value.oc }}" /></div>
+      <div>
+        <div>{{ worker.value.name }}</div>
+        <div class="text-xs uppercase font-semibold opacity-60">{{ worker.value.oc }}/{{ worker.value.occupation }}</div>
+       {{worker.id}}
+      </div>
+      
+      <button class="btn btn-square btn-ghost"
+        hx-get="/project/{{project._id}}/addworker/{{worker.id}}"
+        hx-target="#project-workers">
+        Add  <span class="fa fa-plus"></span>
+      </button>
+      
+    </li>
+    {% endfor %}
+    </ul>
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- if there is a button, it will close the modal -->
+        <button class="btn">Close</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+{% else %}
+  {% include '/components/project/worker/WorkerIntroduction.html' %}
+{% endif %}
+
+{% block extra_scripts %}
+<script>
+function filterWorkers(occupation) {
+    // Get all worker rows
+    alert(occupation)
+}
+</script>
+{% endblock %}

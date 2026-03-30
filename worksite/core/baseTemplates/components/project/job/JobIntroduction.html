@@ -1,0 +1,76 @@
+<div class="items-center">
+    <div class="card w-96 bg-base-100 shadow-sm">
+        <div class="card-body">
+            <span class="badge badge-xs badge-info">Project Ready</span>
+            <div class="flex justify-between">
+                <p class="text-sm text-gray-500 font-semibold">You need to avtivate this Project to start creating and managing jobs and tasks.
+                </p>
+
+            </div>
+            <ul class="mt-6 flex flex-col gap-2 text-xs">
+                <li>
+                    <span class="fa fa-check-circle size-4 me-2 mx-1 done">
+
+                    </span>
+                    <span>Create New Jobs</span>
+                </li>
+                <li>
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+
+                    </span>
+                    <span>Jobs And Tasks Management</span>
+                </li>
+                <li>
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+
+                    </span>
+                    <span>Job Crew Management</span>
+                </li>
+                <li>
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+                
+                    </span>
+                    <span>Worker Task delegation </span>
+                </li>
+                <li>
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+                
+                    </span>
+                    <span>Manage Job and Task progression </span>
+                </li>
+                <li>
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+                
+                    </span>
+                    <span>Job Fees and Cost Management</span>
+                </li>
+                <li>
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+                
+                    </span>
+                    <span>Bill of Quantity Production</span>
+                </li>
+                <li>
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+                
+                    </span>
+                    <span>Job and Task progress reporting </span>
+                </li>
+                
+                
+                
+                <li >
+                    <span class="fa fa-check size-4 me-2 mx-1 inline-block done" fill="none">
+
+                    </span>
+                    <span class="line-underline">Real-time Construction Project Management</span>
+                </li>
+            </ul>
+            <div class="mt-6">
+                <button class="btn btn-accent btn-block tooltip tooltip-info" data-tip="Activate this Project."
+                    hx-post="/project/{{ project._id }}/readystate/activate" hx-target="#main-display"
+                    hx-confirm="You are about to Start this Project's activities.">Activate Project</button>
+            </div>
+        </div>
+    </div>
+</div>

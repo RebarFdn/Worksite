@@ -1,0 +1,61 @@
+<div class="breadcrumbs text-sm">
+    <ul>
+        <li>
+            <a hx-get="/project/{{project._id}}/rates/i" hx-target="#project_rates">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    class="h-4 w-4 stroke-current job">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                </svg>
+                Industry Rates <span class="badge badge-primary badge-xs">{{ project.industry_rates | length }}</span>
+            </a>
+        </li>
+        <li>
+            <span class="inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    class="h-4 w-4 stroke-current job">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                </svg>
+                <button class="btn btn-ghost btn-xs" popovertarget="popover-8" style="anchor-name:--anchor-8">
+                    Filter by Category
+                </button>
+                <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-sm" popover id="popover-8"
+                    style="position-anchor:--anchor-8">
+                    <li><a>Rate Categories</a></li>
+                    {% for item in project.rate_categories %}
+                    <li><a hx-get="/project/{{project._id}}/industryrates/{{item}}" hx-target="#industry_rates_Table"
+                            hx-trigger="click">
+                            <span class="text-xs bg-base-200 flex flex-row">{{ item }} </span>
+                        </a></li>
+                    {% endfor %}
+                </ul>
+            </span>
+        </li>
+        <li>
+            <span class="inline-flex items-center gap-2">
+                <span class="fa fa-search h-4 w-4 stroke-current job">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                </span>
+                <input type="search" name="search-rates" placeholder="Search" class="input-xs rounded-sm input-info" />
+            </span>
+        </li>
+       
+        <li>
+            <span class="inline-flex items-center gap-2" onclick="create_projectrate_modal.showModal()">
+                <svg xmlns=" http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    class="h-4 w-4 stroke-current job">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                    </path>
+                </svg>
+                Create Industry Rate
+            </span>
+        </li>
+        
+    </ul>
+</div>
+<div id="industry_rates_Table">
+{% include '/components/project/rate/IndustryRatesTable.html' %}
+</div>

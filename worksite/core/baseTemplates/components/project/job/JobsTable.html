@@ -1,0 +1,102 @@
+<table class="table table-zebra table-xs md:table-sm">
+    <!-- head -->
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Phase</th>
+            <th>Crew</th>
+            <th>Tasks</th>
+            <th>State </th>
+            <th>Progress</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- row 1 -->
+        <tr>
+            <th>
+                
+                    
+                    <span class="cursor-pointer" hx-get="/project/{{project._id}}/jobsreport/n" hx-target="#jobs-index"
+                        hx-trigger="click">Report</span>
+              
+            </th>
+            <td ></td>
+            <td>Jobs Report</td>
+            <td></td>
+            <td> </td>
+            <th> {{ project.jobs | length }} </th>
+            <td>
+                
+            </td>
+            <td></td>
+            <td>
+            
+                
+            </td>
+        </tr>
+
+        {% for row in project.jobs %}
+        <tr>
+            <th>
+                {% if row.get('id') %}
+                    
+                    <span class="cursor-pointer" hx-get="/getProjectJob/{{project._id}}/{{ row.id }}" hx-target="#jobs-index"
+                        hx-trigger="click">{{ row.id }}</span>
+                {% else %}
+                    
+                    <span class="cursor-pointer" hx-get="/getProjectJob/{{project._id}}/{{ row._id }}" hx-target="#jobs-index"
+                        hx-trigger="click">{{ row._id }}</span>
+                {% endif %}
+            </th>
+            <td ><span class="cursor-pointer" hx-get="/project/{{project._id}}/job/{{ row.id }}" hx-target="#jobs-index" hx-trigger="click">{{ row.title }}</span></td>
+            <td>{{ row.description }}</td>
+            <td>{{ row.projectPhase }}</td>
+            <td> {{ row.crew.name }} </td>
+            <th> {{ row.tasks | length }} </th>
+            <td>
+                {% if row.state.active %}
+                <span class="badge badge-success">Active</span>
+                {% elif row.state.complete %}
+                <span class="badge badge-primary">Completed</span>
+                {% elif row.state.pause %}
+                <span class="badge badge-warning">Paused</span>
+                {% elif row.state.terminate %}
+                <span class="badge badge-error">Terminated</span>
+                {% else %}
+
+                <span class="badge badge-outline badge-accent badge-sm">Ready</span>
+                {% endif %}
+
+            </td>
+            <td><span class="badge">{{ row.get('progress') }}% </span></td>
+            <td>
+            
+                <div class="tooltip">
+                    <div class="tooltip-content">
+                        <div class="animate-bounce text-red-600-rotate-2 text-xs  p-1">Delete {{row.title}}<br> From Project!</div>
+                    </div>
+                    <button class="btn btn-sm" hx-delete="/project/{{project._id}}/deletejob/{{row.id}}"
+                        hx-target="#jobs-index"
+                        hx-confirm="Are you shure you want to remove Job {{row.title}} from project {{project._id}}"><span
+                            class="fa fa-trash fa-xs"></span></button>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        
+        <tr>
+            <th></th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> </td>
+            <th></th>
+        </tr>
+
+    </tbody>
+    <!-- foot -->
+    
+</table>

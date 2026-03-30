@@ -1,0 +1,152 @@
+
+<ul class="timeline timeline-vertical">
+    <li>
+        {% if task.get('event',{}).get('created') %}
+        <div class="timeline-start timeline-box">{{ task.get('event').get('created') | convert_timestamp }}</div>
+        
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Task Created</div>
+        {% else %}
+        
+            <div class="flex flex-row items-inline mx-10">
+                <input type="date" name="created_date" id="create-task" class="input input-sx timeline-start">
+                <div class="timeline-middle"><hr></div>
+                <button class="btn btn-soft btn-accent btn-sm mx-2 tooltip tooltip-info timeline-end" data-tip="The date you created this task.">Set Task Created</button>
+                
+            </div>
+       
+        {% endif %}
+        <hr />
+    </li>
+
+    <li>
+        <hr />
+        {% if task.get('event').get('started') and task.get('event').get('started') > 0 %}
+        <div class="timeline-start timeline-box">{{ task.get('event').get('started') | convert_timestamp }}</div>
+        {% else %}
+        <div class="timeline-start">
+            <button class="btn btn-soft btn-accent btn-xs mx-2 tooltip tooltip-info" data-tip="Activate this Task!">Start
+                Task</button>
+        </div>
+        {% endif %}
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Task Started</div>
+        <hr />
+    </li>
+
+    <li>
+        <hr />
+        {% if task.get('event').get('paused') %}
+        <div class="timeline-start">
+
+            <ul class="timeline">
+                {% for event in task.get('event').get('paused') %}
+                <li>
+                    <div class="timeline-start timeline-box">{{ event | convert_timestamp }}</div>
+                    <hr />
+                </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+        {% else %}
+        <div class="timeline-start">
+            <button class="btn btn-soft btn-accent btn-xs mx-2 tooltip tooltip-info" data-tip="Pause this Task!">Pause
+                Task</button>
+        </div>
+        {% endif %}
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Task Paused</div>
+        <hr />
+    </li>
+    {% if task.get('event').get('paused') %}
+    <li>
+        <hr />
+        {% if task.get('event').get('restart') %}
+        <div class="timeline-start">
+            <ul class="timeline">
+                {% for event in task.get('event').get('restart') %}
+                <li>
+                    <div class="timeline-start timeline-box">{{ event | convert_timestamp }}</div>
+                    <hr />
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <div class="timeline-start">
+            <button class="btn btn-soft btn-accent btn-xs mx-2 tooltip tooltip-info"
+                data-tip="Restart this Task!">Restart
+                Task</button>
+        </div>
+        {% endif %}
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Task Resumed</div>
+        <hr />
+    </li>
+    {% endif %}
+    <li>
+        <hr />
+        {% if task.get('event').get('completed') and task.get('event').get('completed') > 0 %}
+        <div class="timeline-start timeline-box">{{ task.get('event').get('completed') | convert_timestamp }}</div>
+        {% else %}
+        <div class="timeline-start">
+            <button class="btn btn-soft btn-accent btn-xs mx-2 tooltip tooltip-info" data-tip="Finish this Task!">Finish
+                Task</button>
+        </div>
+        {% endif %}
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Task Completed</div>
+        <hr />
+    </li>
+    <li>
+        <hr />
+        {% if task.get('event').get('terminated') and task.get('event').get('terminated') > 0 %}
+        <div class="timeline-start timeline-box">{{ task.get('event').get('terminated') | convert_timestamp }}</div>
+        {% else %}
+        <div class="timeline-start">
+            <button class="btn btn-soft btn-error btn-xs mx-2 tooltip tooltip-info"
+                data-tip="Terminate this Task!">Terminate
+                Task</button>
+        </div>
+        {% endif %}
+        <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="timeline-end timeline-box">Task is Terminated</div>
+    </li>
+</ul>
