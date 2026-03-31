@@ -52,7 +52,7 @@
 {% else %}
 <div id="project-navbar" class="navbar bg-base-100 shadow-sm">
     <div class="navbar-start">
-        <span hx-get="/project/index/i/i" hx-target="#right-bar" hx-trigger="load delay:5s">{% if project.name|length >
+        <span hx-get="/project/projects" hx-target="#app" class="cursor-pointer">{% if project.name|length >
             20 %}{{ project.name[:20] }}{% else %}{{ project.name }}{% endif %}
         </span>-<span class="badge badge-info badge-xs">{{project.category}}</span>
     </div>
@@ -62,7 +62,7 @@
 
             <li><a hx-get="/project/{{ project._id }}/home/page" hx-target="#project_console"><span
                         class="fa fa-home"></span> Home</a></li>
-            <li><a hx-get="/project/{{ project._id }}/account/page" hx-target="#project_console"><span
+            <li><a hx-get="/project/account/{{ project._id }}" hx-target="#project_console"><span
                         class="fa fa-bank"></span> Account</a></li>
             <li><a hx-get="/project/{{ project._id }}/workers/page" hx-target="#project_console"><span
                         class="fa fa-users"></span> Workers</a></li>

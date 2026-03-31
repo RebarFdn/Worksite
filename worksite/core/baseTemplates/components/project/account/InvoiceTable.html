@@ -19,8 +19,8 @@
             <td>{{ invoice.invoiceno }}</td>
             <td>{{ invoice.date | convert_timestamp }}</td>
             <td>
-                {% if invoice.get('items') | length > 0 %}
-                {{ invoice.get('items') | length }}
+                {% if invoice.items | length > 0 %}
+                {{ invoice.items | length }}
                 {% else %}
                 <span class="badge badge-info badge-sm">record</span>
                 {% endif %}

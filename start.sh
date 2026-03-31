@@ -1,0 +1,1 @@
+uv run nodemon worksite/main.py

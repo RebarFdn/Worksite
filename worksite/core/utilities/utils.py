@@ -27,6 +27,7 @@ def check_paths( path:Path|None=None, paths:list=[]):
             path.mkdir(parents=True, exist_ok=True)
 
 
+
 def today()->str:
     """Presents the date in a human readable date time string
     Returns:
@@ -58,6 +59,7 @@ def timestamp(date:typing.Any=None)->int:
         return int(datetime.datetime.timestamp(element)) * 1000     
     else:
         return  int(datetime.datetime.now().timestamp()) * 1000
+
 
 
 def datimestamp(date_time:str='')->int:
@@ -93,9 +95,12 @@ def filter_dates(date:str='', start:str='', end:str=''):
             return False
 
 
+
 def converTime(timestamp:int=0): 
     """Converts a integer timestamp to a human readable format. """    
     return time.ctime(float(timestamp/1000)) 
+
+
 
 def convert_timestamp(timestamp:int=0): 
     if type(timestamp) == int:   
@@ -144,6 +149,7 @@ def convert_unit(unit:str='', value:float=0.0)->dict:
     }
 
     return unitvalue.get(unit, '')
+
 
 
 def convert_price_by_unit(unit:str='', value:float=0.0)->dict:
@@ -196,6 +202,7 @@ class AmountTotal(BaseModel):
                 self.total = float(data.get('total', 0.0))
         else:
             pass
+
 
 
 def tally(items:list = []):

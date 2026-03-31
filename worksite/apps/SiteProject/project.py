@@ -3,7 +3,9 @@ from typing import ( Coroutine, Any )
 from database.mongo_dms import ( async_client, client)
 from database.couch_dms import ( local_db, )
 from core.baseModels.project_models import ( Project, )
-from core.utilities.utils import converTime, convert_timestamp, to_dollars, to_project_id, tally
+from core.baseModels.ezchart import (ezChart, )
+from core.utilities.utils import ( converTime, convert_timestamp, to_dollars, to_project_id, tally )
+
 
 # MongoDB Configuration
 database:str = "project" # The Project Database 
@@ -55,17 +57,18 @@ def save_project(data:dict={}):
             "jobs": job_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='jobs', data=data.get('jobs', [])) ),
             "rates": rate_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='rates', data=data.get('rates', [])) ),
             "dayswork": daywork_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='dayswork', data=data.get('dayswork', [])) ),
-            "inventory": inventory_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='inventory', data=data.get('inventory', [])) ),
-            "accounts": account_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='accounts', data=data.get('accounts', [])) ),
+            "inventory": inventory_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='inventory', data=data.get('inventorys', [])) ),
+            "accounts": account_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='account', data=data.get('account', [])) ),
             "estimates": estimate_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='estimates', data=data.get('estimates', [])) ),
             "reports": report_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='reports', data=data.get('reports', [])) ),
             "logs": logs_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='logs', data=data.get('logs', [])) )
         }
         print(result)
 
-        return 
+        return project
     except Exception as ex:
         print( str(ex))
+        return Project()
     finally:
         #print("PROJECT", project)
         del project
@@ -86,21 +89,24 @@ def create_project( data:dict={} ):
 
 
 ## Read Project
-async def read_project(id:str='', conn:Coroutine=db_connection):
+async def read_project(id:str='', conn:Coroutine=db_connection)->Project | dict :
 
     project:Project = Project()
+    #project.load_data( data= await conn.get(_directive=id))
     try:
         data:dict = project_home_collection.find_one({"_id": id}) # type: ignore
         #print(data)
         #project:Project = Project( **data ) # type: ignore
         project.load_data( data=data )
-        #project_data:dict = await conn.get(_directive=id) # type: ignore        
+        #project_data:dict = await conn.get(_directive=id) # type: ignore     
+        #project.load_data( data=project_data )   
         #project.load_data(data=project_data  )
         #project.load_workers()
         #project.load_jobs()
         #project.load_rates()
         #save_project(data=project_data)
-        return project.project
+        #print("PROJECT DATA", project_data.get('account', {}))
+        return project
     except Exception as ex:
         return {'error': str(ex) } #HTTPStatus(404).description}
 
@@ -158,3 +164,91 @@ def get_workers(project_id:str=''):
     except Exception as ex:
         return {'error': str(ex) } #HTTPStatus(404).description}
 
+    
+def get_account(project_id:str=''):    
+    try:
+        result = account_collection.find_one({"_id": project_id})
+    
+        return result
+    except Exception as ex:
+        return {'error': str(ex) } #HTTPStatus(404).description}
+
+
+
+# Accounting Management
+# Project accounting management 
+async def account_statistics(project_id:str='')-> dict:
+    """Account Statistics Reporting"""
+    project:Project = await read_project(id=project_id) 
+    project.load_account()   
+    print("PROJECT ACCOUNT", project.account)
+    account:dict = {
+        "current_balance": 0,
+        "deposits": 0,
+        "withdrawals": 0,
+        "expences": 0,
+        "paybills": 0,
+        "invoices": 0
+    }
+    if len( project.account.transactions.deposit ) > 0 :        
+        account["deposits"] = tally([ item.model_dump() for item in project.account.transactions.deposit ])
+        account["withdrawals"] = tally([ item.model_dump() for item in project.account.transactions.withdraw ])
+        account["expences"] = tally( [ item.model_dump() for item in project.account.expences.expences ] )
+        account["paybills"] = tally( [ item.model_dump() for item in project.account.records.paybills ] )
+        account["invoices"] = tally([ item.model_dump() for item in project.account.records.invoices ])   
+        account['current_balance'] = account["deposits"] - account["withdrawals"]
+        account['budget_balance'] = float(project.account.budget) - account["deposits"]
+        account['budget'] = float( project.account.budget )
+
+    return  { "_id": project.id, "account": account }
+            
+
+
+async def piechart(project:dict={}):
+    account:dict = {
+        "current_balance": 0,
+        "deposits": tally(project['account']['transactions']['deposit']),
+        "withdrawals": tally(project['account']['transactions']['withdraw']),
+        "expences": tally(project['account']['expences']),
+        "paybills": tally(project['account']['records']['paybills']),
+        "invoices": tally(project['account']['records']['invoices'])
+    }
+    account['current_balance'] = account["deposits"] - sum([account["withdrawals"], account["expences"]])
+    labels = []
+    series = []
+    for key, val in account.items():
+        if key in ['deposits', 'withdrawals']:
+            pass  
+        else:
+            labels.append(key)
+            series.append(val)
+    options = {
+        "chart": {
+                "width": '380',
+                "height": '280',
+                "type": 'pie',
+            },
+        "series": series,
+        "labels": labels,
+        "responsive": [
+            {
+            "breakpoint": 1000,
+            "options": {
+                "plotOptions": {
+                    "bar": {
+                        "horizontal": False
+                    },                
+                    "pie": {
+                        "expandOnClick": False
+                    },
+                    "legend": {
+                        "position": "bottom"
+                    }
+                }
+            }
+            }
+        ]
+
+    }
+    chart = ezChart(options=options )
+    return chart

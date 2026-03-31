@@ -593,6 +593,7 @@ class Project(BaseModel):
             pass
     
 
+
     def load_rates(self, data:dict={}):
         if data:
             pass

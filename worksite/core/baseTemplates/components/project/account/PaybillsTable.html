@@ -19,7 +19,7 @@
             <td><a hx-get="/project/{{project._id}}/paybill/{{bill.id}}" hx-target="#paybill_index"
                     hx-trigger="click">{{ bill.mainTitle }}</a> </td>
 
-            <td>{{ bill.get('items') | length }} </td>
+            <td>{{ bill.items | length }} </td>
             <td>{{ bill.total | to_dollars }}</td>
             <td>
                 <span class="tooltip cursor-pointer" data-tip="Delete paybill?"
