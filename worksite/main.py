@@ -38,12 +38,12 @@ app.add_middleware(
 
 # Serve Static Files
 app.mount("/static", StaticFiles(directory=STATIC_PATH), name="static")
-#app.include_router( projectRouter )
+
 app.mount("/user", user_app)
 app.mount("/project", project_app)
 app.mount("/rate", rate_app)
 app.mount("/supplier", supplier_app)
-app.mount("/worker", worker_app)
+app.mount("/employee", worker_app)
 
 
 

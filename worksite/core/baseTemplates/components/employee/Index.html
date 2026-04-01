@@ -1,0 +1,66 @@
+<div class="navbar bg-base-100 shadow-sm">
+    
+    <a class="btn btn-ghost text-xl" onclick="add_employee_modal.showModal()">Employees</a>
+   
+    <div class="navbar-start">
+        <ul class="menu menu-horizontal px-1">
+          <li>
+            <div class="dropdown">
+              <div tabindex="0" role="button" class="btn btn-sm btn-accent m-1">Filter<span>{{filter}}</span></div>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                {% for cat in occupation_index %}
+                <li hx-get="/employee/index/{{cat}}" hx-target="#app" hx-trigger="click"><a>{{cat}}</a></li>
+                {% endfor %}
+                <li><a></a></li>
+              </ul>
+            </div>
+            </li>
+        
+        </ul>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><label class="input">
+          <span class="fa fa-search"></span>
+            <input 
+            type="search" 
+            name="search-project-worker" 
+            required placeholder="Search"
+            class="input-xs input-info rounded-lg" 
+            />
+          </label></li>
+        
+        <li><button class="btn" hx-get="/employee/about/i/i" hx-target="#right-bar" hx-trigger="every 20s">
+            <span class="badge badge-outline badge-info">{{ workers | length}}</span></button></li> 
+        <li><button class="btn" onclick="add_employee_modal.showModal()">Register New Employee</button></li>        
+        <li><button class="btn" ><span class="fa fa-print"></span>Print Employees</button></li> 
+      </ul>
+    </div>
+</div>
+
+
+<div id="employee-index" class="overflow-y-auto sm:overflow-x-auto h-[42rem] p-5">
+    {% include 'components/employee/employeesTable.html' %}
+   
+</div>
+
+
+<dialog id="add_employee_modal" class="modal">
+  <div class="modal-action">
+    <form method="dialog">
+      <!-- if there is a button, it will close the modal -->
+      <button class="btn">Close Portal</button>
+    </form>
+  </div>
+  
+  <div class="modal-box w-11/12 max-w-5xl">
+    <h3 class="text-lg font-bold">Register New Employee</h3>
+    {% include '/components/employee/EmploymentForm.html' %}
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- if there is a button, it will close the modal -->
+        <button class="btn">Close Portal</button>
+      </form>
+    </div>
+  </div>
+</dialog>

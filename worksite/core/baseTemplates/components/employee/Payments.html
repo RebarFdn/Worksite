@@ -1,0 +1,41 @@
+{% if employee.account.payments %}
+
+ 
+ <div class="text-sm overflow-y-auto sm:overflow-x-auto h-96 p-5">
+    <table class="table table-sm"
+    >
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Project</th>
+                <th>Bill Ref</th>
+                <th>Items</th>
+                <th>Total</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in employee.account.payments %}
+            
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.date | to_date  }}</td>
+                <td>{{item.project}}</td>
+                <td>{{item.bill_ref}}</td>
+                <td>{{ item.get('items') | length }}</td>
+                <td>{{item.payment.total | to_dollars }}</td>
+                
+                
+            </tr>
+            
+             {% endfor %}
+        </tbody>
+    
+    </table>
+    </div>
+{% else %}
+<p class="text-xl text-center text-gray-500 font-bold">
+    There is no paymemt record for the employee! 
+</p>
+{% endif %}

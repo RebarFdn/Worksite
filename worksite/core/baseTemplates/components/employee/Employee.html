@@ -1,0 +1,45 @@
+
+ 
+  <p class="text-lg font-bold"> 
+    <span class="badge badge-outline">employee</span>-
+    <span class="badge badge-outline cursor-pointer tooltip" data-tip="change employee occupation.">{{employee.occupation}}</span> 
+    {% if employee.oc %} 
+    {{ employee.oc}} {% else %}{{ employee.name}}{% endif %}</p>
+
+<div class="tabs tabs-border">
+  <input type="radio" name="my_tabs_2" class="tab" aria-label="Home" checked="checked"/>
+  <div class="tab-content border-base-300 bg-base-100 p-10">
+    {% include 'components/employee/Home.html' %}
+  </div>
+
+  <input type="radio" name="my_tabs_2" class="tab" aria-label="Account"  />
+  <div class="tab-content border-base-300 bg-base-100 p-10">
+    {% include 'components/employee/Account.html' %}
+     
+  </div>
+
+  <input type="radio" name="my_tabs_2" class="tab" aria-label="Projects" />
+  <div class="tab-content border-base-300 bg-base-100 p-10">
+    
+    {% include 'components/employee/Projects.html' %}
+</div>
+<input type="radio" name="my_tabs_2" class="tab" aria-label="Jobs" />
+  <div class="tab-content border-base-300 bg-base-100 p-10">
+   
+    {% include 'components/employee/Jobs.html' %}
+</div>
+ <input type="radio" name="my_tabs_2" class="tab" aria-label="Tasks" />
+  <div class="tab-content border-base-300 bg-base-100 p-10">
+    
+     {% include 'components/employee/Tasks.html' %}
+</div>
+ <input type="radio" name="my_tabs_2" class="tab" aria-label="Days" />
+  <div class="tab-content border-base-300 bg-base-100 p-10">
+    {% include 'components/employee/Days.html' %}
+</div>
+ <input type="radio" name="my_tabs_2" class="tab" aria-label="reports" />
+  <div class="tab-content border-base-300 bg-base-100 p-10">
+    {% include 'components/employee/Reports.html' %}
+</div>
+</div>
+

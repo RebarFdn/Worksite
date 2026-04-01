@@ -260,7 +260,7 @@ class EmployeeModel(BaseModel):
     reports:list[ ReportModel ] = []
     health_issues: list[str] = []
     metadata: MetaData = MetaData()
-    rev:str = Field(default='')
+    
 
     @property
     def generate_id(self):
@@ -310,7 +310,6 @@ class EmployeeModel(BaseModel):
                 self.occupation = data.get('occupation', {})
             if data.get('rating'):
                 self.rating = data.get('rating',0)            
-            
             if data.get('imgurl'):
                 self.imgurl = data.get('imgurl', '')
             if data.get('address'):
@@ -340,8 +339,7 @@ class EmployeeModel(BaseModel):
                 self.health_issues = data.get('health_issues', [])
             if data.get('metadata'):
                 self.metadata.load_data(data= data.get('metadata', {}))
-            if data.get('_rev'):
-                self.rev =  data.get('_rev')
+           
                
         else:
             pass 

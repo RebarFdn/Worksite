@@ -41,7 +41,7 @@
         {% for row in project.jobs %}
         <tr>
             <th>
-                {% if row.get('id') %}
+                {% if row.id %}
                     
                     <span class="cursor-pointer" hx-get="/getProjectJob/{{project._id}}/{{ row.id }}" hx-target="#jobs-index"
                         hx-trigger="click">{{ row.id }}</span>
@@ -71,7 +71,7 @@
                 {% endif %}
 
             </td>
-            <td><span class="badge">{{ row.get('progress') }}% </span></td>
+            <td><span class="badge">{{ row.progress }}% </span></td>
             <td>
             
                 <div class="tooltip">

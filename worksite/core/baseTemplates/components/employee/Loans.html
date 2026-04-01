@@ -1,0 +1,38 @@
+{% from 'components/macros.html' import loanpayment %}
+
+{% if employee.account.loans %}
+
+ <div class="text-sm overflow-y-auto sm:overflow-x-auto h-96 p-5">
+    <table class="uk-table uk-table-small uk-table-responsive"
+    >
+        <thead>
+            <tr>
+                <th>Ref</th>
+                <th>Date</th>
+                <th>Reason</th>
+                <th>Amount</th>
+                <th>RePaid</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in employee.account.loans %}
+            <tr>
+                <td>{{ item.ref }}</td>
+                <td>{{ item.date }}</td>
+                <td>{{ item.about }}</td>
+                <td>{{ item.amount | to_dollars }}</td>
+                <td>{{ loanpayment( item.repayment )}}</td>
+                <td></td>
+                
+            </tr>
+             {% endfor %}
+        </tbody>
+    
+    </table>
+    </div>
+{% else %}
+<p class="text-xl text-center text-gray-500 font-bold">
+    There are no loan recorded for the employee! 
+</p>
+{% endif %}

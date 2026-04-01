@@ -1,0 +1,53 @@
+
+
+<form id="employee-bio-form" hx-post="/employee/{{ employee._id }}/i/bio" hx-target="#employee-bio"
+    class="space-y-4">
+    <ul id="employee-bio-list">
+        <li>
+
+            <strong>Date of Birth</strong>.
+            {% if employee.dob %}
+            {{ employee.dob}}
+            {% else %}
+            <div class="flex flex-row">
+                <input type="text" placeholder="Date of Birth" name="dob" class="input input-accent input-xs" />
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+
+           
+        <li>
+
+            <strong>Sex.</strong>
+            {% if employee.sex %}
+            {{ employee.sex}}
+            {% else %}
+
+            <div class="flex flex-row">
+                <select type="text" name="sex" class="select select-accent select-xs">
+                    <option disabled selected>Sex</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Machine</option>
+                    <option>Other</option>
+                </select>
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+        <li>
+
+            <strong>Height</strong>.
+            {% if employee.height %}
+            {{ employee.height}}cm
+            {% else %}
+            <div class="flex flex-row">
+                <input type="text" placeholder="Height" name="height" class="input input-accent input-xs" />
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+
+    </ul>
+</form>

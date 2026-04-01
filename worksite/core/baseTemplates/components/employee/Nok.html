@@ -1,0 +1,161 @@
+
+
+<form id="employee-nok-form" hx-post="/employee/nok/{{ employee._id }}" hx-target="#employee-nok" class="space-y-4">
+    <ul id="employee-nok-list">
+        <li>
+
+            <strong>Name</strong>.
+        </li>
+        <li>
+            {% if employee.nok.name %}
+            {{ employee.nok.name}}
+            {% else %}
+            <div class="flex flex-row">
+                <input type="text" placeholder="Name" name="name" class="input input-accent input-xs" />
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+        <li>
+        
+            <strong>Relation</strong>.
+        </li>
+        <li>
+            {% if employee.nok.relation %}
+            {{ employee.nok.relation}}
+            {% else %}
+            <div class="flex flex-row">
+                <input type="text" placeholder="Relation" name="relation" class="input input-accent input-xs" />
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+        <li>
+
+            <strong>Address</strong>
+        </li>
+        <li>
+            {% if employee.nok.address is string %}
+                <p class="text-sm text-center text-gray-500 font-bold">
+                    The employee's next of kin has'nt provided any Address information!
+                </p>
+                <div id="nok-address-data-list">
+                    
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Lot</legend>
+                            <input type="text" placeholder="Lot" name="lot" class="input input-accent input-xs ml-2" />
+                        
+                        </fieldset>                       
+                    
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Street</legend>
+                            <input type="text" placeholder="Street" name="street" class="input input-accent input-xs ml-2" />
+                        
+                        </fieldset>
+                    
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Town</legend>
+                            <input type="text" placeholder="Town" name="town" class="input input-accent input-xs ml-2" />
+                        
+                        </fieldset>
+                    
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">City or Parish</legend>
+                            <input type="text" placeholder="City or Parish" name="city_parish" class="input input-accent input-xs ml-2" />
+                        
+                        </fieldset>
+                    
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Country</legend>
+                            <input type="text" placeholder="Country" name="country" class="input input-accent input-xs ml-2" />
+                        
+                        </fieldset>
+                    <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+                
+                
+                    </div>
+            {% else %}
+                <ul id="nok-address-list">                
+                
+                    {% for item in employee.nok.address %}
+                    <li>
+                        <strong>{{item[0]}}.</strong>
+                        {% if item[1] %}
+                        {{ item[1] }}
+                        {% else %}
+                
+                        <div class="flex flex-row">
+                            <input type="text" placeholder="{{item[0]}}" name="{{item[0]}}" class="input input-accent input-xs" />
+                            <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+                        </div>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            
+        </li>
+
+
+
+        <li>
+
+            <strong>Contact.</strong>
+        </li>
+        <li>
+            {% if employee.nok.contact is string %}
+            <p class="text-sm text-center text-gray-500 font-bold">
+                The employee's next of kin has'nt provided any Contact information!
+            </p>
+            <ul id="nok-contact-data-list">
+                <li>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Tel</legend>
+                        <input type="text" placeholder="Tel" name="tel" class="input input-accent input-xs ml-2" />
+                    
+                    </fieldset>
+                </li>
+                <li>
+                    
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Mobile</legend>
+                        <input type="text" placeholder="Mobile" name="mobile" class="input input-accent input-xs ml-2" />
+                    
+                    </fieldset>
+                
+                </li>
+                <li>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Email</legend>
+                        <input type="text" placeholder="Email" name="email" class="input input-accent input-xs ml-2" />
+                    
+                    </fieldset>
+                </li>
+
+
+            </ul>
+            {% else %}
+            <ul id="nok-contact-list">  
+                {% for item in employee.nok.contact %}
+                <li>
+                    <strong>{{item[0]}}.</strong>
+                    {% if item[1] %}
+                    {{ item[1] }}
+                    {% else %}
+                
+                    <div class="flex flex-row">
+                        <input type="text" placeholder="{{item[0]}}" name="{{item[0]}}" class="input input-accent input-xs" />
+                        <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+                    </div>
+                    {% endif %}
+                </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+        </li>
+        
+
+    </ul>
+</form>

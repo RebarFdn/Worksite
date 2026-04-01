@@ -1,0 +1,26 @@
+{% if employee.contact %}
+<form id="employee-contact-form" hx-post="/employee/contact/{{ employee._id }}" hx-target="#employee-contact"
+    class="space-y-4">
+    <ul id="employee-contact-list">
+
+        {% for item in employee.contact %}
+        <li>
+            <strong>{{item[0]}}.</strong>
+            {% if item[1] %}
+            {{ item[1] }}
+            {% else %}
+
+            <div class="flex flex-row">
+                <input type="text" placeholder="{{item[0]}}" name="{{item[0]}}" class="input input-accent input-xs" />
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</form>
+{% else %}
+<p class="text-xl text-center text-gray-500 font-bold">
+    The employee has'nt provided any Contact information!
+</p>
+{% endif %}

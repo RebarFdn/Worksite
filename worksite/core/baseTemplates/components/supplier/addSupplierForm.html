@@ -1,0 +1,65 @@
+<form >
+    <div uk-grid>
+        <div class="uk-width-auto@m"></div>
+        <div class="uk-width-1-3@m">
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">The Supplier's name?</legend>
+                <input type="text" class="input input-xs validator" name="name" placeholder="Name" required />
+            
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Gct No?</legend>
+                <input type="text" class="input input-xs validator" name="taxid" placeholder="Tax Id" required />
+            
+            </fieldset>
+            <fieldset class="fieldset">
+                <button 
+                class="btn btn-secondary btn-sm" 
+                hx-post="/supplier/i/i/save"
+                hx-target="#suppliers-index"
+                >Submit </button>
+            </fieldset>
+        </div>
+        <div class="uk-width-expand@m">
+            <details class="collapse bg-base-100 border border-base-300" name="my-accordion-det-1">
+                <summary class="collapse-title font-semibold">Address</summary>
+                <div class="collapse-content text-sm">
+                    <div class="flex flex-col">
+                    <input type="text" class="input input-xs" name="lot" placeholder="Lot"/>
+                    <input type="text" class="input input-xs" name="street" placeholder="Street"/>
+                    <input type="text" class="input input-xs" name="town" placeholder="Town"/>
+                    <input type="text" class="input input-xs" name="city_parish" placeholder="City/Parish"/>
+                    <input type="text" class="input input-xs" name="country" placeholder="Country"/>
+                    
+                    </div>
+                </div>
+            </details>
+            <details class="collapse bg-base-100 border border-base-300" name="my-accordion-det-1">
+                <summary class="collapse-title font-semibold">Contact</summary>
+                <div class="collapse-content text-sm"><div class="flex flex-col">
+                    <input type="text" class="input input-xs" name="tel" placeholder="Tel"/>
+                    <input type="text" class="input input-xs" name="mobile" placeholder="Mobile"/>
+                    <input type="text" class="input input-xs" name="watsapp" placeholder="Watsapp"/>
+                    <input type="text" class="input input-xs" name="email" placeholder="Email"/>
+                    
+                    </div>
+                </div>
+            </details>
+            <details class="collapse bg-base-100 border border-base-300" name="my-accordion-det-1">
+                <summary class="collapse-title font-semibold">Banking Info</summary>
+                <div class="collapse-content text-sm"><div class="flex flex-col">
+                    <input type="text" class="input input-xs" name="bank_name" placeholder="Bank Name"/>
+                    <input type="text" class="input input-xs" name="branch" placeholder="Branch" />
+                    <input type="text" class="input input-xs" name="account_type" placeholder="Account Type"/>
+                    <input type="text" class="input input-xs" name="account" placeholder="Account Number"/>
+                    
+                    </div>
+                </div>
+                </details>
+        </div>
+    </div>
+    
+    
+    
+    
+</form>

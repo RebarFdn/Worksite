@@ -55,7 +55,8 @@ class ActivityLog(BaseModel):
                 self.id = data.get('description', '')
         else:
             pass
-    
+
+
 
 class ProjectAccountRecords(BaseModel):
     invoices:list[InvoiceModel] = []
@@ -204,6 +205,7 @@ class ProjectAccountRecords(BaseModel):
             pass
 
 
+
 class ProjectExpenceModel(BaseModel):
     id:str = Field(default=generate_id(name='account expence') )
     ref:str = Field(default="")
@@ -271,6 +273,7 @@ class ProjectAccount(BaseModel):
     expences:ProjectExpences = ProjectExpences()
     records:ProjectAccountRecords = ProjectAccountRecords()
 
+    
     def load_data(self, data:dict={} ):
         if data:
             if data.get('bank'):
@@ -287,6 +290,7 @@ class ProjectAccount(BaseModel):
                 self.transactions.load_data(data=data.get('transactions', []))
             if data.get('expences'):
                 self.expences.load_data(data= data.get('expences', []))
+                self.expences.calculate_total
             if data.get('records'):
                 self.records.load_data( data=data.get('records', {}) )
         
@@ -294,12 +298,14 @@ class ProjectAccount(BaseModel):
         else:
             pass
 
+    
     def update_budget(self, resource:str='', data:float= 0.0) -> None:
         if resource and data:
             if resource == 'budget':
                 self.budget = data
                 self.updated = timestamp()
 
+    
     def get_paybill(self, id:str=''):
         ''''''
         bill = [ bill for bill in self.records.paybills if bill.get('id') == id ] # type: ignore

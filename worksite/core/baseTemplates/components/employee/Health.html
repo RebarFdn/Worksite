@@ -1,0 +1,25 @@
+<form id="employee-health-form" hx-post="/employee/health/{{ employee._id }}" hx-target="#employee-health"
+    class="space-y-4">
+    <ul id="employee-health">        
+        <li>
+           
+            {% if employee.health_issues %}
+                {% for item in employee.health_issues %}
+                    <div class="badge badge-lg badge-error">{{ item }}</div>
+                {% endfor %}
+            {% else %}
+            <select class="select select-xs select-accent" name="health_issues" id="health_issues" size="3" multiple>
+                <option disabled selected>Select Health Issue</option>
+                <option>Diabetes</option>
+                <option>Hypertension</option>
+                <option>Asthma</option> 
+                <option>Allergies</option>
+                <option>Other</option>
+                <option><input type="text" placeholder="Issue" name="health_issues" class="input input-accent input-xs" /></option>
+            </select>
+            <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            {% endif %}
+        </li>
+       
+    </ul>
+</form>

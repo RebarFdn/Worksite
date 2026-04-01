@@ -1,0 +1,171 @@
+<div class="bg-gray-50 p-5 mx-10 rounded-md shadow">
+    <div class="flex flex-row">
+        {% if shared %}
+            <span uk-icon="icon: link-external; ratio: .75"  uk-tooltip="This Item is being Shared with Peers!"></span>
+        {% else %}
+                  
+            <span 
+                class="pointer" 
+                uk-icon="icon: social; ratio: .75" 
+                uk-tooltip="Share with Peers across the Network!"
+                hx-get="/share/rate/{{rate._id}}/{{rate.title}}/construction {{rate.category}} rate/{{request.user.username}}"
+                hx-swap="outerHTML"
+                hx-trigger="click"
+            > share 
+            </span>
+        {% endif %}
+        <!--p class="text-lg text-center font-semibold mx-2">Title: {{ rate.title }}</!--p-->
+    </div>
+    <form hx-put="/update_rate/{{rate._id}}" hx-target="#rate-console">
+        <div id="rate-console">
+            {% include "components/rate/RateConsole.html" %}
+        </div>
+    </form>
+
+
+</div>
+<!-- This is the modal -->
+<div id="add-to-project"  uk-modal>
+    <div class="uk-modal-dialog uk-modal-body bg-yellow-300 rounded-lg">
+        <h4 class="uk-modal-title text-sm">Select a Project to Add {{ rate.get("title")  }} To.</h4>
+       
+        <select 
+        class="mx-5 my-3 rounded-md"
+        name="project_id" 
+       
+        aria-label="Custom controls"
+        >
+            <option value="">Active Projects</option>
+           
+            {% for project in projects %}
+                <option class="uk-modal-close" value="{{project._id}}"  hx-get="/addIndustryRate/{{project._id}}/{{rate.id}}"
+                hx-target="#message">{{ project.name }}</option>
+            {% endfor %}
+        </select>
+
+        <p class="uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+           
+        </p>
+    </div>
+</div>
+
+
+<!-- This is the clone rate  modal -->
+<div id="clone-rate"  uk-modal>
+    <div class="uk-modal-dialog uk-modal-body bg-blue-300 rounded-lg">
+        <h4 class="text-lg text-center font-semibold"> Clone {{ rate.get("title")  }} </h4>
+       
+        <div class="text-xs">
+            
+            <form class="mx-auto flex w-full max-w-lg flex-col rounded-xl border border-border bg-backgroundSecondary p-4 sm:p-20" prevent-default>
+                <div class="form-group">
+                    <div class="flex w-full flex-col gap-2">
+                        <div class="form-field hidden">
+                            <label class="form-label">Id </label>            
+                            <input type="text"  name="_id" value="{{rate._id}}" class="input max-w-full" />                        
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label"><span>Title</span></label>   
+                            <div class="form-control">
+                                <input type="text"  name="title" value="{{rate.title}}" class="input max-w-full" /> 
+                            </div>                       
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">
+                                <span>Description</span>
+                            </label>
+                            <div class="form-control">
+                                <input placeholder="Description here" type="textarea"  name="description" value="{{rate.description}}" class="input max-w-full" />
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">
+                                <span>Category</span>
+                            </label>
+                            <div class="form-control">
+                                <select class="select select-ghost" name="category" id="category">
+                                    <option disabled selected>Category</option>
+                                    {% for item in rate_categories %}
+                                    <option>{{ item }}</option>
+                                    {% endfor %}               
+                                </select>
+                                
+                            </div>
+                        </div>
+                        <div class="flex flex-row">
+                            <div class="flex flex-col mx-2 my-5">
+                                <p class="text-xs">Metric Properties</p>
+                                <div class="form-field">
+                                    <label class="form-label">
+                                        <span>Unit</span>
+                                    </label>
+                                    <div class="form-control">
+                                        <input placeholder="Metric Unit here" type="text" name="metric_unit" value="{{rate.metric.unit}}" class="input max-w-full" />
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">
+                                        <span>Price Per Unit</span>
+                                    </label>
+                                    <div class="form-control">
+                                        <input placeholder="Price here" type="number" step="0.01" name="metric_price" value="{{rate.metric.price}}" class="input max-w-full" />
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">
+                                        <span>Output</span>
+                                    </label>
+                                    <div class="form-control">
+                                        <input placeholder="Output here" type="number" step="0.01" name="metric_output" value="{{rate.output.metric}}" class="input max-w-full" />
+                                    </div>
+                                </div>
+                                
+    
+                            </div>
+                            <div class="flex flex-col mx-2 my-5">
+                                <p class="text-xs">Imperial Properties</p>
+                                <div class="form-field">
+                                    <label class="form-label">
+                                        <span>Unit</span>
+                                    </label>
+                                    <div class="form-control">
+                                        <input placeholder="Imperial Unit here" type="text" name="imperial_unit" value="{{rate.imperial.unit}}" class="input max-w-full" />
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">
+                                        <span>Price Per Unit</span>
+                                    </label>
+                                    <div class="form-control">
+                                        <input placeholder="Price here" type="number" step="0.01" name="imperial_price" value="{{rate.imperial.price}}" class="input max-w-full" />
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">
+                                        <span>Output</span>
+                                    </label>
+                                    <div class="form-control">
+                                        <input placeholder="Output here" type="number" step="0.01" name="imperial_output" value="{{rate.output.imperial}}" class="input max-w-full" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-field pt-5">
+                            <div class="form-control justify-between">
+                                <button 
+                                    type="button" 
+                                    class="btn btn-secondary w-full uk-modal-close"
+                                    hx-post="/clone_rate/{{rate._id}}"
+                                    hx-target="#rate-console"
+                                >Clone Rate</button>
+                                <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+

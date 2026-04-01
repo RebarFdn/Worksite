@@ -1,0 +1,84 @@
+<div class="navbar bg-base-100 shadow-sm">
+    
+      <a class="btn btn-ghost text-xl" onclick="add_rate_modal.showModal()">Industry Rates</a>
+   
+    <div class="navbar-start">
+        <ul class="menu menu-horizontal px-1">
+          <li>
+            <div class="dropdown">
+              <div tabindex="0" role="button" class="btn m-1">Filter<span>{{filter}}</span></div>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                {% for cat in rate_categories %}
+                <li hx-get="/rate/index/{{cat}}/i" hx-target="#main-display" hx-trigger="click"><a>{{cat}}</a></li>
+                {% endfor %}
+                <li><a></a></li>
+              </ul>
+            </div>
+            </li>
+        
+        </ul>
+      </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><label class="input">
+          <span class="fa fa-search"></span>
+            <input type="search" name="search-project-worker" required placeholder="Search" class="input-xs input-info rounded-lg" />
+          </label></li>
+        
+        <li><button class="btn" hx-get="/rate/about/i/i" hx-target="#right-bar" hx-trigger="every 10s"><span class="badge badge-outline badge-info">{{ rates | length}}</span></button></li> 
+        <li><button class="btn" onclick="add_rate_modal.showModal()">Create New Rate</button></li>        
+        <li><button class="btn" ><span class="fa fa-print"></span>Print Rates</button></li> 
+      </ul>
+    </div>
+  </div>
+  
+  <div id="industry-rates" class="overflow-y-auto sm:overflow-x-auto h-[42rem] p-5">
+   
+    <table class="table table-xs text-xs">
+      <caption>Industrial Rates</caption>
+        <thead>
+            <tr>
+            
+            <th scope="col" class="px-2 py-2 text-start text-xs font-medium text-gray-500 uppercase">Title</th>
+            <th scope="col" class="px-4 py-2 text-start text-xs font-medium text-gray-500 uppercase">Description</th>
+            <th scope="col" class="px-4 py-2 text-start text-xs font-medium text-gray-500 uppercase">Category</th>
+            <th scope="col" class="px-4 py-2 text-start text-xs font-medium text-gray-500 uppercase">Metric</th>
+            <th scope="col" class="px-4 py-2 text-end text-xs font-medium text-gray-500 uppercase">Imperial</th>
+            <th></th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+    
+    {% for rate in rates %}
+    <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">      
+      
+    <td class="px-2 py-2 whitespace-wrap text-sm font-medium text-gray-800 dark:text-gray-200 w-48 cursor-pointer" 
+    hx-get="/rate/{{rate._id}}/n/n" hx-target="#main-display" hx-trigger="click"
+    >{{ rate.get('title')  }} </td>
+    <td class="px-4 py-2 whitespace-wrap text-sm text-gray-800 dark:text-gray-200">{{ rate.get('description')  }} </td>
+    <td class="px-4 py-2 whitespace-wrap text-sm text-gray-800 dark:text-gray-200">{{ rate.get('category')  }} </td>
+    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ rate.metric.price | to_dollars  }}  /{{ rate.metric.unit }} </td>
+    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ rate.imperial.price | to_dollars  }}  /{{ rate.imperial.unit }} </td>
+    <td class="px-4 py-2 whitespace-nowrap text-end text-sm font-medium">
+    <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Delete</button>
+    </td>
+    </tr>
+    {% endfor %}
+    
+            </tbody>
+        </table>
+   
+  </div>
+  
+<dialog id="add_rate_modal" class="modal">
+  <div class="modal-box w-11/12 max-w-5xl">
+    <h3 class="text-lg font-bold">Add Industry Rate To Project</h3>
+    {% include '/components/rate/RateForm.html' %}
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- if there is a button, it will close the modal -->
+        <button class="btn">Close Portal</button>
+      </form>
+    </div>
+  </div>
+</dialog>

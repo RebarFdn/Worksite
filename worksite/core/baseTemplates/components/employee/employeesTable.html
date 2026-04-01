@@ -1,0 +1,34 @@
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Id</th>
+            <th>Name </th>
+            <th>Oc</th>
+            <th>Occupation</th>
+            <th>Rating</th>
+            <th>manage</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for worker in workers %}
+        <tr>
+            <td class="text-xs">
+                <div><img class="size-10 rounded-box" src="{{ worker.value.imgurl }}" alt="{{worker.value.oc}}" /></div>
+            </td>
+            <td>{{ worker.id }}</td>
+            <td class="tooltip tooltip-info cursor-pointer" data-tip="Go to employee {{worker.value.name}}'s Page"
+                hx-get="/employee/{{worker.id}}" hx-target="#app" hx-trigger="click">{{ worker.value.name
+                }}</td>
+            <td>{{ worker.value.oc }}</td>
+            <td>
+                {{ worker.value.occupation }}
+            </td>
+            <td class="tooltip tooltip-info" data-tip="Click to activate Location and distance tracking">
+                {{ worker.value.rating }}
+            </td>
+            <td>manage</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

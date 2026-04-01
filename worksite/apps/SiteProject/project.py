@@ -2,14 +2,14 @@ from http import HTTPStatus
 from typing import ( Coroutine, Any )
 from database.mongo_dms import ( async_client, client)
 from database.couch_dms import ( local_db, )
-from core.baseModels.project_models import ( Project, )
+from core.baseModels.project_models import ( JobModel, Project, ProjectAccount, ProjectWorker )
 from core.baseModels.ezchart import (ezChart, )
 from core.utilities.utils import ( converTime, convert_timestamp, to_dollars, to_project_id, tally )
-
+from logger import (logger, g_log)
 
 # MongoDB Configuration
 database:str = "project" # The Project Database 
-db = client.get_database(database)# Database server 
+db = async_client.get_database(database)# Database server 
 
 project_home_collection = db["project_home"]  # Project base collection
 workers_collection = db["workers"]  # Project workers collection
@@ -46,22 +46,22 @@ def crunch_data(id:str,flag:str, data:Any=None):
     }
 
 
-def save_project(data:dict={}):
+async def save_project(data:dict={}):
     project:Project = Project()
     project.load_data( data=data )
     try:
         workers = crunch_data(id=data.get('_id', ''), flag='workers', data=data.get('workers', []))
         result = {
-            "project": project_home_collection.insert_one( project.project ),
-            "workers": workers_collection.insert_one( workers ),
-            "jobs": job_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='jobs', data=data.get('jobs', [])) ),
-            "rates": rate_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='rates', data=data.get('rates', [])) ),
-            "dayswork": daywork_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='dayswork', data=data.get('dayswork', [])) ),
-            "inventory": inventory_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='inventory', data=data.get('inventorys', [])) ),
-            "accounts": account_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='account', data=data.get('account', [])) ),
-            "estimates": estimate_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='estimates', data=data.get('estimates', [])) ),
-            "reports": report_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='reports', data=data.get('reports', [])) ),
-            "logs": logs_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='logs', data=data.get('logs', [])) )
+            "project": await project_home_collection.insert_one( project.project ),
+            "workers": await workers_collection.insert_one( workers ),
+            "jobs": await job_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='jobs', data=data.get('jobs', [])) ),
+            "rates": await rate_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='rates', data=data.get('rates', [])) ),
+            "dayswork": await daywork_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='dayswork', data=data.get('dayswork', [])) ),
+            "inventory": await inventory_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='inventory', data=data.get('inventorys', [])) ),
+            "accounts": await account_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='account', data=data.get('account', [])) ),
+            "estimates": await estimate_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='estimates', data=data.get('estimates', [])) ),
+            "reports": await report_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='reports', data=data.get('reports', [])) ),
+            "logs": await logs_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='logs', data=data.get('logs', [])) )
         }
         print(result)
 
@@ -75,11 +75,11 @@ def save_project(data:dict={}):
 
 
 ## Create Project
-def create_project( data:dict={} ):
+async def create_project( data:dict={} ):
     project:Project = Project()
     project.load_data( data=data )
     try:
-        result = project_home_collection.insert_one( project.project )
+        result = await project_home_collection.insert_one( project.project )
         return result
     except Exception as ex:
         print( str(ex))
@@ -94,7 +94,7 @@ async def read_project(id:str='', conn:Coroutine=db_connection)->Project | dict 
     project:Project = Project()
     #project.load_data( data= await conn.get(_directive=id))
     try:
-        data:dict = project_home_collection.find_one({"_id": id}) # type: ignore
+        data:dict = await project_home_collection.find_one({"_id": id}) # type: ignore
         #print(data)
         #project:Project = Project( **data ) # type: ignore
         project.load_data( data=data )
@@ -112,14 +112,16 @@ async def read_project(id:str='', conn:Coroutine=db_connection)->Project | dict 
 
 
 ## Update Project
-def update_project(data:dict={}, conn:Coroutine=db_connection):
+async def update_project(data:dict={}, conn:Coroutine=db_connection)->Project | dict:
     query_filter = {'_id' : data.get('_id')}
-    update_operation = { '$set' : data }
-    result = project_home_collection.update_one(query_filter, update_operation)    
-    try:  
+    update_operation = { '$set' : data }    
+    result:Any = None
+    try: 
+        result = await project_home_collection.update_one(query_filter, update_operation)  
+        #log the update operation result 
         print(result)     
         
-        return read_project(id=data.get('_id', ''))
+        return await read_project(id=data.get('_id', ''))
     except Exception as ex:
         return {'error': str(ex) } #HTTPStatus(404).description}
     finally:
@@ -138,50 +140,59 @@ async def all_projects(conn:Coroutine=db_connection ) -> list[dict]:
 
 
 ## Delete Project   
-def delete_project(id:str='', conn:Coroutine=db_connection):
-    return project_home_collection.delete_one( {"_id": id} )
+async def delete_project(id:str='', conn:Coroutine=db_connection):
+    return await project_home_collection.delete_one( {"_id": id} )
 
 # Project Worker Management
 
 ## Add worker to project workers
-def get_worker(project_id:str='', worker_id:str=''):
-    
+async def get_worker(project_id:str='', worker_id:str='')-> ProjectWorker | dict:
+    worker:ProjectWorker = ProjectWorker()
+    result:Any = None
     try:
-        result = workers_collection.find_one({"_id": project_id})
-    
-        return [ worker for worker in result.get('workers') if worker.get('key') == worker_id ][0] # type: ignore
+        result = await workers_collection.find_one({"_id": project_id})
+        worker.load_data( data= [ worker for worker in result.get('workers') if worker.get('key') == worker_id ][0] ) # type: ignore    
+        return worker
     except Exception as ex:
         return {'error': str(ex) } #HTTPStatus(404).description}
 
 
     
-def get_workers(project_id:str=''):
-    
+async def get_workers(project_id:str='')->list[ProjectWorker] | dict:  
+    workers:list[ProjectWorker] = []
+    result:Any = None
     try:
-        result = workers_collection.find_one({"_id": project_id})
-    
-        return result
+        result = await workers_collection.find_one({"_id": project_id})
+        for item in result.get('workers', []):            
+            worker:ProjectWorker = ProjectWorker()
+            worker.load_data(data=item)
+            workers.append(worker)
+        return workers
     except Exception as ex:
         return {'error': str(ex) } #HTTPStatus(404).description}
-
-    
-def get_account(project_id:str=''):    
-    try:
-        result = account_collection.find_one({"_id": project_id})
-    
-        return result
-    except Exception as ex:
-        return {'error': str(ex) } #HTTPStatus(404).description}
-
-
+    # clean up
+    finally:        
+        del workers
 
 # Accounting Management
-# Project accounting management 
+# Project accounting management functions for retrieving and managing project accounts and financial data. These functions interact with the account collection in the MongoDB database to perform operations such as retrieving account details, calculating statistics, and generating charts for financial reporting.
+    
+async def get_account(project_id:str='')->ProjectAccount | dict:  
+    account:ProjectAccount = ProjectAccount()  
+    try:
+        result:dict = await account_collection.find_one({"_id": project_id}) # type: ignore
+        account.load_data(data=result.get('account', {}))
+        return account
+    except Exception as ex:
+        return {'error': str(ex) } #HTTPStatus(404).description}
+    
+
+
 async def account_statistics(project_id:str='')-> dict:
     """Account Statistics Reporting"""
-    project:Project = await read_project(id=project_id) 
-    project.load_account()   
-    print("PROJECT ACCOUNT", project.account)
+    project:Project = await read_project(id=project_id)  # type: ignore
+    project.load_account()  
+    
     account:dict = {
         "current_balance": 0,
         "deposits": 0,
@@ -204,16 +215,18 @@ async def account_statistics(project_id:str='')-> dict:
             
 
 
-async def piechart(project:dict={}):
+async def piechart(project_id:str='')-> ezChart:
+    project_account:ProjectAccount = await get_account(project_id=project_id) # type: ignore
     account:dict = {
         "current_balance": 0,
-        "deposits": tally(project['account']['transactions']['deposit']),
-        "withdrawals": tally(project['account']['transactions']['withdraw']),
-        "expences": tally(project['account']['expences']),
-        "paybills": tally(project['account']['records']['paybills']),
-        "invoices": tally(project['account']['records']['invoices'])
+        "deposits": tally( [{'amount': deposit.amount} for deposit in project_account.transactions.deposit] ),
+        "withdrawals": tally( [{'amount': withdrawal.amount} for withdrawal in project_account.transactions.withdraw] ),
+        "expences": project_account.expences.total,
+        "paybills": tally( [{'total': paybill.total} for paybill in project_account.records.paybills] ),
+        "invoices": tally( [{'total': invoice.total} for invoice in project_account.records.invoices] )
     }
     account['current_balance'] = account["deposits"] - sum([account["withdrawals"], account["expences"]])
+   #print("Account Data for Pie Chart:", account)
     labels = []
     series = []
     for key, val in account.items():
@@ -252,3 +265,23 @@ async def piechart(project:dict={}):
     }
     chart = ezChart(options=options )
     return chart
+
+
+# Project Jobs Management
+
+async def get_jobs(project_id:str='')->list[JobModel] | dict:  
+    jobs:list[JobModel] = []
+    result:Any = None
+    try:
+        result = await job_collection.find_one({"_id": project_id})
+        for item in result.get('jobs', []): 
+            job:JobModel = JobModel()
+            job.load_data(data=item)           
+            jobs.append(job)
+        return jobs
+    except Exception as ex:
+        return {'error': str(ex) } #HTTPStatus(404).description}
+    # clean up
+    finally:        
+        del jobs
+

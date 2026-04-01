@@ -1,0 +1,39 @@
+
+<form id="employee-identity-form" hx-post="/employee/{{ employee._id }}/i/identity" hx-target="#employee-identity"
+    class="space-y-4">
+    <ul id="employee-identity-list">             
+        <li>  
+            
+            <strong>Id.</strong>  
+            {% if employee.identity %}
+            {{ employee.identity}}
+            {% else %}            
+
+            <div class="flex flex-row">
+                <input type="text" placeholder="Identity" name="identity" class="input input-accent input-xs" />
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+        <li>
+        
+            <strong>Id Type.</strong>
+            {% if employee.id_type %}
+            {{ employee.id_type}}
+            {% else %}
+        
+            <div class="flex flex-row">               
+                <select class="select select-xs select-accent" name="id_type">
+                    <option disabled selected>Government Issued Id</option>
+                    <option>pasport</option>
+                    <option>drivers license</option>
+                    <option>national id</option> 
+                    <option>other</option>
+                </select>
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+        
+    </ul>
+</form>

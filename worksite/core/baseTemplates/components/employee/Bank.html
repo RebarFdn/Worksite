@@ -1,0 +1,26 @@
+{% if employee.account.bank %}
+ <form id="employee-bank-form" hx-post="/employee/{{ employee._id }}/i/bank"
+ hx-target="#employee-bank" class="space-y-4">
+ <ul  id="employee-account-bank" > 
+    <li class="text-md font-semibold py-2">Banking Information</li>
+    {% for key,val in employee.account.bank.items() %}
+    <li>
+        <strong>{{key}}.</strong> 
+        {% if val %}
+        {{ val }}
+        {% else %}
+        
+        <div class="flex flex-row">
+            <input type="text" placeholder="{{key}}" name="{{key}}" class="input input-accent input-xs"/>
+            <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+        </div>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+</form>
+{% else %}
+<p class="text-xl text-center text-gray-500 font-bold">
+    The employee has'nt provided any banking information! 
+</p>
+{% endif %}

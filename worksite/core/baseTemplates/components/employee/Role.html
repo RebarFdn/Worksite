@@ -1,0 +1,40 @@
+<form id="employee-role-form" hx-post="/employee/{{ employee._id }}/i/role" hx-target="#employee-role"
+    class="space-y-4">
+    <ul id="employee-role-list">
+        <li>
+
+            <strong>Occupation.</strong>
+            {% if employee.occupation %}
+            {{ employee.occupation}}
+            {% else %}
+
+            <div class="flex flex-row">
+                
+                <select class="select select-xs select-accent" name="occupation">
+                    <option disabled selected>Job Categories</option>                    
+                    {% for job in occupation_index %}
+                    <option>{{ job }}</option>
+                    {% endfor %}
+                </select>
+                   
+                </select>
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+        <li>
+
+            <strong>Rating.</strong>
+            {% if employee.rating %}
+            {{ employee.rating}}
+            {% else %}
+
+            <div class="flex flex-row">
+                <input type="number" placeholder="Rating" name="rating" class="input input-accent input-xs" />
+                <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
+            </div>
+            {% endif %}
+        </li>
+
+    </ul>
+</form>

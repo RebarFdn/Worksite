@@ -1,0 +1,167 @@
+<div id="employee-home" class="grid grid-flow-row grid-row-2 md:grid-cols-4 gap-4"> 
+        <div id="employee-left-display" class="md:col-span-2 bg-blue-100 border-blue-200 rounded-sm ml-2">
+           <p class="text-lg font-semibold p-2">Employee Basic Information</p> 
+            <div class="uk-grid-small uk-child-width-expand@s uk-text-left" uk-grid>
+                <div>
+                     <div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
+                        <ul>
+                             
+                            <li id="employee-name">
+                                <strong>Name.</strong> {{ employee.name }}
+                            </li>
+                            <li id="employee-oc">
+                                <strong>Known as.</strong> {{ employee.oc }}
+                            </li>
+                            <li id="employee-id">
+                                <strong>Employee Id.</strong> {{ employee._id }}
+                            </li>                            
+                            <li><strong>Address.</strong></li>
+                            <li>
+                            <!-- Address Info -->
+                                <div  id="employee-address" class="mt-1">                            
+                                    {% include 'components/employee/Address.html' %}                        
+                                </div>
+                            </li>
+                           
+
+                            <li class="text-md font-semibold py-2">Contact</li>
+                            <li>
+                            <!-- Contact Info -->
+                                <div id="employee-contact" class="mt-1">
+                                    {% include 'components/employee/Contact.html' %}
+                                </div>   
+                            </li>
+                            <li class="text-md font-semibold py-2">Role</li>
+                            <li>
+                                <!-- Role Info -->
+                                <div id="employee-role" class="mt-1">
+                                    {% include 'components/employee/Role.html' %}
+                                </div>
+                            </li>
+                            <li class="text-md font-semibold py-2">Identity</li>
+                            <li>
+                                <!-- Identity Info -->
+                                <div id="employee-identity" class="mt-1">
+                                    {% include 'components/employee/Identity.html' %}
+                                </div>
+                            </li>
+                        <li class="text-lg font-semibold py-2">Employment Status</li>
+
+
+
+                            
+                        </ul>
+
+                    </div>
+                </div>
+                <div>
+                    <div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-5">
+                    
+                      <div class="card text-center bg-base-100 w-48 shadow-sm uk-animation-fade">
+                        <div id="employee-profile">
+                       {% if employee.imgurl %}
+                        {% include 'components/employee/employeeProfile.html' %}
+                        {% endif %}
+                        </div>
+                        <div class="card-body items-center text-center">
+                            <span class="text-md text-center font-semibold">{{ employee.oc }}</span>
+                            <span class="text-sm text-center">{{ employee.occupation }}</span>
+                            <div class="card-actions flex flex-col">                              
+                            <button class="btn" onclick="e_profile.showModal()">Update Profile</button>
+                            
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+           
+
+        </div>
+        <div id="employee-right-display" class="md:col-span-2 bg-blue-100 border-blue-200 rounded-sm ml-2">
+            <div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-5">
+                <ul  id="employee-personal" class="mt-5"> 
+                    <li class="text-lg font-semibold p-1">Employee Personal Information</li> 
+                    <li><strong>Bio.</strong> </li>
+                    <li><!-- Bio Info -->
+                    <div id="employee-bio" class="mt-1">
+                        {% include 'components/employee/Bio.html' %}
+                    </div>
+                    </li>
+                    
+                    <li class="text-lg font-semibold p-2">Next of Kin</li>  
+                    <li><!-- Nok Info -->
+                        <div id="employee-nok" class="mt-1">
+                            {% include 'components/employee/Nok.html' %}
+                        </div>
+                    </li>  
+                    <li><strong>Health Issues</strong> </li>
+                    <li><!-- Health Info -->
+                        <div id="employee-health" class="mt-1">
+                            {% include 'components/employee/Health.html' %}
+                        </div>
+                    </li>
+                                        
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+  
+
+
+<dialog id="e_profile" class="modal">
+  <div class="modal-box">
+    <h3 class="text-md font-bold">Update Employee Profile Image</h3>
+    <div class="uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
+        <div>
+            
+                <form hx-encoding='multipart/form-data' hx-post='/upload_file/employee_image/{{ employee._id }}'
+                    _='on htmx:xhr:progress(loaded, total) set #progress.value to (loaded/total)*100' hx-target="#employee-profile">
+
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Pick a Image</legend>
+                        <input class="file-input" id="file-upload" type="file" name="file" accept=".jpg, .png, .pdf" onchange="previewImage(event)"/>
+                        <label class="label">Max size 2MB {{ employee._id }}</label>
+                        <progress id='progress' value='0' max='100'></progress>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <button class="btn btn-primary mt-4" type="submit">Upload Image</button>
+                    </fieldset>
+                </form>
+            
+            
+        </div>
+        <div>
+            
+                <img id="preview" alt="Preview Image" style="width: 300px; height: auto;" />
+           
+        </div>
+        
+        </div>
+    
+    
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+{% block extra_scripts %}
+
+<script type="text/javascript">
+    function previewImage(event) {
+        var input = event.target;
+        var image = document.getElementById('preview');
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                image.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{% endblock extra_scripts %}
