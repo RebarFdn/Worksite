@@ -18,7 +18,8 @@ STYLES_PATH:Path = STATIC_PATH / 'css'
 IMAGES_PATH:Path = STATIC_PATH / 'imgs'
 MAPS_PATH:Path = STATIC_PATH / 'maps'
 ICONS_PATH:Path = IMAGES_PATH / 'icons' 
-PROFILES_PATH:Path = IMAGES_PATH / 'workers'
+LOCAL_IMGS_PATH:Path = BASE_PATH.parent.parent.parent / 'Pictures'
+PROFILES_PATH:Path = LOCAL_IMGS_PATH / 'workers'
 DATA_PATH:Path = BASE_PATH.parent.parent / 'SiteLiteData'
 LOG_PATH:Path = Path.joinpath(BASE_PATH.parent, 'logs')
 # Certificate and Key paths
@@ -77,3 +78,4 @@ class Settings(BaseSettings):
     items_per_user: int = 50
 
 settings = Settings()
+

@@ -23,7 +23,7 @@
                 <td>{{ item.date | to_date  }}</td>
                 <td>{{item.project}}</td>
                 <td>{{item.bill_ref}}</td>
-                <td>{{ item.get('items') | length }}</td>
+                <td>{{ item.items | length }}</td>
                 <td>{{item.payment.total | to_dollars }}</td>
                 
                 

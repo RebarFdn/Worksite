@@ -8,10 +8,10 @@
         </tr>
     </thead>
     <tbody>
-        {% for supplier in filtered %}
+        {% for supplier in suppliers %}
         <tr>
             <td class="tooltip tooltip-info cursor-pointer" data-tip="Go to Supplier {{supplier._id}}"
-                hx-get="/supplier/{{supplier._id}}/n/n" hx-target="#main-display" hx-trigger="click">{{ supplier.name }}
+                hx-get="/supplier/{{supplier._id}}" hx-target="#app" hx-trigger="click">{{ supplier.name }}
             </td>
             <td>{{ supplier.taxid }}</td>
             <td>

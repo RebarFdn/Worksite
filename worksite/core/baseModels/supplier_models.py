@@ -5,7 +5,7 @@ from core.utilities.utils import generate_id, timestamp
 from core.baseModels.addresslocation_models import Address
 from core.baseModels.comunication_modules import Contact
 from core.baseModels.accounting_models import CommercialAccount, SupplierInvoiceRecord
-from core.baseModels.data_models import ( SupplierStub )
+from core.baseModels.data_models import ( MetaData, SupplierStub )
 
 
 
@@ -16,6 +16,7 @@ class Supplier(BaseModel):
     address:Address = Address()
     contact: Contact = Contact()    
     account:CommercialAccount = CommercialAccount()
+    metadata:MetaData = MetaData()
 
     @property
     def _id(self)->str:
@@ -63,6 +64,25 @@ class Supplier(BaseModel):
         else:
             pass 
 
+    
+    def load_form_data(self, form_data:dict={}):
+        if form_data:            
+            if form_data.get('name'):
+                self.name = form_data.get('name', '')
+            if form_data.get('taxid'):
+                self.taxid = form_data.get('taxid', '')
+            if form_data.get('street') or form_data.get('city_parish') or form_data.get('country') or form_data.get('zip'):
+                self.address.load_data( data=form_data )
+            if form_data.get('tel') or form_data.get('email') or form_data.get('mobile'):
+                self.contact.load_data( data=form_data )
+            if form_data.get('account'):
+                del form_data['name']
+                self.account.bank.load_data( data=form_data )
+                
+        else:
+            pass 
+
+    
     def add_invoice_record(self, data:Any=None)->None:
         '''Updates records with a dict or Model'''
         if data:
@@ -75,16 +95,9 @@ class Supplier(BaseModel):
         else:
             pass
     
+ 
     
     
-    
-    
-    
-class MaterialSupplier(BaseModel):
-    id: str = Field(default="" )
-    name:str = Field(default='')     
-    taxid: str = Field(default='')
-    account:CommercialAccount = CommercialAccount()
-    address:Address = Address()
-    contact: Contact = Contact()
+class MaterialSupplier(Supplier):
+    materials:list = Field(default_factory=list)
 

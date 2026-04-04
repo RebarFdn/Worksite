@@ -5,11 +5,8 @@ from fastapi.responses import FileResponse # pyright: ignore[reportMissingImport
 
 from config import (TEMPLATES)
 
+from apps.SiteSupplier.routes import router 
+
+
 app = FastAPI()
-
-
-
-@app.get("/suppliers")
-async def supplier_home(request:Request):
-    return TEMPLATES.TemplateResponse( request=request, name="components/supplier/index.html")
-
+app.mount("/", router)

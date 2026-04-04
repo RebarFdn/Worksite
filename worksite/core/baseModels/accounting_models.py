@@ -51,6 +51,8 @@ class Bank(BaseModel):
         if data:
             if data.get('name'):
                 self.name = data.get('name', '')
+            elif data.get('bank_name'):
+                self.name = data.get('bank_name', '')   
             if data.get('branch'):
                 self.branch=data.get('branch', '')
             if data.get('account'):

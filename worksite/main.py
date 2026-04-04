@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse # pyright: ignore[reportMissingImport
 from fastapi.staticfiles import StaticFiles # pyright: ignore[reportMissingImports]
 from fastapi.middleware.cors import CORSMiddleware # pyright: ignore[reportMissingImports]
 
-from config import (STATIC_PATH, TEMPLATES, FAVICON_FILE, CERT_PATH, HOST, PORT, app_paths, settings)
+from config import (STATIC_PATH, PROFILES_PATH, TEMPLATES, FAVICON_FILE, CERT_PATH, HOST, PORT, app_paths, settings)
 from core.utilities import ( check_paths, )
 # Importing Applications
 from apps.SiteUser.application import app as user_app
@@ -38,6 +38,9 @@ app.add_middleware(
 
 # Serve Static Files
 app.mount("/static", StaticFiles(directory=STATIC_PATH), name="static")
+
+# Serve Profile Images
+app.mount("/profile", StaticFiles(directory=PROFILES_PATH), name="profiles")
 
 app.mount("/user", user_app)
 app.mount("/project", project_app)

@@ -339,13 +339,17 @@ class EmployeeModel(BaseModel):
                 self.health_issues = data.get('health_issues', [])
             if data.get('metadata'):
                 self.metadata.load_data(data= data.get('metadata', {}))
-           
+            self.update_imgurl
                
         else:
             pass 
     
-    
-            
+   
+    @property
+    def update_imgurl(self):
+        self.imgurl = f"/profile/{self.id}.jpg"
+        
+
     def load_new_form_data(self, form_data:dict={}, user:str='' )->None:
         if form_data: 
             if form_data.get('name'):         

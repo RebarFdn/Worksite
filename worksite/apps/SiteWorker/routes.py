@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse # pyright: ignore[reportMissingImport
 from config import ( TEMPLATES, )
 from core.utilities.data_lib import ( get_job_categories, project_phases, rate_categories )
 from logger import (logger, g_log)
-from apps.SiteWorker.worker import ( all_workers, get_worker )
+from apps.SiteWorker.worker import ( all_workers, get_worker, update_employee )
 from core.utilities.data_lib import ( get_job_categories, project_phases, rate_categories )
 
 
@@ -37,6 +37,13 @@ async def get_workers_index(request:Request, filter:str='all'):
 @router.get("/{item_id}")
 async def read_worker(request:Request, item_id: str, q: str | None = None):
     worker:Employee = await get_worker(id= item_id) # type: ignore
+
+    try:
+        result = await update_employee(worker.employee) # type: ignore
+        #print(f"Update Result: {result}") # type: ignore
+    except Exception as e:
+        logger().exception(e)
+
     return TEMPLATES.TemplateResponse(
         request=request,
         name= page_url('Employee.html'), 
