@@ -8,8 +8,8 @@
             <div class="dropdown">
               <div tabindex="0" role="button" class="btn m-1">Filter<span>{{filter}}</span></div>
               <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                {% for cat in locations %}
-                <li hx-get="/supplier/index/{{cat}}/i" hx-target="#main-display" hx-trigger="click"><a>{{cat}}</a></li>
+                {% for place in locations %}
+                <li hx-get="/supplier/index/{{place}}" hx-target="#app" hx-trigger="click"><a>{{place}}</a></li>
                 {% endfor %}
                 <li><a></a></li>
               </ul>
@@ -26,7 +26,7 @@
           </label></li>
         
         <li><button class="btn" hx-get="/supplier/about/i/i" hx-target="#right-bar" hx-trigger="every 10s">
-            <span class="badge badge-outline badge-info">{{ filtered | length}}</span></button></li> 
+            <span class="badge badge-outline badge-info">{{ suppliers | length}}</span></button></li> 
         <li><button class="btn" onclick="add_supplier_modal.showModal()">Register New Supplier</button></li>        
         <li><button class="btn" ><span class="fa fa-print"></span>Print Suppliers</button></li> 
       </ul>

@@ -3,15 +3,15 @@
  hx-target="#employee-bank" class="space-y-4">
  <ul  id="employee-account-bank" > 
     <li class="text-md font-semibold py-2">Banking Information</li>
-    {% for key,val in employee.account.bank.items() %}
+    {% for item in employee.account.bank %}
     <li>
-        <strong>{{key}}.</strong> 
-        {% if val %}
-        {{ val }}
+        <strong>{{item[0]}}.</strong> 
+        {% if item[1] %}
+        {{ item[1] }}
         {% else %}
         
         <div class="flex flex-row">
-            <input type="text" placeholder="{{key}}" name="{{key}}" class="input input-accent input-xs"/>
+            <input type="text" placeholder="{{item[0]}}" name="{{item[0]}}" class="input input-accent input-xs"/>
             <button type="submit" class="btn btn-xs btn-primary ml-2">Update</button>
         </div>
         {% endif %}

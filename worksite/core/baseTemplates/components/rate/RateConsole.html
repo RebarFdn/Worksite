@@ -39,26 +39,26 @@
                 <th>Metric</th>
                 <th>Imperial</th>
                 <th>Action</th>
-                <th>Image</th>
+                <th>Manage</th>
             </tr>
         <tbody>
             <tr>
-                <td>{{ rate.get("_id") }}</td>
-                <td><textarea id="rate-description" name="description" rows="4" cols="30">{{ rate.description }}
+                <td>{{ rate.id }}</td>
+                <td><textarea class="textarea textarea-xs" id="rate-description" name="description" rows="4" cols="30">{{ rate.description }}
                     </textarea></td>
                 <td>
                     <div class="flex flex-row">
-                        <input id="metric-price" name="metric_price" value="{{rate.metric.price }}" style="width: 86px">
+                        <input class="input input-xs" id="metric-price" name="metric_price" value="{{rate.metric.price }}" style="width: 86px">
                         <span class="badge">per</span>
-                        <input id="metric-unit" name="metric_unit" value="{{rate.metric.unit}}" style="width: 60px">
+                        <input class="input input-xs" id="metric-unit" name="metric_unit" value="{{rate.metric.unit}}" style="width: 60px">
                     </div>
                 </td>
                 <td>
                     <div class="flex flex-row">
-                        <input id="imperial-price" name="imperial_price" value="{{rate.imperial.price }}"
+                        <input class="input input-xs" id="imperial-price" name="imperial_price" value="{{rate.imperial.price }}"
                             style="width: 86px">
                         <span class="badge">per</span>
-                        <input id="imperial-unit" name="imperial_unit" value="{{rate.imperial.unit}}"
+                        <input class="input input-xs" id="imperial-unit" name="imperial_unit" value="{{rate.imperial.unit}}"
                             style="width: 60px">
                     </div>
                 </td>

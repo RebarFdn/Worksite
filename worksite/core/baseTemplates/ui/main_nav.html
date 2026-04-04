@@ -191,7 +191,7 @@
 
     </div>
   </!--div-->
-  <div class="navbar bg-base-100 shadow-sm">
+  <div class="navbar bg-base-100">
     <div class="navbar-start">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
@@ -207,15 +207,15 @@
       <a class="btn btn-ghost text-xl">Worksite</a>
     </div>
 
-    <div class="navbar-center">
-      <ul class="menu menu-horizontal px-1">
+    <div class="navbar-center flex gap-4 items-center items-inline">
+      <ul class="menu menu-horizontal px-1 rounded-md shadow-sm">
       
         <li hx-get="/project/projects" hx-target="#app" trigger="click">
-          <label for="my-drawer" class="uk-button uk-button-default uk-button-small drawer-button">
+          <label for="my-drawer" class="btn btn-ghost btn-sm drawer-button">
             <span class="fa fa-cubes"></span> Projects</label>
         </li>
         <li>
-          <a class="uk-button uk-button-default uk-button-small" hx-get="/employee/index/all" hx-target="#app"
+          <a class="btn btn-ghost btn-sm" hx-get="/employee/index/all" hx-target="#app"
             hx-trigger="click">
             <span class="fa fa-users">
             </span> Team
@@ -223,21 +223,26 @@
         </li>
       
         <li>
-          <a class="uk-button uk-button-default uk-button-small" hx-get="/rate/index" hx-target="#app"
+          <a class="btn btn-ghost btn-sm" hx-get="/rate/index/all" hx-target="#app"
             hx-trigger="click">
             <span class="fa fa-dollar">
             </span> Industry Rates
           </a>
         </li>
       
-        <li><a class="uk-button uk-button-default uk-button-small" hx-get="/supplier/index" hx-target="#app"
+        <li><a class="btn btn-ghost btn-sm" hx-get="/supplier/index/all" hx-target="#app"
             hx-trigger="click">
             <span class="fa fa-truck"></span> Suppliers</a>
         </li>
       </ul>
+      
+      
     </div>
 
     <div class="navbar-end">
+      <button class="btn btn-sm btn-ghost">
+        <div id="date" class="badge badge-sm shadow-sm">Date time</div>
+      </button>
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
           <span>Tools </span>
@@ -262,7 +267,7 @@
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </button>
-      <button class="btn btn-ghost btn-circle">
+      <button class="btn btn-ghost btn-circle"  uk-tooltip="title: Notifications" >
         <div class="indicator">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -275,3 +280,17 @@
 
 
   </div>
+
+  {% block extra_scripts %}
+  <script>
+    var dateElement = document.getElementById('date');
+
+    function updateDate() {
+      var now = new Date();
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' , hour: '2-digit', minute: '2-digit' };
+      dateElement.textContent = now.toLocaleDateString('en-US', options);
+    }
+    updateDate();
+    setInterval(updateDate, 2000); // Update every minute    
+  </script>
+  {% endblock %}

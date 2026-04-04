@@ -8,7 +8,7 @@
                 class="pointer" 
                 uk-icon="icon: social; ratio: .75" 
                 uk-tooltip="Share with Peers across the Network!"
-                hx-get="/share/rate/{{rate._id}}/{{rate.title}}/construction {{rate.category}} rate/{{request.user.username}}"
+                hx-get="/share/rate/{{rate.id}}/{{rate.title}}/construction {{rate.category}} rate/"
                 hx-swap="outerHTML"
                 hx-trigger="click"
             > share 
@@ -16,7 +16,7 @@
         {% endif %}
         <!--p class="text-lg text-center font-semibold mx-2">Title: {{ rate.title }}</!--p-->
     </div>
-    <form hx-put="/update_rate/{{rate._id}}" hx-target="#rate-console">
+    <form hx-put="/update/{{rate.id}}" hx-target="#rate-console">
         <div id="rate-console">
             {% include "components/rate/RateConsole.html" %}
         </div>
@@ -27,7 +27,7 @@
 <!-- This is the modal -->
 <div id="add-to-project"  uk-modal>
     <div class="uk-modal-dialog uk-modal-body bg-yellow-300 rounded-lg">
-        <h4 class="uk-modal-title text-sm">Select a Project to Add {{ rate.get("title")  }} To.</h4>
+        <h4 class="uk-modal-title text-sm">Select a Project to Add {{ rate.title  }} To.</h4>
        
         <select 
         class="mx-5 my-3 rounded-md"
@@ -54,7 +54,7 @@
 <!-- This is the clone rate  modal -->
 <div id="clone-rate"  uk-modal>
     <div class="uk-modal-dialog uk-modal-body bg-blue-300 rounded-lg">
-        <h4 class="text-lg text-center font-semibold"> Clone {{ rate.get("title")  }} </h4>
+        <h4 class="text-lg text-center font-semibold"> Clone {{ rate.title  }} </h4>
        
         <div class="text-xs">
             
@@ -63,7 +63,7 @@
                     <div class="flex w-full flex-col gap-2">
                         <div class="form-field hidden">
                             <label class="form-label">Id </label>            
-                            <input type="text"  name="_id" value="{{rate._id}}" class="input max-w-full" />                        
+                            <input type="text"  name="id" value="{{rate.id}}" class="input max-w-full" />                        
                         </div>
                         <div class="form-field">
                             <label class="form-label"><span>Title</span></label>   

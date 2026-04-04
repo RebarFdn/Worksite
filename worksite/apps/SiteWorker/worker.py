@@ -46,11 +46,11 @@ async def all_workers(conn:Coroutine=db_connection)->list:
     Returns:
         list: _description_
     """
-    data = await conn.get(_directive="_design/workers/_view/name-index") 
+    data = await conn.get(_directive="_design/workers/_view/name-index")  # type: ignore
     try:
         return data.get('rows')
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": str(e)} # type: ignore
     finally: 
         del data
 
@@ -64,6 +64,19 @@ async def get_worker( id:str='', conn:Coroutine=db_connection )->EmployeeModel:
         dict: key value store of employee's record.
     """               
     worker:EmployeeModel = EmployeeModel()
-    worker.load_data( data= await conn.get(_directive=id) )
+    worker.load_data( data= await conn.get(_directive=id) ) # type: ignore
     return worker 
+
+
+async def update_employee(data:dict={}, conn:Coroutine=db_connection ):
+   
+    payload = await conn.put( json=data)    # type: ignore
+    try:           
+        return payload
+    except Exception as e:
+        return {"error": str(e)}
+    finally: 
+        del payload
+        
+
 
