@@ -1,41 +1,80 @@
-<div class="navbar bg-base-100 shadow-sm">
+
+
+<div id="employees-navbar" class="navbar bg-base-100 shadow-sm">
+ 
+  <div class="navbar-start">
+    <span hx-get="/employee/index/all" hx-target="#app" class="cursor-pointer">Employees</span> <span
+      class="badge badge-info badge-xs">{{workers | length}}</span>
     
-    <a class="btn btn-ghost text-xl" onclick="add_employee_modal.showModal()">Employees</a>
-   
-    <div class="navbar-start">
-        <ul class="menu menu-horizontal px-1">
-          <li>
-            <div class="dropdown">
-              <div tabindex="0" role="button" class="btn btn-sm btn-accent m-1">Filter<span>{{filter}}</span></div>
-              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                {% for cat in occupation_index %}
-                <li hx-get="/employee/index/{{cat}}" hx-target="#app" hx-trigger="click"><a>{{cat}}</a></li>
-                {% endfor %}
-                <li><a></a></li>
-              </ul>
-            </div>
-            </li>
-        
-        </ul>
-    </div>
-    <div class="flex-none">
-      <ul class="menu menu-horizontal px-1">
-        <li><label class="input">
+    <ul class="menu menu-horizontal px-1">
+
+      <li><a class="btn btn-ghost btn-xs text-sm" onclick="add_employee_modal.showModal()"><span
+            class="fa fa-home"></span>
+          Create
+          Employee</a>
+      </li>
+      <li><label class="input input-xs input-info rounded-md">
           <span class="fa fa-search"></span>
-            <input 
-            type="search" 
-            name="search-project-worker" 
-            required placeholder="Search"
-            class="input-xs input-info rounded-lg" 
-            />
-          </label></li>
-        
-        <li><button class="btn" hx-get="/employee/about/i/i" hx-target="#right-bar" hx-trigger="every 20s">
-            <span class="badge badge-outline badge-info">{{ workers | length}}</span></button></li> 
-        <li><button class="btn" onclick="add_employee_modal.showModal()">Register New Employee</button></li>        
-        <li><button class="btn" ><span class="fa fa-print"></span>Print Employees</button></li> 
-      </ul>
+          <input type="search" name="employee_search_term" placeholder="Search" />
+        </label>
+      </li>
+      <li>
+
+        <button class="btn btn-ghost btn-xs" type="button">Filter</button>
+        <div uk-dropdown>
+          <ul class="uk-nav uk-dropdown-nav">
+
+            <li class="uk-nav-header">Occupation</li>
+            {% for cat in occupation_index %}
+            <li hx-get="/employee/index/{{cat}}" hx-target="#app" hx-trigger="click" class="px-2 my-1"><a>{{cat}}</a></li>
+            {% endfor %}
+            <li><a href="#"></a></li>
+          </ul>
+        </div>
+      </li>
+      <li><button class="btn btn-ghost btn-xs"><span id="filter">{{filter}}</span></button></li>
+
+    </ul>
+  </div>
+  <div class="navbar-center hidden lg:flex">
+    {% if filter == 'all' %}
+    <p class="text-center font-semibold">Registered Employees</p>
+    {% else %}
+    <p class="text-center font-semibold"> Registered {{filter | capitalize }}s </p>
+    {% endif %}
+
+  </div>
+  <div class="navbar-end mr-5">
+    <div class="flex-none">
+
+
+      <button class="btn btn-sm btn-ghost tooltip tooltip-top" data-tip="About Suppliers" hx-get="/employee/about"
+        hx-target="#employees-index">
+        <span class="fa fa-home rate"></span>About
+      </button>
+
+      <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Collaborate with others"
+        hx-post="/employee/share/sheet" hx-target="#message"
+        hx-confirm="You are about to give access to this project's sensitive information and management with another user. Are you shure you want to do that? This action can be undone.">
+        <span class="fa fa-share-alt rate"></span>
+      </button>
+      <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Archive Suppliers"
+        hx-get="/employee/archive/{{filter }}" hx-target="#message"
+        hx-confirm="Are you sure you want to put this supplier sheet in the Archives? You can recover it at a later time if desired.">
+        <span class="fa fa-archive rate"></span>
+      </button>
+      <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Print Suppliers"
+        hx-get="/employee/print/{{filter }}" hx-target="#message"
+        hx-confirm="Are you sure you want to print this supplier sheet?">
+        <span class="fa fa-print rate"></span>
+      </button>
+
+      <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Export To Excel!" id="button-excel"
+        onclick="exportExcel()">
+        <span class="fa fa-file-excel rate"></span>
+      </button>
     </div>
+  </div>
 </div>
 
 

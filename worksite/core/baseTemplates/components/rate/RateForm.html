@@ -1,4 +1,5 @@
-<form class="mx-auto flex w-full max-w-lg flex-col rounded-xl border border-border bg-backgroundSecondary p-4 sm:p-20"
+<div>
+<form class="mx-auto flex w-full max-w-lg flex-col text-xs p-4 sm:p-20"
     hx-post="/rate/save"
     hx-target="#industry-rates"
     prevent-default>
@@ -6,14 +7,14 @@
         <div class="flex w-full flex-col gap-2">
             <div class="form-field">
                 <label class="form-label">Title </label>
-                <input type="text" name="title" class="input max-w-full" />
+                <input type="text" name="title" placeholder="Title here"  class="input input-xs max-w-full" />
             </div>
             <div class="form-field">
                 <label class="form-label">
                     <span>Description</span>
                 </label>
                 <div class="form-control">
-                    <input placeholder="Description here" type="textarea" name="description" class="input max-w-full" />
+                    <input placeholder="Description here" type="textarea" name="description" class="input input-xs max-w-full" />
                 </div>
             </div>
             <div class="form-field">
@@ -22,8 +23,8 @@
                 </label>
                 <div class="form-control">
                     <input id="rcat" placeholder="Category here" type="textarea" name="category"
-                        class="input max-w-full" value="" />
-                    <select class="select select-secondary" name="category" value="Category"
+                        class="input input-xs max-w-full" value="" />
+                    <select class="select select-info select-xs" name="category" value="Category"
                         oninput="this.form.rcat.value=this.value">
                         <option>Select Category</option>
                         {% for category in rate_categories %}
@@ -41,7 +42,7 @@
                         </label>
                         <div class="form-control">
                             <input placeholder="Metric Unit here" type="text" name="metric_unit"
-                                class="input max-w-full" />
+                                class="input input-xs max-w-full" />
                         </div>
                     </div>
                     <div class="form-field">
@@ -50,7 +51,7 @@
                         </label>
                         <div class="form-control">
                             <input placeholder="Price here" type="number" step="0.01" name="metric_price"
-                                class="input max-w-full" />
+                                class="input input-xs max-w-full" />
                         </div>
                     </div>
                     <div class="form-field">
@@ -59,7 +60,7 @@
                         </label>
                         <div class="form-control">
                             <input placeholder="Output here" type="number" step="0.01" name="metric_output"
-                                class="input max-w-full" />
+                                class="input input-xs max-w-full" />
                         </div>
                     </div>
 
@@ -73,7 +74,7 @@
                         </label>
                         <div class="form-control">
                             <input placeholder="Imperial Unit here" type="text" name="imperial_unit"
-                                class="input max-w-full" />
+                                class="input input-xs max-w-full" />
                         </div>
                     </div>
                     <div class="form-field">
@@ -82,7 +83,7 @@
                         </label>
                         <div class="form-control">
                             <input placeholder="Price here" type="number" step="0.01" name="imperial_price"
-                                class="input max-w-full" />
+                                class="input input-xs max-w-full" />
                         </div>
                     </div>
                     <div class="form-field">
@@ -91,15 +92,22 @@
                         </label>
                         <div class="form-control">
                             <input placeholder="Output here" type="number" step="0.01" name="imperial_output"
-                                class="input max-w-full" />
+                                class="input input-xs max-w-full" />
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-field pt-5">
-                <div class="form-control justify-between">
+                <div class="form-control justify-between my-2">
                     <button type="submit" class="btn btn-primary w-full uk-modal-close">Create New Rate</button>
                 </div>
+                <form method="dialog">
+                    <!-- if there is a button, it will close the modal -->
+                    <button class="btn btn-ghost w-full">Cancel </button>
+                </form>
             </div>
+            
         </div>
 </form>
+
+</div>
