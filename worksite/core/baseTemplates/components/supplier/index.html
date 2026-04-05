@@ -8,8 +8,6 @@
             <div class="dropdown">
               <div tabindex="0" role="button" class="btn m-1">Filter<span>{{filter}}</span></div>
               <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                {% for cat in locations %}
-                <li hx-get="/supplier/index/{{cat}}/i" hx-target="#main-display" hx-trigger="click"><a>{{cat}}</a></li>
                 {% endfor %}
                 <li><a></a></li>
               </ul>
