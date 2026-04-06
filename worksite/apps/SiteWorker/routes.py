@@ -1,11 +1,14 @@
 # SiteWorker Routes
 from typing import Any
-from fastapi import APIRouter , Request # pyright: ignore[reportMissingImports]
+from pathlib import Path
+from PIL import Image
+from functools import lru_cache
+from fastapi import APIRouter, Request, UploadFile, File # pyright: ignore[reportMissingImports]
 from fastapi.responses import HTMLResponse # pyright: ignore[reportMissingImports]
-from config import ( TEMPLATES, )
+from config import ( TEMPLATES, PROFILES_PATH )
 from core.utilities.data_lib import ( get_job_categories, project_phases, rate_categories )
 from logger import (logger, g_log)
-from apps.SiteWorker.worker import ( all_workers, get_worker, update_employee )
+from apps.SiteWorker.worker import ( all_workers, get_worker, save_employee_image  )
 from core.utilities.data_lib import ( get_job_categories, project_phases, rate_categories )
 
 
@@ -15,6 +18,7 @@ def page_url(page:str='')->str:
     return f"/components/employee/{page}"
 
 
+@lru_cache
 @router.get("/index/{filter}")
 async def get_workers_index(request:Request, filter:str='all'):
     workers:list = [] 
@@ -53,3 +57,31 @@ async def read_worker(request:Request, item_id: str, q: str | None = None):
              "occupation_index": get_job_categories()
         }
     )
+
+
+
+# Upload worker Profile 
+@router.post("/upload_file/{id}")
+async def upload_file(request:Request, id:str=''):    
+    
+    '''if proc == 'employee_image':
+            from modules.employee import save_employee_image
+            result = await save_employee_image( id=id, upload_file=upload_file )
+            return result
+        else:
+            return JSONResponse(content={"status": "error", "message": "Invalid process type"})
+    '''
+    worker = await save_employee_image( id=id, request=request )
+    try:
+
+        return TEMPLATES.TemplateResponse(
+            request=request,
+            name= page_url('employeeProfile.html'),
+            context={"employee": {"imgurl": worker.imgurl, "oc": worker.oc} }
+        )
+    except Exception as e:
+        logger().exception(e)
+        return {"error": str(e)}
+    finally:        
+        del worker
+    

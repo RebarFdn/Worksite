@@ -11,6 +11,7 @@ BASE_PATH:Path = Path(__file__).parent
 CORE_PATH:Path = BASE_PATH / 'core'
 STATIC_PATH:Path = CORE_PATH / 'static'
 TEMPLATES_PATH:Path = CORE_PATH / 'baseTemplates'
+CHARTS_PATH:Path = TEMPLATES_PATH / 'charts'
 
 DOCS_PATH:Path = CORE_PATH / 'docs'
 SCRIPTS_PATH:Path = STATIC_PATH / 'js'

@@ -87,7 +87,7 @@ class CommercialAccount(BaseModel):
 
 class DepositModel(BaseModel):
     id:str = Field(default=generate_id(name='account deposit') )
-    date:int = Field(default=timestamp())
+    date:int = Field(default=0)
     type:str = Field(default="deposit")
     ref:str = Field(default="")
     amount:float =Field(default=0.001)
@@ -99,8 +99,10 @@ class DepositModel(BaseModel):
         if data:
             if data.get('id'):
                 self.id = data.get('id', '')
-            if data.get('date'):
+            if data.get('date') and type(data.get('date')) == str:
                 self.date = timestamp(data.get('date', ''))
+            else:
+                self.date = data.get('date', 0)
             if data.get('type'):
                 self.type = data.get('type', 'withdrawal')
             if data.get('ref'):

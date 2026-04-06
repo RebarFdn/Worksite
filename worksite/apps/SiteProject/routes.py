@@ -2,6 +2,7 @@ from fastapi import APIRouter , Request # pyright: ignore[reportMissingImports]
 from fastapi.responses import HTMLResponse # pyright: ignore[reportMissingImports]
 from config import (STATIC_PATH, TEMPLATES, TEMPLATES_PATH)
 from apps.SiteProject.project import ( create_project, read_project, delete_project, get_jobs, get_workers , get_worker, all_projects, suppliers, account_statistics, piechart, Project, JobModel )
+from apps.SiteProject.charting import heatMap
 from core.utilities.data_lib import ( project_phases, rate_categories )
 from logger import (logger, g_log)
 
@@ -91,6 +92,15 @@ async def read_account_statistics(request:Request, project_id: str):
 async def read_piechart(request:Request, project_id: str)-> HTMLResponse:
     chart:ezChart = await piechart(project_id=project_id) # type: ignore
     return HTMLResponse(content=chart.chart(), status_code=200)
+
+@router.get("/heatmap/{project_id}")
+async def read_heatmap(request:Request, project_id: str)-> HTMLResponse:
+    map = heatMap()
+   
+    return HTMLResponse(map)
+   
+
+
 
 
 @router.get("/workers/{project_id}")

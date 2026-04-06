@@ -1,4 +1,5 @@
 {% extends "main_template.html" %}
+
 {%block content %}
 {% include "ui/main_nav.html" %}
 <div id="app">
@@ -7,11 +8,30 @@
         <p class="text-sm text-gray-500">Your Project management platform.</p>
     </div>
 </div>
+<div id="heat-map" data-heat-js="{ 'dynamicColorRange': { 'enabled': true }}">
+
+</div>
 {% endblock %}
+
+
 
 {% block footer %}
 <h6>&copy; 2025 Worksite. All rights reserved.</h6>
-<p>Table to Excell </p>
+
+    <div class="uk-child-width-expand@s uk-text-center" uk-grid>
+        <div>
+            <div class="uk-card uk-card-default uk-card-body">
+                <div id="heatmap" hx-get="/project/heatmap/any" hx-target="#heatmap" hx-trigger="load, click delay:2s" >
+                    HeatMap </div>
+            </div>
+        </div>
+        <div>
+            <div class="uk-card uk-card-default uk-card-body">Item</div>
+        </div>
+        <div>
+            <div class="uk-card uk-card-default uk-card-body">Item</div>
+        </div>
+        </div>
 
 {% endblock %}
    

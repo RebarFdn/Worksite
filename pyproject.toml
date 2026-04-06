@@ -22,4 +22,7 @@ dependencies = [
     "loguru>=0.7.3",
     "python-multipart>=0.0.22",
     "moviepy>=2.2.1",
+    "plotly[express]>=6.6.0",
+    "polars[rtcompat]>=1.39.3",
+    "pandas>=3.0.2",
 ]
