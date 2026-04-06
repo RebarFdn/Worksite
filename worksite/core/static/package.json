@@ -18,6 +18,7 @@
     "exceljs": "^4.4.0",
     "htmx-ext-ws": "^2.0.4",
     "htmx.org": "^2.0.8",
+    "jquery": "^4.0.0",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {

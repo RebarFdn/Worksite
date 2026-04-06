@@ -118,7 +118,7 @@
     <div class="uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
         <div>
             
-                <form hx-encoding='multipart/form-data' hx-post='/upload_file/employee_image/{{ employee._id }}'
+                <form hx-encoding='multipart/form-data' hx-post='/employee/upload_file/{{ employee._id }}'
                     _='on htmx:xhr:progress(loaded, total) set #progress.value to (loaded/total)*100' hx-target="#employee-profile">
 
                     <fieldset class="fieldset">
@@ -140,7 +140,7 @@
            
         </div>
         
-        </div>
+    </div>
     
     
   </div>

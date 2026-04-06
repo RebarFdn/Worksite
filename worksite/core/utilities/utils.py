@@ -102,11 +102,11 @@ def converTime(timestamp:int=0):
 
 
 
-def convert_timestamp(timestamp:int=0): 
-    if type(timestamp) == int:   
-        date = datetime.datetime.fromtimestamp(int(timestamp/1000))
-        return date.strftime("%Y-%m-%d")
-    return timestamp
+def convert_timestamp(timestp:int=0): 
+    
+    date = datetime.datetime.fromtimestamp(timestp/1000)
+    return date.strftime("%Y-%m-%d")
+    
 
 # unit converter 
 

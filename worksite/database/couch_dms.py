@@ -110,7 +110,8 @@ class Recouch:
             async with httpx.AsyncClient() as client:
                 r = await client.get(self.resolve_url_path(db=db, _directive=_directive))
             return r.json()
-        except Exception: return {"status": str(Exception)}
+        except Exception: 
+            return {"status": str(Exception)}
         finally: #close connection and clean up
             await r.aclose() # type: ignore
             del(r)
@@ -126,7 +127,8 @@ class Recouch:
             async with httpx.AsyncClient() as client:
                 r = await client.post(self.resolve_url_path(db=db), json=json)
             return r.json()
-        except Exception: return {"status": str(Exception)}
+        except Exception: 
+            return {"status": str(Exception)}
         finally: 
             await r.aclose() # type: ignore
             del(r) #close connection and clean up
