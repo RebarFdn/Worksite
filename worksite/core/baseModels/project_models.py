@@ -122,7 +122,7 @@ class ProjectAccountRecords(BaseModel):
 
     def add_invoice(self, form_data:dict={} ):
         '''creates a new invoice model and return a SupplierInvoiceRecord Model'''
-        print(f' Module Received {form_data}' )
+        
         new_invoice:InvoiceModel = InvoiceModel()
         record:SupplierInvoiceRecord = SupplierInvoiceRecord()
         statement:WithdrawalModel = WithdrawalModel()
@@ -918,8 +918,7 @@ class Project(BaseModel):
             job = self.get_job(job_id=job_id)
             task = self.get_rate(rate_id=task_id)
            
-            if job and task:                 
-                #print(task)
+            if job and task:               
                 job_task:JobTask = JobTask(
                     id = f"{job.id}-{task_id.split('-')[1]}",
                     title = task.title,

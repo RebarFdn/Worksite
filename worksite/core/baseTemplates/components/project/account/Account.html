@@ -2,6 +2,7 @@
 <div class="flex-1">
     <a class="btn btn-ghost text-xl" >Account</a>
 </div>
+<div class="flex flex-col">
 <div class="uk-grid">
     <div class="uk-width-1-5@m overflow-y-auto h-96">
 
@@ -31,8 +32,35 @@
             <div id="account-orders"> {% include 'components/project/account/Orders.html' %}</div>             
             <div id="account-paybills">{% include 'components/project/account/PayBills.html' %}  </div>
         </div>
+        
     </div>
+   
     {% else %}
     {% include '/components/project/account/AccountIntroduction.html' %}
     {% endif %}
+</div>
+<div>
+    <div class="uk-child-width-expand@s uk-text-center" uk-grid>
+        <div>
+            <div class="uk-card uk-card-default uk-card-body">
+                <div id="heatmap" hx-get="/project/heatmap/any" hx-target="#heatmap" hx-trigger="load, click delay:2s">
+                    HeatMap </div>
+            </div>
+        </div>
+        <div>
+            <div 
+                id="deposit_histogram"  
+                class="uk-card uk-card-default uk-card-body" 
+                hx-get="/project/deposit_histogram/{{project._id}}" hx-target="#deposit_histogram" hx-trigger="load, click delay:3s"
+                ></div>
+        </div>
+        <div>
+            <div 
+                id="deposit_calendar" 
+                class="uk-card uk-card-default uk-card-body"
+                hx-get="/project/deposit_calendar/{{project._id}}" hx-target="#deposit_calendar" hx-trigger="click delay:1s"
+                
+                ></div>
+        </div>
+    </div>
 </div>

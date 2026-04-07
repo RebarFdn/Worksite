@@ -13,6 +13,7 @@
   "author": "Ian Moncrieffe",
   "license": "MIT",
   "dependencies": {
+    "@tabler/core": "^1.4.0",
     "@tailwindcss/cli": "^4.2.2",
     "apexcharts": "^5.10.4",
     "exceljs": "^4.4.0",

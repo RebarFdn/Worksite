@@ -103,9 +103,11 @@ def converTime(timestamp:int=0):
 
 
 def convert_timestamp(timestp:int=0): 
-    
-    date = datetime.datetime.fromtimestamp(timestp/1000)
-    return date.strftime("%Y-%m-%d")
+        try:            
+            date = datetime.datetime.fromtimestamp(timestp/1000)
+            return date.strftime("%Y-%m-%d")
+        except Exception as ex:
+            return timestp
     
 
 # unit converter 

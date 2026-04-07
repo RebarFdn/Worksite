@@ -84,8 +84,7 @@ class IndustryRateModel(BaseModel):
                 self.category = data.get('category', '')           
                 
             #process metric property   
-            self.metric.load_data(data=data.get('metric', {}))    
-            #print(self.metric) # debug
+            self.metric.load_data(data=data.get('metric', {}))
             
             # process imperial property
             self.imperial.load_data(data=data.get('imperial', {}))  

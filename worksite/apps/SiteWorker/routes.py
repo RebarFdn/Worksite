@@ -44,7 +44,7 @@ async def read_worker(request:Request, item_id: str, q: str | None = None):
 
     try:
         result = await update_employee(worker.employee) # type: ignore
-        #print(f"Update Result: {result}") # type: ignore
+        
     except Exception as e:
         logger().exception(e)
 

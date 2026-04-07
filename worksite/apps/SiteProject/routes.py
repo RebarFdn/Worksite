@@ -2,7 +2,7 @@ from fastapi import APIRouter , Request # pyright: ignore[reportMissingImports]
 from fastapi.responses import HTMLResponse # pyright: ignore[reportMissingImports]
 from config import (STATIC_PATH, TEMPLATES, TEMPLATES_PATH)
 from apps.SiteProject.project import ( create_project, read_project, delete_project, get_jobs, get_workers , get_worker, all_projects, suppliers, account_statistics, piechart, Project, JobModel )
-from apps.SiteProject.charting import heatMap
+from apps.SiteProject.analytics import IncomeDataFrame, heatMap
 from core.utilities.data_lib import ( project_phases, rate_categories )
 from logger import (logger, g_log)
 
@@ -38,6 +38,7 @@ async def read_item(request:Request, item_id: str, q: str | None = None):
             "suppliers":suppliers,                    
             "project_phases": project_phases(),
             "rate_categories": rate_categories().keys()
+
         }
     )
 
@@ -52,8 +53,7 @@ async def delete_item(item_id: str, q: str | None = None):
 async def read_account(request:Request, project_id: str, q: str | None = None):
     project:Project = await read_project(id= project_id) # type: ignore
     project.load_jobs()
-    project.load_account()
-
+    project.load_account()    
     return TEMPLATES.TemplateResponse( 
         request=request, 
         name="components/project/account/Account.html", 
@@ -68,6 +68,7 @@ async def read_account(request:Request, project_id: str, q: str | None = None):
             "supplier_filter": list(set(invoice.supplier.name for invoice in project.account.records.invoices)),
             "suppliers": suppliers,
             "invoice_filter": 'all'
+            
         }
         
     )
@@ -98,6 +99,30 @@ async def read_heatmap(request:Request, project_id: str)-> HTMLResponse:
     map = heatMap()
    
     return HTMLResponse(map)
+   
+
+@router.get("/deposit_histogram/{project_id}")
+async def deposit_hist(request:Request, project_id: str)-> HTMLResponse:
+    project:Project = await read_project(id= project_id) # type: ignore
+    project.load_jobs()
+    project.load_account()
+    frame:IncomeDataFrame= IncomeDataFrame()
+    frame.load_data( project.account.transactions.deposit) 
+    #print(project.account.transactions.deposit)
+    
+    return HTMLResponse(frame.deposit_histogram())
+
+
+@router.get("/deposit_calendar/{project_id}")
+async def deposit_calendar(request:Request, project_id: str)-> HTMLResponse:
+    project:Project = await read_project(id= project_id) # type: ignore
+    project.load_jobs()
+    project.load_account()
+    frame:IncomeDataFrame= IncomeDataFrame()
+    frame.load_data( project.account.transactions.deposit) 
+    calendars:list = frame.calendars
+    return HTMLResponse(f"""<div uk-grid><div>{calendars[0]}</div><div>{calendars[1]}</div></div>""")
+                
    
 
 

@@ -4301,9 +4301,6 @@
   .h-18 {
     height: calc(var(--spacing) * 18);
   }
-  .h-32 {
-    height: calc(var(--spacing) * 32);
-  }
   .h-64 {
     height: calc(var(--spacing) * 64);
   }
@@ -4383,9 +4380,6 @@
   }
   .grow {
     flex-grow: 1;
-  }
-  .border-collapse {
-    border-collapse: collapse;
   }
   .-rotate-3 {
     rotate: calc(3deg * -1);

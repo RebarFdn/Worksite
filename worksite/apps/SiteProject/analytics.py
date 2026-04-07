@@ -1,25 +1,32 @@
 import datetime as dt
 import calendar
 import polars as pol
-import pandas as pd
 import plotly.express as px
-from asyncio import run
 from pydantic import BaseModel
-from apps.SiteProject.project import ( create_project, read_project, delete_project, get_workers , get_worker, all_projects, get_account)
-from core.baseModels.project_models import Project
+from fastapi.responses import HTMLResponse
 from core.baseModels.accounting_models import DepositModel
-from core.utilities.utils import convert_timestamp, converTime
+from core.utilities.utils import convert_timestamp
+from config import CHARTS_PATH
+
+#______________ Setup ______________
+
+if CHARTS_PATH.exists():
+    pass
+else:
+    CHARTS_PATH.mkdir(exist_ok=True)
 
 
-ids = ['KS03093','LM8603']
+def file_path(file_name:str):
+    return CHARTS_PATH / file_name
+
+
 
 class IncomeDataFrame(BaseModel):
     deposits:list[DepositModel] = []
     dates:list[str] = []
     amounts:list[float] = []
     chart_width:int= 600
-    chart_height:int= 400 
-    
+    chart_height:int= 400     
 
     @property
     def update(self):
@@ -50,17 +57,20 @@ class IncomeDataFrame(BaseModel):
         ''' '''
         dates = self.group_data_frame(period="1mo")["date"]
         cal = calendar.HTMLCalendar(firstweekday=0)
-        cal2 = calendar.TextCalendar(firstweekday=0)
-        months:dict = {}
-        for item in dates:
-            #print(f"Year: {item.year} / Month: {item.month}")
+        #cal2 = calendar.TextCalendar(firstweekday=0)
+        months:list= []
+        for item in dates:           
             month = cal.formatmonth(item.year, item.month)
-            name = cal2.formatmonthname(item.year, item.month, width=0, withyear=True).lower().replace(' ', '_')
-            months[name] = month            
+            for date in set(self.data_frame['date']):
+                if date.year == item.year and date.month == item.month:
+                    new_month = month.replace(f'">{date.day}<', f' bg-blue-300 font-semibold">{date.day}<')
+
+                    print(f"Year: {date.year}-{item.year} / Month: {date.month}-{item.month} Date {date.day}")   
+            months.append(new_month)  
+            #print(new_month)          
         return months
 
     
-
     def deposit_histogram(self, period:str='date',  bargap:float=0.2):
         df = self.data_frame
         fig = px.histogram(df, x=list(df["date"]), y=list(df["deposit"]), 
@@ -76,39 +86,23 @@ class IncomeDataFrame(BaseModel):
 
 
     def load_data(self, data:list=[]):
+        """Load a List of DepositModels from The Project Account Deposit Transactions """
         if data:
             self.deposits = [item for item in data]
             self.update
     
    
-    
 
-
-async def project_expenditure(project_id:str=''):
-    project:Project | dict = await read_project(id=project_id)
-    if project:
-        project.load_account() # type: ignore
-        frame:IncomeDataFrame= IncomeDataFrame()
-        frame.load_data( project.account.transactions.deposit)  # type: ignore
-        
-       
-        #df.group_by("dates",  maintain_order=True)
-        #df.filter(pol.col("dates") > date)
-        #nf = df.group_by_dynamic("date", every="1mo", closed="right").agg(pol.col("deposit").sum())
-        #pf = df.groupby(["date"])["deposit"].sum()
-        #print(df)
-        #fig = px.histogram(df, y="deposit", x="date", title="Project Account Deposits Periods", width=600, height=400 )
-        #fig.update_layout(bargap=0.2)
-        #fig.show()
-        #print(dp)#px.data.stocks())
-        
-        #hist = frame.deposit_histogram(bargap=0.1)
-        fra = frame.calendars
-        print(fra)
-
-   
-
-if __name__ == '__main__':
-    run( project_expenditure( ids[0] ) )
-    #print( px.data.stocks())
-    #print(calendar.)
+def heatMap(chart_data:dict={}):
+    f_name = 'heatmap.html'
+    #file = file_path(f_name)
+    data=[[1, 25, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, 5, 20]]
+    fig = px.imshow(data,
+                labels=dict(x="Day of Week", y="Time of Day", color="Productivity"),
+                x=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                y=['Morning', 'Afternoon', 'Evening']
+               )
+    fig.update_xaxes(side="top")
+    #fig.write_html(file)
+    return fig.to_html()
+      

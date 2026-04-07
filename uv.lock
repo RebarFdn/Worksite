@@ -731,6 +731,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/8c/de/2150836d972383c75486be4920e9253feb83252650894e28a094f549e3c7/StringGenerator-0.4.4.tar.gz", hash = "sha256:35f86752460b25b2ccf936f6c8b0ed330cf49b01a34a5400cbf3fa6693dea609", size = 12527, upload-time = "2021-03-20T13:28:41.051Z" }
 
 [[package]]
+name = "tablerpy"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c3/16/a03c4ca4ff0ba7cca55b903be86da14e5c55e938c4de8eeba8a582c5958c/tablerpy-0.2.0.tar.gz", hash = "sha256:ee2053a883ef33f8c42907ee2e74fb2b05802aac3a333609c5ae955447b721cc", size = 625757, upload-time = "2025-02-25T12:57:00.039Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/78/41/3db13a18603dc63ceabe5aea46369d2c729bfd200b8dd53246483cab43f8/tablerpy-0.2.0-py3-none-any.whl", hash = "sha256:549a75eb2c71e63123d53906023069efcae367a2a1b0b627cf087353d3bb8570", size = 2948059, upload-time = "2025-02-25T12:56:58.111Z" },
+]
+
+[[package]]
 name = "tqdm"
 version = "4.67.3"
 source = { registry = "https://pypi.org/simple" }
@@ -838,6 +847,7 @@ dependencies = [
     { name = "pymongo" },
     { name = "python-multipart" },
     { name = "stringgenerator" },
+    { name = "tablerpy" },
     { name = "uvicorn" },
     { name = "werkzeug" },
 ]
@@ -862,6 +872,7 @@ requires-dist = [
     { name = "pymongo", specifier = ">=4.16.0" },
     { name = "python-multipart", specifier = ">=0.0.22" },
     { name = "stringgenerator", specifier = ">=0.4.4" },
+    { name = "tablerpy", specifier = ">=0.2.0" },
     { name = "uvicorn", specifier = ">=0.42.0" },
     { name = "werkzeug", specifier = ">=3.1.7" },
 ]

@@ -212,7 +212,7 @@ class JobTask(BaseModel):
 
             #process metric property   
             self.metric.load_data(data=data.get('metric', {}))    
-            #print(self.metric) # debug
+           
 
             # process imperial property
             self.imperial.load_data(data=data.get('imperial', {}))  

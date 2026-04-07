@@ -6,7 +6,7 @@ from apps.SiteSupplier.supplier import (all_suppliers, get_supplier, get_supplie
 def test_all_projects():
     result = all_projects()
     assert isinstance(result, list) 
-    print("All Projects:", result)
+    #print("All Projects:", result)
 
 def test_get_account():
     
@@ -35,7 +35,7 @@ async def test_get_worker():
 async def test_all_suppliers():
     result = await supplier_name_index()
     assert isinstance(result, list) 
-    print("All Suppliers:", result)
+    #print("All Suppliers:", result)
 
 
-run(test_all_suppliers())
+#run(test_all_suppliers())

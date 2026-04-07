@@ -63,7 +63,7 @@ async def save_project(data:dict={}):
             "reports": await report_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='reports', data=data.get('reports', [])) ),
             "logs": await logs_collection.insert_one( crunch_data(id=data.get('_id', ''), flag='logs', data=data.get('logs', [])) )
         }
-        print(result)
+        #print(result)
 
         return project
     except Exception as ex:
@@ -95,17 +95,7 @@ async def read_project(id:str='', conn:Coroutine=db_connection)->Project | dict 
     #project.load_data( data= await conn.get(_directive=id))
     try:
         data:dict = await project_home_collection.find_one({"_id": id}) # type: ignore
-        #print(data)
-        #project:Project = Project( **data ) # type: ignore
-        project.load_data( data=data )
-        #project_data:dict = await conn.get(_directive=id) # type: ignore     
-        #project.load_data( data=project_data )   
-        #project.load_data(data=project_data  )
-        #project.load_workers()
-        #project.load_jobs()
-        #project.load_rates()
-        #save_project(data=project_data)
-        #print("PROJECT DATA", project_data.get('account', {}))
+        project.load_data( data=data )        
         return project
     except Exception as ex:
         return {'error': str(ex) } #HTTPStatus(404).description}
@@ -119,7 +109,7 @@ async def update_project(data:dict={}, conn:Coroutine=db_connection)->Project | 
     try: 
         result = await project_home_collection.update_one(query_filter, update_operation)  
         #log the update operation result 
-        print(result)     
+        #print(result)     
         
         return await read_project(id=data.get('_id', ''))
     except Exception as ex:

@@ -25,4 +25,5 @@ dependencies = [
     "plotly[express]>=6.6.0",
     "polars[rtcompat]>=1.39.3",
     "pandas>=3.0.2",
+    "tablerpy>=0.2.0",
 ]

@@ -118,7 +118,7 @@ async def save_worker(data:dict={} ):
     employee.metadata.created = timestamp()
     try:        
         result = await create_employee(data=employee.employee) 
-        print('CREATE WORKER', result)           
+                 
         return employee
     except Exception as e:
         return {"error": str(e)}
