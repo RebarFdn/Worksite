@@ -26,4 +26,6 @@ dependencies = [
     "polars[rtcompat]>=1.39.3",
     "pandas>=3.0.2",
     "tablerpy>=0.2.0",
+    "matplotlib>=3.10.8",
+    "bcrypt>=5.0.0",
 ]

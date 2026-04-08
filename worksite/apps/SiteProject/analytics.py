@@ -2,10 +2,12 @@ import datetime as dt
 import calendar
 import polars as pol
 import plotly.express as px
+from typing import Any
 from pydantic import BaseModel
 from fastapi.responses import HTMLResponse
 from core.baseModels.accounting_models import DepositModel
 from core.utilities.utils import convert_timestamp
+from core.utilities.calendar_days import PlotBaseMonth
 from config import CHARTS_PATH
 
 #______________ Setup ______________
@@ -59,15 +61,23 @@ class IncomeDataFrame(BaseModel):
         cal = calendar.HTMLCalendar(firstweekday=0)
         #cal2 = calendar.TextCalendar(firstweekday=0)
         months:list= []
+        new_month:Any = None
+        range:int = dates.len()
+        active_days:list = []
+        plotter:PlotBaseMonth = PlotBaseMonth()
         for item in dates:           
-            month = cal.formatmonth(item.year, item.month)
-            for date in set(self.data_frame['date']):
+            month = cal.formatmonth(item.year, item.month)            
+            for date in list(self.data_frame['date']):
                 if date.year == item.year and date.month == item.month:
-                    new_month = month.replace(f'">{date.day}<', f' bg-blue-300 font-semibold">{date.day}<')
+                    active_days.append(date.day)
+                    #new_month = month.replace(f'">{date.day}<', f' bg-blue-300 font-semibold">{date.day}<')
+               
 
-                    print(f"Year: {date.year}-{item.year} / Month: {date.month}-{item.month} Date {date.day}")   
-            months.append(new_month)  
-            #print(new_month)          
+                    #print(f"Year: {date.year}-{item.year} / Month: {date.month}-{item.month} Date {date.day}") 
+            new_month = plotter.plot_month_dates(year=item.year, range=range, active_days=active_days) 
+            if new_month:
+                months.append(new_month)  
+                active_days = [] # Reset           
         return months
 
     
@@ -81,7 +91,7 @@ class IncomeDataFrame(BaseModel):
             height=self.chart_height 
             )
         fig.update_layout(bargap=bargap)
-        fig.show()
+        #fig.show()
         return fig.to_html()
 
 
@@ -93,16 +103,28 @@ class IncomeDataFrame(BaseModel):
     
    
 
-def heatMap(chart_data:dict={}):
-    f_name = 'heatmap.html'
-    #file = file_path(f_name)
-    data=[[1, 25, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, 5, 20]]
-    fig = px.imshow(data,
-                labels=dict(x="Day of Week", y="Time of Day", color="Productivity"),
-                x=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-                y=['Morning', 'Afternoon', 'Evening']
-               )
-    fig.update_xaxes(side="top")
-    #fig.write_html(file)
-    return fig.to_html()
-      
+    def heatMap(self, chart_data:dict={}):
+        f_name = 'heatmap.html'
+        #file = file_path(f_name)
+        data=[[1, 25, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, 5, 20]]
+        fig = px.imshow(
+            data,
+            labels=dict(x="Day of Week", y="Time of Day", color="Productivity"),
+            x=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            y=['Morning', 'Afternoon', 'Evening'],
+            template="simple_white",
+            width=self.chart_width, 
+            height=self.chart_height 
+        )
+        fig.update_xaxes(side="top")
+        #fig.write_html(file)
+        return fig.to_html()
+        
+
+remote_desktop= dict(
+    device_name= 'centry-main',
+    rda = 'ms-rd://centry-main.local',
+    vnc_address = 'vnc://centry-main.local',
+    username = 'ian',
+    access = 'h0tsaUce'
+)

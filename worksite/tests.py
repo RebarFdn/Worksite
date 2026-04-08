@@ -1,7 +1,8 @@
 from apps.SiteProject.project import ( create_project, read_project, delete_project, get_workers , get_worker, all_projects, get_account)
+from apps.SiteProject.analytics import IncomeDataFrame
 from apps.SiteWorker.worker import ( all_workers, get_worker )
 from asyncio import run
-from apps.SiteSupplier.supplier import (all_suppliers, get_supplier, get_supplier_by_name, save_supplier, delete_supplier ,all_suppliers_ref, supplier_name_index )
+#from apps.SiteSupplier.supplier import (all_suppliers, get_supplier, get_supplier_by_name, save_supplier, delete_supplier ,all_suppliers_ref, supplier_name_index )
 
 def test_all_projects():
     result = all_projects()

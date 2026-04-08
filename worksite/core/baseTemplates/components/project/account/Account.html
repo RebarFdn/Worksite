@@ -1,26 +1,27 @@
 
-<div class="flex-1">
-    <a class="btn btn-ghost text-xl" >Account</a>
+<div class="breadcrumbs text-sm">
+
+    <ul uk-switcher="connect: #account-nav; animation: uk-animation-fade">
+        <li><a href="#"><span class="fa fa-clock"></span>Accounting</a></li>
+        <li><a href="#"><span class="fa fa-arrow-circle-right"></span> Deposits</a><span
+                class="badge badge-success badge-xs">{{ project.account.transactions.deposit | length }}</span></li>
+        <li><a href="#"><span class="fa fa-arrow-circle-left"></span> Withdrawals</a><span
+                class="badge badge-secondary badge-xs">{{ project.account.transactions.withdraw | length }}</span></li>
+        <li><a href="#"><span class="fa fa-cart-plus"></span> Expences</a><span class="badge badge-accent badge-xs">{{
+                project.account.expences.expences | length }}</span></li>
+        <li><a href="#"><span class="fa fa-ticket"></span>Invoices</a><span class="badge badge-info badge-xs">{{
+                project.account.records.invoices | length }}</span></li>
+        <li><a href="#"><span class="fa fa-list-ol"></span>Purchase Orders</a><span
+                class="badge badge-accent badge-xs">{{
+                project.account.records.purchase_orders | length }}</span></li>
+        <li><a href="#"> <span class="fa fa-dollar"></span> Pay Bills</a><span class="badge badge-accent badge-xs">{{
+                project.account.records.paybills | length }}</span></li>
+        <li></li>
+    </ul>
 </div>
-<div class="flex flex-col">
-<div class="uk-grid">
-    <div class="uk-width-1-5@m overflow-y-auto h-96">
-
-        <ul class="uk-nav uk-nav-default uk-nav-divider bg-blue-200 uk-border-rounded uk-padding-small uk-margin" uk-switcher="connect: #account-nav; animation: uk-animation-fade">
-            <li><a href="#"><span class="fa fa-clock"></span>Accounting</a></li>
-            <li><a href="#"><span class="fa fa-arrow-circle-right"></span> Deposits</a></li>
-            <li><a href="#"><span class="fa fa-arrow-circle-left"></span> Withdrawals</a></li>
-            <li><a href="#"><span class="fa fa-cart-plus"></span> Expences</a></li>
-            <li><a href="#"><span class="fa fa-ticket"></span>Invoices</a></li>
-            <li><a href="#"><span class="fa fa-list-ol"></span>Purchase Orders</a></li>            
-            <li><a href="#"> <span class="fa fa-dollar"></span> Pay Bills</a></li>
-            <li></li>
-        </ul>
-
-    </div>
-    {% if project.state.active or project.state.complete or project.state.pause or project.state.terminate %}
-    <div class="uk-width-expand@m"  >
-        <div id="account-nav" class="uk-switcher">
+{% if project.state.active or project.state.complete or project.state.pause or project.state.terminate %}
+   
+    <div id="account-nav" class="uk-switcher">
             <div>
                 {% include 'components/project/account/Bank.html' %}
             </div> 
@@ -31,36 +32,37 @@
              <div id="account-invoices">{% include 'components/project/account/Invoices.html' %}</div> 
             <div id="account-orders"> {% include 'components/project/account/Orders.html' %}</div>             
             <div id="account-paybills">{% include 'components/project/account/PayBills.html' %}  </div>
-        </div>
-        
     </div>
-   
-    {% else %}
+{% else %}
     {% include '/components/project/account/AccountIntroduction.html' %}
-    {% endif %}
-</div>
-<div>
+{% endif %}
+
+<div class="bg-base-100 p-5 m-5 shadow-md rounded-md">
+    <p class="text-sm text-center font-semibold">Deposit Analytics</p>
     <div class="uk-child-width-expand@s uk-text-center" uk-grid>
         <div>
             <div class="uk-card uk-card-default uk-card-body">
-                <div id="heatmap" hx-get="/project/heatmap/any" hx-target="#heatmap" hx-trigger="load, click delay:2s">
+                <p class="text-sm text-center font-semibold">Productivity Map</p>
+                <div id="heatmap" hx-get="/project/heatmap/any" hx-target="#heatmap" hx-trigger="load, click delay:1s">
                     HeatMap </div>
             </div>
         </div>
         <div>
+            <div class="uk-card uk-card-default uk-card-body">
+            <p class="text-sm text-center font-semibold">Deposit Periods Agregate</p>
             <div 
-                id="deposit_histogram"  
-                class="uk-card uk-card-default uk-card-body" 
-                hx-get="/project/deposit_histogram/{{project._id}}" hx-target="#deposit_histogram" hx-trigger="load, click delay:3s"
+                id="deposit_histogram" 
+                hx-get="/project/deposit_histogram/{{project._id}}" hx-target="#deposit_histogram" hx-trigger="load, click delay:2s"
                 ></div>
+            </div>
         </div>
-        <div>
-            <div 
-                id="deposit_calendar" 
-                class="uk-card uk-card-default uk-card-body"
-                hx-get="/project/deposit_calendar/{{project._id}}" hx-target="#deposit_calendar" hx-trigger="click delay:1s"
-                
-                ></div>
-        </div>
+        
+    </div>
+</div>
+
+<div class="bg-base-100 p-5 m-5 shadow-md rounded-md">
+    <p class="text-sm text-center font-semibold">Deposit Activity Calendar</p>
+    <div id="deposit_calendar" class="uk-card uk-card-default uk-card-body"
+        hx-get="/project/deposit_calendar/{{project._id}}" hx-target="#deposit_calendar" hx-trigger="load, click delay:3s">
     </div>
 </div>

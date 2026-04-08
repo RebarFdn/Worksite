@@ -1,8 +1,8 @@
 from fastapi import APIRouter , Request # pyright: ignore[reportMissingImports]
-from fastapi.responses import HTMLResponse # pyright: ignore[reportMissingImports]
+from fastapi.responses import HTMLResponse, StreamingResponse # pyright: ignore[reportMissingImports]
 from config import (STATIC_PATH, TEMPLATES, TEMPLATES_PATH)
 from apps.SiteProject.project import ( create_project, read_project, delete_project, get_jobs, get_workers , get_worker, all_projects, suppliers, account_statistics, piechart, Project, JobModel )
-from apps.SiteProject.analytics import IncomeDataFrame, heatMap
+from apps.SiteProject.analytics import (IncomeDataFrame)
 from core.utilities.data_lib import ( project_phases, rate_categories )
 from logger import (logger, g_log)
 
@@ -96,7 +96,8 @@ async def read_piechart(request:Request, project_id: str)-> HTMLResponse:
 
 @router.get("/heatmap/{project_id}")
 async def read_heatmap(request:Request, project_id: str)-> HTMLResponse:
-    map = heatMap()
+    frame:IncomeDataFrame= IncomeDataFrame()
+    map = frame.heatMap()
    
     return HTMLResponse(map)
    
@@ -114,14 +115,20 @@ async def deposit_hist(request:Request, project_id: str)-> HTMLResponse:
 
 
 @router.get("/deposit_calendar/{project_id}")
-async def deposit_calendar(request:Request, project_id: str)-> HTMLResponse:
+async def deposit_calendar(request:Request, project_id: str)-> StreamingResponse:
     project:Project = await read_project(id= project_id) # type: ignore
     project.load_jobs()
     project.load_account()
     frame:IncomeDataFrame= IncomeDataFrame()
     frame.load_data( project.account.transactions.deposit) 
     calendars:list = frame.calendars
-    return HTMLResponse(f"""<div uk-grid><div>{calendars[0]}</div><div>{calendars[1]}</div></div>""")
+    def generate_stream(cal:list):
+        yield f"""<div uk-grid>"""
+        for item in cal:
+            yield f"<div>{item}</div>"
+        yield "</div>"
+
+    return StreamingResponse(content=generate_stream(calendars))
                 
    
 
