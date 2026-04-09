@@ -94,11 +94,15 @@ async def read_piechart(request:Request, project_id: str)-> HTMLResponse:
     chart:ezChart = await piechart(project_id=project_id) # type: ignore
     return HTMLResponse(content=chart.chart(), status_code=200)
 
+
 @router.get("/heatmap/{project_id}")
 async def read_heatmap(request:Request, project_id: str)-> HTMLResponse:
+    project:Project = await read_project(id= project_id) # type: ignore
+    project.load_jobs()
+    project.load_account()
     frame:IncomeDataFrame= IncomeDataFrame()
-    map = frame.heatMap()
-   
+    frame.load_data( project.account.transactions.deposit) 
+    map = frame.heatMap()   
     return HTMLResponse(map)
    
 

@@ -18,12 +18,10 @@ from pathlib import Path
 def check_paths( path:Path|None=None, paths:list=[]):    
     if paths:
         for path_item in paths:
-            if not path_item.exists():
-                print(f'Path {path_item} does not exist. Creating it now.')
+            if not path_item.exists():                
                 path_item.mkdir(parents=True, exist_ok=True)
     if path:
-        if not path.exists():
-            print(f'Path {path} does not exist. Creating it now.')
+        if not path.exists():            
             path.mkdir(parents=True, exist_ok=True)
 
 
@@ -109,6 +107,13 @@ def convert_timestamp(timestp:int=0):
         except Exception as ex:
             return timestp
     
+
+
+def timestamp_to_date( time_stamp:int):
+        date_str:str = convert_timestamp(time_stamp)  # type: ignore
+        return datetime.date.fromisoformat(date_str)
+
+
 
 # unit converter 
 
@@ -196,14 +201,21 @@ class AmountTotal(BaseModel):
     amount:float = 0.0
     total:float = 0.0
 
-    def load_data(self, data:dict={}):
-        if data:
+    def load_data(self, data:typing.Any={}):
+        
+        if data and type(data) == dict:
             if data.get('amount'):
                 self.amount = float(data.get('amount', 0.0))
             if data.get('total'):
                 self.total = float(data.get('total', 0.0))
-        else:
-            pass
+        elif type(data) == classmethod:
+            if data.amount:
+                self.amount = data.amount
+            else:
+                try:
+                    self.total = data.total
+                except Exception as ex:
+                    print(str(ex))
 
 
 
@@ -212,15 +224,21 @@ def tally(items:list = []):
     if items:
         totals = []
         for item in items:
+            amt = AmountTotal()
             if type(item) == dict:
-                amt = AmountTotal()
+                
                 amt.load_data(data=item)
                 if float(amt.amount) > 1:
                     totals.append(float(amt.amount))
                 else:
                     totals.append(float(amt.total))
             else:
-                print(f"Invalid input detected at Tally. culprit: {item} ")
+                amt.load_data(data=item)
+                if float(amt.amount) > 1:
+                    totals.append(float(amt.amount))
+                else:
+                    totals.append(float(amt.total))
+                #print(f"resolved:{amt} ")
         return sum( totals ) #sum([  AmountTotal( **item ).amount if item.get('amount')  else  AmountTotal( **item ).total for item in items])
     else:
         return 0.0
@@ -536,7 +554,7 @@ class Security:
             return file #safe_str_cmp(item, item_1)
         except Exception as ex:
             return str(ex)
-        finally: print()# del(safe_str_cmp)
+        
 
 
 # Currency dollars
@@ -688,7 +706,7 @@ def has_numbers(inputString:str='')->bool:
 # test
 def test_secure_safe_compare(s1, s2):
     s = Security()
-    print(s.safe_file_storage(s1, s2))
+   
 
 #test_secure_safe_compare('buff', 'buff')
 
@@ -710,22 +728,10 @@ def test_delete():
     try: print(rs) 
     except: print(r)
     finally: 
-        print("Done")
+      
         del(r3)
         del(r) 
         del(r4) 
         del(r2) 
         del(rs)
-
-if __name__ == "__main__":
-    print('Testing from SitePlan utils')
-   
-    #data = {'na': "pete", 'aa': 5 }
-    #hd = hash_data(data=data)
-    #print(hd)
-    
-    #vdt = validate_hash_data( hash_key=hd, data=data)
-    #print(vdt)
-
-    #print(convert_price_by_unit('kg', 306.58))
 

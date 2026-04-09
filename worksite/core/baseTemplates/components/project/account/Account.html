@@ -37,32 +37,3 @@
     {% include '/components/project/account/AccountIntroduction.html' %}
 {% endif %}
 
-<div class="bg-base-100 p-5 m-5 shadow-md rounded-md">
-    <p class="text-sm text-center font-semibold">Deposit Analytics</p>
-    <div class="uk-child-width-expand@s uk-text-center" uk-grid>
-        <div>
-            <div class="uk-card uk-card-default uk-card-body">
-                <p class="text-sm text-center font-semibold">Productivity Map</p>
-                <div id="heatmap" hx-get="/project/heatmap/any" hx-target="#heatmap" hx-trigger="load, click delay:1s">
-                    HeatMap </div>
-            </div>
-        </div>
-        <div>
-            <div class="uk-card uk-card-default uk-card-body">
-            <p class="text-sm text-center font-semibold">Deposit Periods Agregate</p>
-            <div 
-                id="deposit_histogram" 
-                hx-get="/project/deposit_histogram/{{project._id}}" hx-target="#deposit_histogram" hx-trigger="load, click delay:2s"
-                ></div>
-            </div>
-        </div>
-        
-    </div>
-</div>
-
-<div class="bg-base-100 p-5 m-5 shadow-md rounded-md">
-    <p class="text-sm text-center font-semibold">Deposit Activity Calendar</p>
-    <div id="deposit_calendar" class="uk-card uk-card-default uk-card-body"
-        hx-get="/project/deposit_calendar/{{project._id}}" hx-target="#deposit_calendar" hx-trigger="load, click delay:3s">
-    </div>
-</div>
