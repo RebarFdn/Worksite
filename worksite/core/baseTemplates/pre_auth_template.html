@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SitePlan</title>
-    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/htmx.org/dist/htmx.min.js"></script>
     <link href="/static/css/site.css" rel="stylesheet">
-    
-   
 </head>
 <body class="bg-gray-200">
     <header>
@@ -20,13 +18,9 @@
         {% block content %}{% endblock %}
 
     </div>
-    
     <footer>
         {% block footer %} {% endblock %}
         <p class="text-xs text-teal-600 m-5">{{ request.headers }}</p>
     </footer>
-
-   
-   
 </body>
 </html>

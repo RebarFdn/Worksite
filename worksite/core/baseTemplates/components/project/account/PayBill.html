@@ -12,12 +12,12 @@
                 <div class="uk-navbar-left">
                     <ul class="menu menu-horizontal bg-base-200 rounded-box">
                         <li><a href="#add_bill_item" uk-toggle>Add Item</a></li>
-                        <li><a href="#add_day_item" uk-toggle>Add Daywork Item</a></li>                        
+                        <li><a href="#add_day_item" uk-toggle>Add Daywork Item</a></li>
                         <li><a href="#" onclick="worker_salary_modal.showModal()">Process Salaries</a></li>
-                        <li><a href="#">Pay out Bill</a></li>   
-                        <li><button class="btn btn-sm btn-ghost" hx-get="/project/{{paybill.project_id}}/printbill/{{paybill.id}}"
+                        <li><a href="#">Pay out Bill</a></li>
+                        <li><button class="btn btn-sm btn-ghost" hx-get="/project/printbill/{{paybill.project_id}}/{{paybill.id}}"
                             hx-target="#message">Print bill</button>
-                        </li>    
+                        </li>
                     </ul>
                 </div>
 

@@ -1,59 +1,83 @@
 
 {% if project.account.records.purchase_orders %}
 
- <a href="#order-modal" uk-toggle><span class="text-lg text-blue-500 font-semibold">Purchase Orders</span></a>
- <div id="order-result"></div>
-<div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
+ 
+<div class="uk-grid-divider uk-child-width-expand@s" uk-grid>
+    <div class="card w-96 bg-base-100 card-md shadow-sm">
+        <div class="card-body">
 
-    <table class="uk-table uk-table-small uk-table-responsive text-gray-800">
-        <thead>
-            <tr>      
-                 
-                <th>Order No.</th>   
-                <th>Date</th>        
-                <th>Title</th>
-                <th>Items</th>
-                <th>Resolved</th>                                  
-                <th>Manage</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for d in project.account.records.purchase_orders |reverse %}                      
+            <p class="text-sm text-center font-semibold">
+                <a class="text-lg text-teal-500 font-semibold" href="#order-modal" uk-toggle>Purchase Orders</a>
+            </p>
+            <div class="flex flex-col text-xs overflow-y-auto h-auto p-1">
 
-                <tr>  
-                    <td>{{ d.id }}</td>
-                    <td>{{ d.date | convert_timestamp }}</td>
-                    <td>{{ d.title }}</td>
-                    <td> {{d.get('items') | length }}</td>
-                    <td>{{ d.resolved }} </td> 
-                    <td>
-                        <div class="dropdown dropdown-start">
-                            <div tabindex="0" role="button" class="btn m-1">Manage</div>
-                            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                <li><a 
-                                            href="#" 
-                                            hx-get="/project/{{project._id}}/expence/{{d.id}}-{{d.ref}}"
-                                            hx-target="#message"
-                                            
-                                            >Edit</a></li>
-                                    <li><a href="#">Tag</a></li>
-                                    <li><a 
-                                        href="#"><button 
-                                        type="button" 
-                                        class="btn btn-primary btn-sm">Delete</button>
-                                        </a>
-                                    </li>
-                            </ul>
-                        </div>
-                                                    
-                    </td>
-                </tr>
-            {% endfor %}
-               
-        </tbody>
-    </table>
-    
+
+
+                <table id="orders-table" 
+                    class="table table-sm font-medium text-gray-800 uppercase m-2"
+                    data-order='[[ 1, "asc" ]]' 
+                    data-page-length='25'
+                >
+                    <thead>
+                        <tr>      
+                            
+                            <th>Order No.</th>   
+                            <th>Date</th>        
+                            <th>Title</th>
+                            <th>Items</th>
+                            <th>Resolved</th>                                  
+                            <th>Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in project.account.records.purchase_orders |reverse %}                      
+
+                            <tr>  
+                                <td>{{ d.id }}</td>
+                                <td>{{ d.date | convert_timestamp }}</td>
+                                <td>{{ d.title }}</td>
+                                <td> {{d.get('items') | length }}</td>
+                                <td>{{ d.resolved }} </td> 
+                                <td>
+                                    <div class="dropdown dropdown-start">
+                                        <div tabindex="0" role="button" class="btn m-1">Manage</div>
+                                        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                            <li><a 
+                                                        href="#" 
+                                                        hx-get="/project/{{project._id}}/expence/{{d.id}}-{{d.ref}}"
+                                                        hx-target="#message"
+                                                        
+                                                        >Edit</a></li>
+                                                <li><a href="#">Tag</a></li>
+                                                <li><a 
+                                                    href="#"><button 
+                                                    type="button" 
+                                                    class="btn btn-primary btn-sm">Delete</button>
+                                                    </a>
+                                                </li>
+                                        </ul>
+                                    </div>
+                                                                
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+                
+            </div>
+            <div class="justify-end card-actions">
+                <button class="btn btn-primary">Print</button>
+            </div>
+        </div>
+    </div>
+            
+            
+    <div class="bg-base-100 shadow-md rounded-md">
+                <p class="text-sm text-center font-semibold">Purchasing Analytics</p>
+    </div>
 </div>
+
 
 {% else %}
 <p class="text-lg">You have'nt create any Purchase orders to  date! </p><br>
@@ -96,3 +120,15 @@
        
     </div>
 </div>
+
+{% block extra_scripts %}
+<script>
+    var table = new DataTable('#orders-table', {
+        // options
+        paging: true,
+        scrollY: 400,
+        autoFill: true
+
+    });
+</script>
+{% endblock %}

@@ -1,4 +1,10 @@
-<table class="table table-zebra table-xs md:table-sm">
+<table 
+    id="jobs-table"
+    class="table table-zebra table-sm md:table-sm"
+    data-order='[[ 1, "asc" ]]' 
+    data-page-length='25'
+                
+    >
     <!-- head -->
     <thead>
         <tr>
@@ -16,26 +22,18 @@
     <tbody>
         <!-- row 1 -->
         <tr>
-            <th>
-                
-                    
+            <th>                   
                     <span class="cursor-pointer" hx-get="/project/{{project._id}}/jobsreport/n" hx-target="#jobs-index"
                         hx-trigger="click">Report</span>
-              
             </th>
-            <td ></td>
             <td>Jobs Report</td>
             <td></td>
             <td> </td>
             <th> {{ project.jobs | length }} </th>
-            <td>
-                
-            </td>
             <td></td>
-            <td>
-            
-                
-            </td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
 
         {% for row in project.jobs %}
@@ -51,7 +49,8 @@
                         hx-trigger="click">{{ row._id }}</span>
                 {% endif %}
             </th>
-            <td ><span class="cursor-pointer" hx-get="/project/{{project._id}}/job/{{ row.id }}" hx-target="#jobs-index" hx-trigger="click">{{ row.title }}</span></td>
+            <td ><span class="cursor-pointer" hx-get="/project/{{project._id}}/job/{{ row.id }}" hx-target="#jobs-index" hx-trigger="click">{{ row.title }}</span>
+            </td>
             <td>{{ row.description }}</td>
             <td>{{ row.projectPhase }}</td>
             <td> {{ row.crew.name }} </td>
@@ -93,6 +92,9 @@
             <td></td>
             <td></td>
             <td> </td>
+            <td></td>
+            <td></td>
+            <td> </td>
             <th></th>
         </tr>
 
@@ -100,3 +102,15 @@
     <!-- foot -->
     
 </table>
+
+{% block extra_scripts %}
+<script>
+    var table = new DataTable('#jobs-table', {
+        // options
+        paging: true,
+        scrollY: 400,
+        autoFill: true
+
+    });
+</script>
+{% endblock %}

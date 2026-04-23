@@ -2,7 +2,7 @@
 # Date Nov 26 2022
 # Updated: 2026-03-28
 # Author: Ian Alexander Moncrieffe
-
+import os
 import time
 import datetime
 import json
@@ -79,7 +79,6 @@ def datimestamp(date_time:str='')->int:
         return int(datetime.datetime.timestamp(element)) * 1000     
     else:
         return  int(datetime.datetime.now().timestamp()) * 1000
-
 
 
 
@@ -735,3 +734,40 @@ def test_delete():
         del(r2) 
         del(rs)
 
+
+def join_words(text:str):
+    return "".join(text.split())
+
+def space_words(text:str):
+    return " ".join(text.split())
+
+
+def check_create_filepath( file_path:Path, permission:bool=True):
+    if file_path.parent.exists():
+        pass
+    else:
+        if permission:
+            print("The directory you are tryng to write to does not exist , i'm creating it now ...")
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+        else:
+            positive_results:list = ['Y', 'y', 'Yes', 'yes']
+            print('The directory you are tryng to write to does not exist , should i create one now? ')
+            print('enter Yes')
+            result = input()
+            if result in positive_results:
+                file_path.parent.mkdir(parents=True, exist_ok=True)
+            else:
+                print('Your file will be temporarily stored in the tmp directory.')
+    
+                
+
+def json_file_writer( file_path:Path, data:dict={}, permission:bool=True):    
+    
+    try:
+        check_create_filepath(file_path=file_path)
+        with open(file_path, 'w') as file:
+            #file.write(json.dumps(data))
+            json.dump(data, file)
+        return {"ok": True, "json_file_fath": file_path}
+    except Exception as ex:
+        return {"error": str(ex)}

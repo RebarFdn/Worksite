@@ -4,14 +4,11 @@
         <div>
             <p class="p-1 pb-2 text-xs opacity-60 tracking-wide">Workers Associated with Items on {{paybill.ref}}</p>
             <div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
-                
                 <ul class="list bg-base-100 rounded-box shadow-md">
-                
-                    
                     {% for worker in project.workers %}
                     <li 
                         class="list-row cursor-pointer"  
-                        hx-get="/project/{{project._id}}/salary/{{paybill.id}}-{{worker.id}}"
+                        hx-get="/project/salary/{{paybill.project_id}}/{{paybill.id}}/{{worker.id}}"
                         hx-target="#salary-statement"
                         >
 
@@ -22,29 +19,21 @@
                                 <span>{{worker.value.occupation}}</span>
                                 
                             </div-->  
-                            <div><img class="size-8 rounded-full" src="{{worker.value.imgurl}}" alt="{{worker.value.oc}}" /></div>
+                            <div><img class="size-8 rounded-full" src="{{worker.value.imgurl}}" alt="{{worker.value.oc}}"></div>
                             <div>
                                 <div>{{worker.value.name}} <span class="badge badge-accent badge-xs mx-2">{{worker.tasks | length }}</span>
 
                                 </div>
                                 <div class="text-xs uppercase font-semibold opacity-60">{{worker.value.occupation}}</div>
                                 </div>
-
-                        
                     </li>
                     {% endfor %}
-                          
                 </ul>
-                
             </div>
         </div>
     </div>
     <div id="cell-2">
-        
         <div id="salary-statement"></div>
-        
     </div>
-    
-    
 </div>
   

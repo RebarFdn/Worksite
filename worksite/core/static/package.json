@@ -12,14 +12,10 @@
   },
   "author": "Ian Moncrieffe",
   "license": "MIT",
-  "dependencies": {
-    "@tabler/core": "^1.4.0",
-    "@tailwindcss/cli": "^4.2.2",
-    "apexcharts": "^5.10.4",
-    "exceljs": "^4.4.0",
-    "htmx-ext-ws": "^2.0.4",
-    "htmx.org": "^2.0.8",
-    "jquery": "^4.0.0",
+  "dependencies": {   
+    "@tailwindcss/cli": "^4.2.2",    
+    "exceljs": "^4.4.0",    
+    "pdfmake": "^0.3.7",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {

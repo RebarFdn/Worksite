@@ -1,6 +1,3 @@
-
-
- 
 <div class="breadcrumbs text-sm">
     <ul class="animation: uk-animation-fade">
         <li>
@@ -33,10 +30,29 @@
     </ul>
 </div>
  {% if project.account.records.paybills  %}
- <div id="paybill-result"></div>
-<div id="paybill_index" class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-11/12 p-1">
+<div class="uk-grid-divider uk-child-width-expand@s" uk-grid>
+    <div class="card w-96 bg-base-100 card-md shadow-sm">
+        <div class="card-body">
+
+            <p class="text-sm text-center font-semibold">
+                Paybills
+            </p>
+
+<div id="paybill_index" class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-auto p-1">
 
    {% include '/components/project/account/PaybillsTable.html' %}
+</div>
+<div class="justify-end card-actions">
+    <button class="btn btn-primary">Print</button>
+</div>
+</div>
+</div>
+
+
+<div class="bg-base-100 shadow-md rounded-md">
+    <p class="text-sm text-center font-semibold">Paybills Analytics</p>
+    <div id="project_paybill"></div>
+</div>
 </div>
 
 {% else %}
@@ -210,6 +226,14 @@
     updateField("insurance");
     updateField("misc");
     updateField("overhead");
+
+    var table = new DataTable('#paybills-table', {
+            // options
+            paging: true,
+            scrollY: 400,
+            autoFill: true
+
+        });
   
 </script>
 

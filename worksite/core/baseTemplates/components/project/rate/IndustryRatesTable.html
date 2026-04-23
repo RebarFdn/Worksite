@@ -1,4 +1,9 @@
-<table class="table table-xs">
+<!DOCTYPE html>
+<table 
+    id="addindustryrate-table"
+    class="table table-xs"
+    data-order='[[ 1, "asc" ]]' 
+    data-page-length='25' >
     <thead>
         <tr>
 
@@ -36,3 +41,15 @@
 
     </tbody>
 </table>
+
+{% block extra_scripts %}
+<script>
+    var table = new DataTable('#addindustryrate-table', {
+        // options
+        paging: true,
+        scrollY: 400,
+        autoFill: true
+
+    });
+</script>
+{% endblock %}

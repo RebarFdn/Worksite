@@ -70,7 +70,25 @@ async def delete_worker( id:str='', conn:Coroutine=db_connection ):
 #_____________  Other Database Operations ___________________________
 
 
-    
+  
+
+async def all_workers_data(conn:Coroutine=db_connection)->list:
+    """_summary_
+    Args:
+        conn (typing.Coroutine, optional): _description_. Defaults to db_connection.
+    Returns:
+        list: _description_
+    """
+    data = await conn.get(_directive="_design/workers/_view/all")  # type: ignore
+    try:
+        return data.get('rows')
+    except Exception as e:
+        return {"error": str(e)} # type: ignore
+    finally: 
+        del data
+
+
+
 
 async def all_workers(conn:Coroutine=db_connection)->list:
     """_summary_

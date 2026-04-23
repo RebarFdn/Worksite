@@ -1,5 +1,4 @@
 <div id="unpaid-tasks">
-    
     <div class="breadcrumbs text-sm">
         <ul class="animation: uk-animation-fade">
             <li>
@@ -8,13 +7,11 @@
                  <span class="badge badge-primary badge-sm">{{ unpaid_tasks | length }}</span>
                 </span>
             </li>
-    
             <li>
                 <span class="inline-flex items-center gap-2">
-                    <span>Project</span> 
+                    <span>Project</span>
                     <span class="badge badge-primary badge-sm">{{paybill.project_id}}</span>
                 </span>
-                
             </li>
             <li>
                 <span class="inline-flex items-center gap-2">
@@ -22,8 +19,6 @@
                 <span class="badge badge-primary badge-sm">{{paybill.id}}</span>
                 </span>
             </li>
-            
-    
         </ul>
     </div>
      <div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
@@ -42,17 +37,15 @@
                     {% for task in unpaid_tasks %}
                     <tr>
                         <td>   <div class="uk-margin ">
-                    
                                 <label><input 
                                     class="uk-radio uk-primary" 
                                     type="radio" 
                                     name="task"
-                                    hx-post="/Project/{{paybill.project_id}}/billtask/{{paybill.id}}_{{task.id}}"
+                                    hx-post="/project/billtask/{{paybill.project_id}}/{{paybill.id}}/{{task.id}}"
                                     hx-target="#add-item" 
                                     hx-trigger="click" 
 
                                     > Select</label>
-                            
                             </div>
                         </td>
                         <td>{{ task.id}}</td>
@@ -66,9 +59,5 @@
         {% else %}
         <p class="text-lg text-center text-orange-600 font-semibold">There are no available tasks to add to the Bill.</p>
         {% endif %}
-     
-   
-
     </div>
-   
 </div>

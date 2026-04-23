@@ -1,4 +1,10 @@
-<table class="table table-xs font-medium text-gray-800 ">
+<table 
+    id="workers-table"
+    class="table table-zebra table-sm md:table-sm"
+    data-order='[[ 1, "asc" ]]' 
+    data-page-length='25'
+            
+>
     <!-- head -->
     <thead>
         <tr>
@@ -127,3 +133,15 @@
     <!-- foot -->
 
 </table>
+
+{% block extra_scripts %}
+<script>
+    var table = new DataTable('#workers-table', {
+        // options
+        paging: true,
+        scrollY: 400,
+        autoFill: true
+
+    });
+</script>
+{% endblock %}

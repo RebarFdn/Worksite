@@ -65,7 +65,7 @@
   
 {% if project.state.active or project.state.complete or project.state.pause or project.state.terminate %}
 
-<div id="project-workers" class="overflow-y-auto sm:overflow-x-auto h-96 p-5">
+<div id="project-workers" class="overflow-y-auto sm:overflow-x-auto h-auto p-5">
         {% include 'components/project/worker/WorkersTable.html' %}
 </div>
   

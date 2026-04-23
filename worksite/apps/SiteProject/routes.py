@@ -1,7 +1,9 @@
+from typing import ( Any )
 from fastapi import APIRouter , Request # pyright: ignore[reportMissingImports]
 from fastapi.responses import HTMLResponse, StreamingResponse # pyright: ignore[reportMissingImports]
 from config import (STATIC_PATH, TEMPLATES, TEMPLATES_PATH)
-from apps.SiteProject.project import ( create_project, read_project, delete_project, get_jobs, get_workers , get_worker, all_projects, suppliers, account_statistics, piechart, Project, JobModel )
+from apps.SiteProject.project import ( create_project, read_project, delete_project, get_jobs, get_workers , get_worker, all_projects, suppliers, account_statistics, piechart, update_project, Project, JobModel )
+from apps.SiteRate.rate import ( all_rates )
 from apps.SiteProject.analytics import (IncomeDataFrame)
 from core.utilities.data_lib import ( project_phases, rate_categories )
 from logger import (logger, g_log)
@@ -12,13 +14,13 @@ router = APIRouter()
 
 @router.get("/index")
 async def get_project_index(request:Request):
-    return TEMPLATES.TemplateResponse( request=request, name="index.html", context={'projects': await all_projects()})
+    return TEMPLATES.TemplateResponse( request=request, name="index.html", context={'title': 'Projects','projects': await all_projects()})
 
 
 @router.get("/projects")
 async def index_home(request:Request):
 
-    return TEMPLATES.TemplateResponse( request=request, name="components/project/index.html", context={'projects': await all_projects()})
+    return TEMPLATES.TemplateResponse( request=request, name="components/project/index.html", context={'title': 'Projects','projects': await all_projects()})
 
 
 @router.post("/project/")
@@ -31,9 +33,10 @@ async def save_project(data:dict={}):
 async def read_item(request:Request, item_id: str, q: str | None = None):
     project:Project = await read_project(id= item_id) # type: ignore
     return TEMPLATES.TemplateResponse( 
-        request=request, 
+        request=request,        
         name="components/project/ProjectPage.html", 
         context={
+            'title': 'Projects',
             'project':project.project,
             "suppliers":suppliers,                    
             "project_phases": project_phases(),
@@ -48,6 +51,28 @@ async def delete_item(item_id: str, q: str | None = None):
     return delete_project(id= item_id)
 
 
+# Project Home Routes
+@router.get("/home/{project_id}")
+async def read_home(request:Request, project_id: str, q: str | None = None):
+    project:Project = await read_project(id= project_id) # type: ignore
+    project.load_jobs()
+    project.load_account()    
+    return TEMPLATES.TemplateResponse( 
+         request=request, 
+        name="components/project/Home.html", 
+        context={
+            'title': 'Home',
+            'project':project.project,
+            "suppliers":suppliers,                    
+            "project_phases": project_phases(),
+            "rate_categories": rate_categories().keys()
+
+        }
+        
+    )
+
+
+
 # Project Accounting Routes
 @router.get("/account/{project_id}")
 async def read_account(request:Request, project_id: str, q: str | None = None):
@@ -58,6 +83,7 @@ async def read_account(request:Request, project_id: str, q: str | None = None):
         request=request, 
         name="components/project/account/Account.html", 
         context={
+            'title': 'Project Account Page',
             'project': {
                     "_id": project.id, 
                     "account": project.account, 
@@ -73,6 +99,38 @@ async def read_account(request:Request, project_id: str, q: str | None = None):
         
     )
 
+
+@router.get("/paybill/{project_id}/{bill_id}")
+async def read_paybill(request:Request, project_id: str, bill_id: str ,q: str| None = None):
+    project:Project = await read_project(id= project_id) # type: ignore
+    #project.load_jobs()
+    project.load_account() 
+    project.load_workers()
+    paybill = project.account.get_paybill(id=bill_id)
+    
+    return TEMPLATES.TemplateResponse( 
+        request=request, 
+        name="components/project/account/PayBill.html", 
+        context={
+            'title': 'Project Account Paybill',
+            'project': {
+                    "name": project.name, 
+                    "workers": project.workers, 
+                    "labour_cost": project.project_labour_cost,
+                    "state": project.state,                    
+                    },
+            "paybill": paybill,
+            "unpaid_tasks": [],
+            "items_tally": [ item.model_dump() for item in paybill.items ], # type: ignore
+            "supplier_filter": list(set(invoice.supplier.name for invoice in project.account.records.invoices)),
+            "suppliers": suppliers,
+            "invoice_filter": 'all'
+            
+        }
+        
+    )
+    
+    
 
 @router.get("/stats/{project_id}")
 async def read_account_statistics(request:Request, project_id: str):
@@ -147,7 +205,8 @@ async def get_project_workers(request:Request, project_id:str):
     return TEMPLATES.TemplateResponse(
             request=request, 
             name= '/components/project/worker/Workers.html', 
-            context= {                    
+            context= {   
+                'title': 'Workers',                 
                     "project":  {
                         "_id": project.id, 
                         "state": project.state, 
@@ -173,7 +232,8 @@ async def get_project_jobs(request:Request, project_id:str):
     return  TEMPLATES.TemplateResponse(
         request=request, 
         name= '/components/project/job/Jobs.html', 
-        context= {                    
+        context= {   
+            'title': 'Jobs',                 
                     "project": {
                         '_id': project.id,                       
                         'state': project.state,
@@ -220,3 +280,127 @@ async def get_project_job(request:Request, project_id:str='' ): # type: ignore
         
 
 '''
+
+# Project Daywork Routes
+@router.get("/dayswork/{project_id}")
+async def read_dayswork(request:Request, project_id: str, q: str | None = None):
+    project:Project = await read_project(id= project_id) # type: ignore
+    project.load_dayswork()
+    project.load_workers()    
+    return TEMPLATES.TemplateResponse( 
+         request=request, 
+        name="components/project/daywork/Days.html", 
+        context={
+            'title': 'Dayswork',
+            'project':project,
+            "suppliers":suppliers,                    
+            "project_phases": project_phases(),
+            "rate_categories": rate_categories().keys()
+
+        }
+        
+    )
+
+
+
+# Project Rate Routes
+@router.get("/rates/{project_id}/{filter}")
+async def read_rates( request:Request, project_id: str, filter: str = 'all' ):
+    project:Project = await read_project( id= project_id ) # type: ignore
+    project.load_rates()
+    industry_rates:Any = await all_rates()
+    project.load_industry_rates( rates_list= industry_rates )
+    #project.load_workers()    
+    return TEMPLATES.TemplateResponse( 
+         request=request, 
+        name="components/project/Rates.html", 
+        context={
+            'title': 'Rates',
+            'project':project,
+            "suppliers":suppliers,                    
+            "project_phases": project_phases(),
+            "rate_categories": rate_categories().keys()
+
+        }
+        
+    )
+    
+# MAterials Inventory
+@router.get("/inventory/{project_id}")
+async def read_inventory( request:Request, project_id: str, q: str = 'all' ):
+    project:Project = await read_project( id= project_id ) # type: ignore
+    project.load_inventories()     
+    return TEMPLATES.TemplateResponse( 
+         request=request, 
+        name="components/project/inventory/Inventories.html", 
+        context={
+            'title': 'Materials Inventory',
+            'project': { 
+                "_id": project.id,
+                "inventories": project.inventories,
+                "state": project.state
+            }           
+        }        
+    )
+    
+# Event State 
+@router.get("/events/{project_id}")
+async def read_event_state( request:Request, project_id: str, q: str = 'all' ):
+    project:Project = await read_project( id= project_id ) # type: ignore
+      
+    return TEMPLATES.TemplateResponse( 
+         request=request, 
+        name="components/project/event_state/eventState.html", 
+        context={
+            'title': 'Project Event and State',
+            'project': { 
+                "_id": project.id,
+                "event": project.event,
+                "state": project.state,
+                "metadata": project.metadata
+            }           
+        }        
+    )
+ 
+ 
+# Update state    
+@router.post("/state/{project_id}/{state}")
+async def process_state_event( request:Request, project_id: str, state: str | None = None ):
+    project:Project = await read_project( id= project_id ) # type: ignore
+    print(f"Request to update: {state}")
+    if state:
+        project.update_state(state=state)
+    
+        await update_project(data=project.project)
+    return TEMPLATES.TemplateResponse( 
+         request=request, 
+        name="components/project/event_state/eventState.html", 
+        context={
+            'title': f'Updated Project Event and State {state}',
+            'project': { 
+                "_id": project.id,
+                "event": project.event,
+                "state": project.state,
+                "metadata": project.metadata
+            }           
+        }        
+    )
+    
+       
+# Activity Logs 
+@router.get("/activity_logs/{project_id}")
+async def read_activity_logs( request:Request, project_id: str, q: str = 'all' ):
+    project:Project = await read_project( id= project_id ) # type: ignore
+    project.load_logs      
+    return TEMPLATES.TemplateResponse( 
+         request=request, 
+        name="components/project/ActivityLogs.html", 
+        context={
+            'title': 'Project Event Logs',
+            'project': { 
+                "_id": project.id,
+                "activity_logs": project.activity_logs               
+            }           
+        }        
+    )
+ 

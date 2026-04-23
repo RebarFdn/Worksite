@@ -1,8 +1,10 @@
-<table id="suppliers_index_table" class="table table-xs ">
-    <caption class="my-2 font-semibold text-center text-lg">Materials and Products Suppliers</caption>
-    
-    
-    
+<!DOCTYPE html>
+<table 
+    id="suppliers-table" 
+    class="table table-sm font-medium text-gray-800 dark:text-gray-200"
+    data-order="[[ 1, &quot;dsc&quot; ]]"
+    data-page-length="25"    
+    >
     <thead>
         <tr>
             <th>Name </th>
@@ -15,19 +17,25 @@
     <tbody>
         {% for supplier in suppliers %}
         <tr>
-            <td class="tooltip tooltip-info px-2 py-2 whitespace-wrap text-sm font-medium text-gray-800 dark:text-gray-200 cursor-pointer" data-tip="Go to Supplier {{supplier._id}}"
-                hx-get="/supplier/{{supplier._id}}" hx-target="#app" hx-trigger="click">{{ supplier.name }}
+            <td ><span 
+                    class="tooltip tooltip-info cursor-pointer" 
+                    data-tip="Go to Supplier {{supplier._id}}"
+                    hx-get="/supplier/{{supplier._id}}" 
+                    hx-target="#app" 
+                    hx-trigger="click">{{ supplier.name }}
+                </span>
             </td>
-            <td class="px-4 py-2 whitespace-wrap text-sm text-gray-800 dark:text-gray-200">{{ supplier.taxid }}</td>
-            <td class="px-4 py-2 whitespace-wrap text-sm text-gray-800 dark:text-gray-200">{{ supplier.contact.tel }}</td>
-            <td class="px-4 py-2 whitespace-wrap text-sm text-gray-800 dark:text-gray-200"> {{ supplier.contact.email }}</td>
-            <td class="tooltip tooltip-info" data-tip="Click to activate Location and distance tracking">
+            <td>{{ supplier.taxid }}</td>
+            <td>{{ supplier.contact.tel }}</td>
+            <td> {{ supplier.contact.email }}</td>
+            <td>
+                <span class="tooltip tooltip-info" data-tip="Click to activate Location and distance tracking">
                 {% if filter == 'all' %}
                 {{ supplier.address.city_parish }}
                 {% else %}
                 {{ supplier.address.town }}
                 {% endif %}
-
+                </span>
             </td>
         </tr>
         {% endfor %}

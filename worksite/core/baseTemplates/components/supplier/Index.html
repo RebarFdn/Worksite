@@ -71,10 +71,26 @@
     </div>
 </div>
 
+<div class="uk-grid-divider uk-child-width-expand@m" uk-grid>
+  <div class="uk-width-expand@m">
+    <div class="card  bg-base-100 card-md shadow-sm">
+      <div class="card-body">
   <div id="suppliers-index" class="overflow-y-auto sm:overflow-x-auto h-[42rem] p-5">
     {% include 'components/supplier/suppliersTable.html' %}
-    
   </div>
+  <div class="justify-end card-actions">
+    <button type="button" class="btn btn-primary">Print</button>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div class="uk-width-1-3@m">
+    <div class="bg-base-100 shadow-md rounded-md">
+      <p class="text-sm text-center font-semibold">Suppliers Statistics</p>
+    </div>
+  </div>
+  </div>
+
 
 <dialog id="add_supplier_modal" class="modal">
   <div class="modal-box w-11/12 max-w-5xl">
@@ -89,3 +105,16 @@
     </div>
   </div>
 </dialog>
+
+{% block extra_scripts %}
+<script>
+  var table = new DataTable('#suppliers-table', {
+    // options
+    paging: true,
+    scrollY: 400,
+    autoFill: true
+
+  });
+
+</script>
+{% endblock %}

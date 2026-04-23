@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <p class="text-lg text-center font-semibold my-2 p-2">Project Activity Logs</p>
 
 <div class="overflow-y-auto h-96">
@@ -5,32 +6,27 @@
       <!-- head -->
       <thead>
         <tr>
-          
           <th>Time Stamp</th>
           <th>Title</th>
           <th>Description</th>
-         
         </tr>
       </thead>
       <tbody>
         <!-- row 1 -->
-         {% for item in project.activity_logs |reverse %} 
-        <tr>
+         {% for item in project.activity_logs |reverse %}
+         <tr>
           <td>{{ item.id | convert_timestamp }}</td>
           <td>{{ item.title }}</td>
           <td>{{ item.description }}</td>
-          
-          
         </tr>
         {% endfor %}
         <tr>
           <td></td>
           <td></td>
           <td></td>
-          
         </tr>
-        
       </tbody>
     </table>
   </div>
+  <p class="text-xs">{{ project.activity_logs }}</p>
   

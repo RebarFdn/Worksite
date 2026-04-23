@@ -1,4 +1,7 @@
 
+<!DOCTYPE html>
+
+<p class="text-md text-center font-semibold">{{title}}</p>
 <div class="breadcrumbs text-sm">
 
     <ul uk-switcher="connect: #account-nav; animation: uk-animation-fade">
@@ -20,17 +23,15 @@
     </ul>
 </div>
 {% if project.state.active or project.state.complete or project.state.pause or project.state.terminate %}
-   
     <div id="account-nav" class="uk-switcher">
             <div>
                 {% include 'components/project/account/Bank.html' %}
-            </div> 
-
-            <div id="account-deposits">{% include 'components/project/account/Deposits.html' %}</div> 
-            <div id="account-withdrawals">{% include 'components/project/account/Withdrawals.html' %}</div> 
+            </div>
+            <div id="account-deposits">{% include 'components/project/account/Deposits.html' %}</div>
+            <div id="account-withdrawals">{% include 'components/project/account/Withdrawals.html' %}</div>
             <div id="account-expences">{% include 'components/project/account/Expences.html' %}</div>
-             <div id="account-invoices">{% include 'components/project/account/Invoices.html' %}</div> 
-            <div id="account-orders"> {% include 'components/project/account/Orders.html' %}</div>             
+             <div id="account-invoices">{% include 'components/project/account/Invoices.html' %}</div>
+            <div id="account-orders"> {% include 'components/project/account/Orders.html' %}</div>
             <div id="account-paybills">{% include 'components/project/account/PayBills.html' %}  </div>
     </div>
 {% else %}

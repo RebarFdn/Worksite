@@ -1,64 +1,75 @@
+<!DOCTYPE html>
 
 {% if project.account.transactions.withdraw %}
 
- <a href="#withdraw-modal" uk-toggle><span class="text-lg text-blue-500 font-semibold">Withdrawals</span></a>
- <p id="withdraw-result" 
-        hx-get="/Project/{{project._id}}/withdraw/i"
-        hx-target="#account-withdrawals"
-        hx-trigger="click"                 
-    >refresh</p>
-<div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto h-96 p-1">
+<div class="uk-grid-divider uk-child-width-expand@s" uk-grid>
+    <div class="card w-96 bg-base-100 card-md shadow-sm">
+        <div class="card-body">
+            <p class="text-sm text-center font-semibold">
+                <a class="text-lg text-teal-500 font-semibold" href="#withdraw-modal" uk-toggle>Withdrawals</a>
+            </p>
+            <div class="flex flex-col text-xs overflow-y-auto h-auto p-1">
+                <table id="withdrawals"
+                    class="table table-sm font-medium text-gray-800 uppercase m-2"
+                    data-order="[[ 1, &quot;asc&quot; ]]"
+                    data-page-length="25"
 
-    <table class="uk-table uk-table-small uk-table-responsive text-gray-800">
-        <thead>
-            <tr>                   
-                <th>Date</th>
-                <th>Ref</th>
-                <th>Recipient</th>
-                <th>Amount</th>                    
-                <th>Manage</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for d in project.account.transactions.withdraw |reverse %}                      
+                >
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Ref</th>
+                            <th>Recipient</th>
+                            <th>Amount</th>
+                            <th>Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in project.account.transactions.withdraw |reverse %}
 
-                <tr>              
-                    <td>{{ d.date | convert_timestamp }}</td>
-                    <td>{{ d.ref }} </td>
-                    <td>{% if d.recipient.name %} 
-                        {{ d.recipient.name }} 
-                        {% else %}
-                        {{ d.recipient }} 
-                        {% endif %} 
-                    </td>
-                    <td>{{ d.amount | to_dollars }}</td>
-                    <td>
-                        {% if d.user %}
-                        <span
-                            class="tooltip cursor-pointer"                       
-                            data-tip="Delete withdrawal?"
-                            hx-delete="/Project/{{project._id}}/withdraw/{{d.id}}"
-                            hx-confirm="Are you shure you want to delete withdrawal transaction {{d.ref}}?"
-                            hx-target="#account-withdrawals"
-                            hx-trigger="click"
-                            ><span class="fa fa-trash"></span>
-                        </span>
-                        {% endif %}
-                                                    
-                                                    
-                    </td>
-                </tr>
-            {% endfor %}
-                <tr > 
-                    <td>Total Withdrawals to Date</td>
-                    <td></td>
-                    <td></td>
-                    <td><strong>{{ project.account.transactions.withdraw | tally | to_dollars }}</strong></td>
+                        <tr>
+                            <td>{{ d.date | convert_timestamp }}</td>
+                            <td>{{ d.ref }} </td>
+                            <td>{% if d.recipient.name %}
+                                {{ d.recipient.name }}
+                                {% else %}
+                                {{ d.recipient }}
+                                {% endif %}
+                            </td>
+                            <td>{{ d.amount | to_dollars }}</td>
+                            <td>
+                                {% if d.user %}
+                                <span class="tooltip cursor-pointer" data-tip="Delete withdrawal?"
+                                    hx-delete="/Project/{{project._id}}/withdraw/{{d.id}}"
+                                    hx-confirm="Are you shure you want to delete withdrawal transaction {{d.ref}}?"
+                                    hx-target="#account-withdrawals" hx-trigger="click"><span class="fa fa-trash"></span>
+                                </span>
+                                {% endif %}
 
-                    <td></td>
-                </tr>
-        </tbody>
-    </table>
+
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>Total Withdrawals to Date</td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>{{ project.account.transactions.withdraw | tally | to_dollars }}</strong></td>
+
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>  </div>
+            <div class="justify-end card-actions">
+                <button type="button" class="btn btn-primary">Print</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="bg-base-100 shadow-md rounded-md">
+        <p class="text-sm text-center font-semibold">Withdrawals Analytics</p>
+    </div>
 </div>
 
 {% else %}
@@ -70,15 +81,15 @@
 <div id="withdraw-modal" uk-modal>
     <div class="uk-modal-dialog uk-modal-body rounded-lg">
         <p class="text-lg text-center font-semibold">Project account withdrawal </p>
-        <form 
+        <form
             hx-post="/Project/{{project._id}}/withdraw/w"
             hx-target="#account-withdrawals"
-            hx-trigger="submit"                        
-            class="uk-grid-small" 
+            hx-trigger="submit"
+            class="uk-grid-small"
             uk-grid
             >
             <div class="uk-width-1-1">
-                <input class="uk-input" type="date" placeholder="Date" name="date" aria-label="Date">
+                <input class="uk-input" type="date" name="date" aria-label="Date">
             </div>
             <div class="uk-width-1-2@s">
                 <input class="uk-input" type="text" placeholder="Transaction Type" value="withdraw" name="type" aria-label="Withdrawal">
@@ -92,13 +103,25 @@
             <div class="uk-width-1-2@s">
                 <input class="uk-input" type="text" placeholder="Recipient" name="recipient" aria-label="Recitient">
             </div>
-            
-    
+
+
             <p class="uk-text-right">
                 <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
                 <button class="uk-button uk-button-primary rounded-md uk-modal-close" type="submit">Make Withdrawal</button>
             </p>
         </form>
-       
+
     </div>
 </div>
+
+{% block extra_scripts %}
+<script>
+    var table = new DataTable('#withdrawals', {
+        // options
+        paging: true,
+        scrollY: 400,
+        autoFill: true
+
+    });
+</script>
+{% endblock %}

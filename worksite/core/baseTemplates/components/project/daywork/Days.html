@@ -2,7 +2,7 @@
 <div class="breadcrumbs text-sm">
     <ul class="animation: uk-animation-fade">
       <li>
-        <a hx-get="/project/{{project._id}}/daywork/i" hx-target="#daywork-index">
+        <a hx-get="/project/dayswork/{{project._id}}" hx-target="#daywork-index">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current job">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
@@ -23,7 +23,7 @@
             style="position-anchor:--anchor-4">
             <li><a>Day workers</a></li>
             {% for item in project.days %}
-            <li><a hx-get="/project/{{project._id}}/daywork/{{ item.worker_name  }}" hx-target="#daywork-index" hx-trigger="click">
+            <li><a hx-get="/project/daywork/{{project._id}}/{{ item.worker_name  }}" hx-target="#daywork-index" hx-trigger="click">
                 <span class="text-xs bg-base-200 flex flex-row">{{ item.worker_name }} <span
                     class="badge badge-xs badge-ghost mx-2">2</span></span>
               </a></li>

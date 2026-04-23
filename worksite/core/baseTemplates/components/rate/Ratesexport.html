@@ -1,0 +1,224 @@
+<div id="rates-navbar" class="navbar bg-base-100 shadow-sm">
+  <div class="navbar-start">
+    <span hx-get="/rates/index" hx-target="#app" class="cursor-pointer">Industry Rates</span>-<span class="badge badge-info badge-xs">{{rates | length}}</span>
+    <ul class="menu menu-horizontal px-1">
+    
+      <li><a class="btn btn-ghost btn-xs text-sm" onclick="add_rate_modal.showModal()"><span class="fa fa-home"></span> Create
+          Rate</a>
+      </li>
+      <li><label class="input input-xs input-info rounded-md">
+          <span class="fa fa-search"></span>
+          <input type="search" name="search_term" required placeholder="Search" />
+        </label>
+      </li>
+      <li>
+       
+        <button class="btn btn-ghost btn-xs" type="button">Filter</button>
+        <div uk-dropdown>
+          <ul class="uk-nav uk-dropdown-nav">
+            
+            <li class="uk-nav-header">Rate Category</li>
+            {% for cat in rate_categories %}
+            <li hx-get="/rate/index/{{cat}}" hx-target="#app" hx-trigger="click">{{cat}}</li>
+            {% endfor %}
+            <li><a href="#"></a></li>
+          </ul>
+        </div>
+      </li>
+      <li><button class="btn btn-ghost btn-xs"><span id="filter">{{filter}}</span></button></li>
+    
+    </ul>
+  </div>
+  <div class="navbar-center hidden lg:flex">
+    {% if filter == 'all' %}
+   <p class="text-center font-semibold">Industrial Rates</p>
+    {% else %}
+    <p class="text-center font-semibold"> {{filter | capitalize }} Rates</p>
+    {% endif %} 
+
+  </div>
+  <div class="navbar-end mr-5">
+    <div class="flex-none">
+
+
+      <button class="btn btn-sm btn-ghost tooltip tooltip-top" data-tip="Amout Rates"
+        hx-get="/rate/about" 
+        hx-target="#industry-rates">
+        <span class="fa fa-home rate"></span>About
+      </button>
+
+      <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Collaborate with others"
+        hx-post="/rate/share/sheet" hx-target="#message"
+        hx-confirm="You are about to give access to this project's sensitive information and management with another user. Are you shure you want to do that? This action can be undone.">
+        <span class="fa fa-share-alt rate"></span>
+      </button>
+      <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Archive Rates"
+        hx-get="/rates/archive/{{filter }}" hx-target="#message"
+        hx-confirm="Are you sure you want to put this rate sheet in the Archives? You can recover it at a later time if desired.">
+        <span class="fa fa-archive rate"></span>
+      </button>
+      <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Print Rates"
+        hx-get="/rates/print/{{filter }}" hx-target="#message"
+        hx-confirm="Are you sure you want to print this rate sheet?">
+        <span class="fa fa-print rate"></span>
+      </button>
+      <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Clone Rates"
+        hx-post="/rates/clone/{{filter }}" hx-target="#message"
+        hx-confirm="Are you sure you want to clone this rate sheet? This action cannot be undone.">
+        <span class="fa fa-clone fa-fade rate"></span>
+      </button>
+      <button class="btn btn-sm btn-circle tooltip tooltip-top" data-tip="Export To Excel!"
+        id="button-excel" onclick="exportExcel()">
+        <span class="fa fa-file-excel rate"></span>
+      </button>
+    </div>
+  </div>
+</div>
+  
+<div id="industry-rates" class="overflow-y-auto sm:overflow-x-auto h-auto p-5">
+   
+    <table 
+      id="industry-rates-table" 
+      class="table table-sm font-medium text-gray-800 m-2"
+      data-order='[[ 1, "asc" ]]' 
+      data-page-length='25'
+      >
+      <caption>Industrial Rates</caption>
+        <thead>
+            <tr>
+              <th></th>
+            
+            <th scope="col" class="px-2 py-2 text-start text-xs font-medium text-gray-500 uppercase">Title</th>
+            <th scope="col" class="px-4 py-2 text-start text-xs font-medium text-gray-500 uppercase">Description</th>
+            <th scope="col" class="px-4 py-2 text-start text-xs font-medium text-gray-500 uppercase">Category</th>
+            <th scope="col" class="px-4 py-2 text-start text-xs font-medium text-gray-500 uppercase">Metric</th>
+            <th scope="col" class="px-4 py-2 text-end text-xs font-medium text-gray-500 uppercase">Imperial</th>
+            <th></th>
+            </tr>
+        </thead>
+        <tbody>
+          <caption>Industrial Rates</caption>
+    {% for rate in rates %}
+    <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">      
+      <td></td>
+    <td class="px-2 py-2 whitespace-wrap text-sm font-medium text-gray-800 dark:text-gray-200 w-48 cursor-pointer" 
+    hx-get="/rate/{{rate._id}}" hx-target="#app" hx-trigger="click"
+    >{{ rate.get('title')  }} </td>
+    <td class="px-4 py-2 whitespace-wrap text-sm text-gray-800 dark:text-gray-200">{{ rate.get('description')  }} </td>
+    <td class="px-4 py-2 whitespace-wrap text-sm text-gray-800 dark:text-gray-200">{{ rate.get('category')  }} </td>
+    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ rate.metric.price | to_dollars  }}  /{{ rate.metric.unit }} </td>
+    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ rate.imperial.price | to_dollars  }}  /{{ rate.imperial.unit }} </td>
+    <td class="px-4 py-2 whitespace-nowrap text-end text-sm font-medium">
+    <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Delete</button>
+    </td>
+    </tr>
+    {% endfor %}
+    
+            </tbody>
+    </table>
+   
+</div>
+  
+<dialog id="add_rate_modal" class="modal">
+  <div class="modal-box w-11/12 ">
+    <p class="text-sm text-center font-bold">Create New Industry Rate</p>
+    {% include '/components/rate/RateForm.html' %}
+    
+  </div>
+</dialog>
+
+{% block extra_scripts %}
+<script src="/static/js/polyfill.js.js"></script>
+<script src="/static/node_modules/exceljs/dist/exceljs.js"></script>
+<script>
+  var table = new DataTable('#industry-rates-table', {
+      // options
+      paging: true,
+      scrollY: 400,
+      autoFill: true
+
+    });
+</script>
+<script>
+  
+  
+  function exportExcel() {
+    console.log("Exporting to Excel...");
+    const workbook = new ExcelJS.Workbook();
+      workbook.creator = 'Worksite';
+      workbook.lastModifiedBy = 'Ian Moncrieffe';
+      workbook.created = new Date();
+      workbook.modified = new Date();
+      workbook.lastPrinted = new Date();
+    
+    const worksheet = workbook.addWorksheet('Industry Rates',{
+      properties:{tabColor:{argb:'FFC0000'}},
+      pageSetup:{paperSize:9,orientation:'landscape'},
+      headerFooter: { firstHeader: "Industry Rates", firstFooter: "Page &P of &N" }
+    });
+    worksheet.properties.outlineLevelCol = 2;
+    worksheet.properties.defaultRowHeight = 35;
+    // adjust pageSetup settings afterwards
+    worksheet.pageSetup.margins = {
+      left: 0.7, right: 0.7,
+      top: 0.75, bottom: 0.75,
+      header: 0.3, footer: 0.3
+    };
+    const table = document.getElementById('industry-rates-xtable');
+    const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.innerText.trim());
+    worksheet.addRow({ "": "", "": 'Industrial Rates ', "":"", "":"" });
+    // merge a range of cells
+    worksheet.mergeCells('A1:B1');
+    const filter = document.getElementById('filter').innerText.trim();
+    const heading = worksheet.getCell('B1');
+    heading.font = { name: 'Arial Black', size: 16, bold: true, color: { argb: 'FF778899' } };
+    heading.alignment = { vertical: 'middle', horizontal: 'center' }; 
+    heading.value = 'Industrial Rates';
+    if (filter != 'all') {
+      heading.value = ` Industrial ${filter} Rates`;
+    } else {  
+        heading.value = 'Industrial Rates';
+    }
+    worksheet.mergeCells('C1:E1');
+     const timeframe = worksheet.getCell('D1');
+     timeframe.font = { name: 'Arial', size: 10, italic: true, color: { argb: 'FF778899' } };
+      timeframe.alignment = { vertical: 'middle', horizontal: 'center' };  
+      timeframe.value = 'From Jan, 2025 to Jan, 2027';
+    worksheet.addRow(headers);  
+    const rows = table.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+      const cells = Array.from(row.querySelectorAll('td')).map(td => td.innerText.trim());
+      worksheet.addRow(cells);
+    });
+    const titleColumn = worksheet.getColumn(1);
+    titleColumn.width = 35;    
+    const descriptionColumn = worksheet.getColumn(2);
+    descriptionColumn.width = 60;
+    const categoryColumn = worksheet.getColumn(3);
+    categoryColumn.width = 16;  
+    const metricColumn = worksheet.getColumn(4);
+    metricColumn.width = 20;
+    const imperialColumn = worksheet.getColumn(5);
+    imperialColumn.width = 20;
+    const deleteColumn = worksheet.getColumn(6);
+    deleteColumn.hidden = true;
+
+    worksheet.commit();
+    console.log("Workbook created with " + worksheet.rowCount + " rows.");
+    // console.log(worksheet.columns);
+    workbook.xlsx.writeBuffer().then(buffer => {
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filter ? `industral_${filter}_rates.xlsx` :  'industry_rates.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }).catch(error => {
+      console.error('Error exporting to Excel:', error);
+    });
+  };
+</script>
+{% endblock %}

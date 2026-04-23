@@ -57,10 +57,9 @@
         </span>-<span class="badge badge-info badge-xs">{{project.category}}</span>
     </div>
     <div class="navbar-center hidden lg:flex">
-        
         <ul class="menu menu-horizontal px-1">
 
-            <li><a hx-get="/project/project/{{ project._id }}/home/page" hx-target="#project_console"><span
+            <li><a hx-get="/project/home/{{ project._id }}" hx-target="#project_console"><span
                         class="fa fa-home"></span> Home</a></li>
             <li><a hx-get="/project/account/{{ project._id }}" hx-target="#project_console"><span
                         class="fa fa-bank"></span> Account</a></li>
@@ -69,11 +68,10 @@
             <li>
                 <a hx-get="/project/jobs/{{ project._id }}" hx-target="#project_console">
                     <span class="fa fa-briefcase"></span>Jobs</a>
-            </li>           
-            
+            </li>
             <li><a hx-get="/project/dayswork/{{ project._id }}" hx-target="#project_console"><span
                         class="fa fa-calendar"></span> Dayswork</a></li>
-            <li><a hx-get="/project/rates/{{ project._id }}" hx-target="#project_console"><span
+            <li><a hx-get="/project/rates/{{ project._id }}/all" hx-target="#project_console"><span
                         class="fa fa-money"></span> Rates</a></li>
             <li><a hx-get="/project/inventory/{{ project._id }}" hx-target="#project_console"><span
                         class="fa fa-box"></span> Inventory</a></li>
@@ -83,9 +81,7 @@
             <li><a hx-get="/project/activity_logs/{{ project._id }}" hx-target="#project_console"><span
                         class="fa fa-history"></span> Activity Logs</a></li>
 
-
         </ul>
-       
     </div>
     <div class="navbar-end">
         <div class="flex-none">

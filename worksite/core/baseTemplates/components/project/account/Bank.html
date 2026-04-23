@@ -1,57 +1,56 @@
+<!DOCTYPE html>
+<div class="uk-text-center" uk-grid>
+    <div class="uk-width-expand@m">
+        <div class="uk-card uk-card-default uk-card-body uk-text-left">
 
-<div class="flex flex-row">
-    <div id="account-banking" class="uk-width-1-4@m">
-        <p class="text-lg text-blue-500 font-semibold"
-        hx-get="/project/stats/{{project._id}}" 
-        hx-target="#account-statistics" 
-        hx-trigger="load delay:1s"
-        >Banking </p>
-
-    <div class="flex flex-col text-xs overflow-y-auto sm:overflow-x-auto p-1">
-    <ul  id="project-account-bank">  
-
-        {% if project.account.bank.name %} 
-                                     
-            <li>
-                <strong>Bank Name </strong> {{ project.account.bank.name }}
-            </li>
-            <li>
-                <strong>Branch</strong> {{ project.account.bank.branch }}
-            </li>
-            <li>
-                <strong>Account Number</strong> {{ project.account.bank.account }}
-            </li>
-            <li>
-                <strong>Account Type</strong> {{ project.account.bank.account_type }}
-            </li>
-            
-        {% else %}
-        <li>Please Provide Banking Information</li>
-        {% endif %}
-        
-        <li>
-                <strong>Budget</strong> {{ project.account.budget | to_dollars }}
-        </li>
-        <li>
-            <div id="project_running_cost">
-                <p class="text-sm font-semibold">Project Running Costs</p>  
-                   
-                <ul>
-                    {% for key,val in project.labour_cost.items() %}
-                    <li>
-                        <strong>{{ key | capitalize }}</strong> {{ val | to_dollars }}
-                    </li>
-                    {% endfor %}
-                </ul> 
+            <div id="account-banking">
+                <p class="text-lg text-blue-500 font-semibold" hx-get="/project/stats/{{project._id}}"
+                    hx-target="#account-statistics" hx-trigger="load delay:5s">Banking </p>
+                    <ul id="project-account-bank">
+                        {% if project.account.bank.name %}
+                        <li>
+                            <strong>Bank Name </strong> {{ project.account.bank.name }}
+                        </li>
+                        <li>
+                            <strong>Branch</strong> {{ project.account.bank.branch }}
+                        </li>
+                        <li>
+                            <strong>Account Number</strong> {{ project.account.bank.account }}
+                        </li>
+                        <li>
+                            <strong>Account Type</strong> {{ project.account.bank.account_type }}
+                        </li>
+                        {% else %}
+                        <li>Please Provide Banking Information</li>
+                        {% endif %}
+                        <li>
+                            <strong>Budget</strong> {{ project.account.budget | to_dollars }}
+                        </li>
+                        <li>
+                            <div id="project_running_cost">
+                                <p class="text-sm font-semibold">Project Running Costs</p>
+                                <ul>
+                                    {% for key,val in project.labour_cost.items() %}
+                                    <li>
+                                        <strong>{{ key | capitalize }}</strong> {{ val | to_dollars }}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </li>
-    </ul>
-   </div>
+    </div>
    
-   </div>
+    <div class="uk-width-auto@m">
+        <div class="uk-card uk-card-default uk-card-body">
+            <iframe src="/project/piechart/{{project._id}}" title="Account Statistics" width="420" height="280"></iframe>
+        </div>
+    </div>
 
-   <div id="account-statistics">
-    
+    <div class="uk-width-1-3@m">
+        <div id="account-statistics" class="uk-card uk-card-default uk-card-body"></div>
+    </div>
 
-   </div>
 </div>

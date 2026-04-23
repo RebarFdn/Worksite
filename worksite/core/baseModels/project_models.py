@@ -308,7 +308,7 @@ class ProjectAccount(BaseModel):
     
     def get_paybill(self, id:str=''):
         ''''''
-        bill = [ bill for bill in self.records.paybills if bill.get('id') == id ] # type: ignore
+        bill = [ bill for bill in self.records.paybills if bill.id == id ] # type: ignore
         if bill:
             return bill[0]
         return {}
@@ -746,7 +746,11 @@ class Project(BaseModel):
         else:
             pass
 
-                   
+    # Load External Data
+    ## Load Industry Rates
+    def load_industry_rates(self, rates_list:list=[]):
+        self.industry_rates = rates_list
+                  
     # Accounting    
     def update_budget(self, figure:float=0.0)->None:
         #jobs_costs = [float(job.cost.total.metric) for job in self.jobs ]
@@ -976,7 +980,12 @@ class Project(BaseModel):
         finally:
             del job
 
-
+    # Event State Management
+    def update_state(self, state:str, date:str | None = None):
+        self.state.set_state(state=state)
+        self.event.update_event(event=state, event_date=date)
+        self.log_activity(title="Project State Update", description=f"The project state was updated to {state}.")
+        
     # Activity Logs Management
     def log_activity(self, title:str='', description:str='')->None:
 
@@ -988,6 +997,29 @@ class Project(BaseModel):
 
          
 
+    @property
+    def project_phases(self)->dict:
+        """Construction development phases
+
+        Returns:
+            dict: key value of project phases
+        """        
+        return {     
+                    
+                'preliminary':'Preliminary',
+                'substructure': 'Substructrue',
+                'superstructure': 'Superstructure',
+                'floors': 'Floors',
+                'roofing': 'Roofing',
+                'installations': 'Installations',
+                'electrical': 'Electrical',
+                'plumbung': 'Plumbing',
+                'finishes': 'Finishes',
+                'landscaping': 'Landscaping',      
+                
+        }
+    
+
 
 def project_phases()->dict:
     """Construction development phases
@@ -996,17 +1028,16 @@ def project_phases()->dict:
         dict: key value of project phases
     """        
     return {     
+                    
+                'preliminary':'Preliminary',
+                'substructure': 'Substructrue',
+                'superstructure': 'Superstructure',
+                'floors': 'Floors',
+                'roofing': 'Roofing',
+                'installations': 'Installations',
+                'electrical': 'Electrical',
+                'plumbung': 'Plumbing',
+                'finishes': 'Finishes',
+                'landscaping': 'Landscaping',      
                 
-            'preliminary':'Preliminary',
-            'substructure': 'Substructrue',
-            'superstructure': 'Superstructure',
-            'floors': 'Floors',
-            'roofing': 'Roofing',
-            'installations': 'Installations',
-            'electrical': 'Electrical',
-            'plumbung': 'Plumbing',
-            'finishes': 'Finishes',
-            'landscaping': 'Landscaping',      
-            
-    }
-   
+        }

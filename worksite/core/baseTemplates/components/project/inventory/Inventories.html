@@ -1,7 +1,10 @@
+<!DOCTYPE html>
+
+<p class="text-md text-center font-semibold">{{title}}</p>
 <div class="breadcrumbs text-sm">
     <ul class="animation: uk-animation-fade">
         <li>
-            <a hx-get="/project/{{project._id}}/inventorys/i" hx-target="#project-inventories">
+            <a hx-get="/project/inventory/{{project._id}}" hx-target="#project-inventories">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     class="h-4 w-4 stroke-current worker">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -17,14 +20,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
                 </svg>
-                <button class="btn btn-ghost btn-xs" popovertarget="popover-5" style="anchor-name:--anchor-5">
+                <button type="button" class="btn btn-ghost btn-xs" popovertarget="popover-5" style="anchor-name:--anchor-5">
                     Filter by material
                 </button>
                 <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-sm" popover id="popover-5"
                     style="position-anchor:--anchor-5">
                     <li><a>Material</a></li>
                     {% for key in project.inventories.keys() %}
-                    <li><a hx-get="/project/{{project._id}}/inventory/{{ key }}"
+                    <li><a hx-get="/project/inventory/{{project._id}}/{{ key }}"
                             hx-target="#project-inventories" hx-trigger="click">
                             <span class="text-xs bg-base-200 flex flex-row">{{ key }} <span
                                     class="badge badge-xs badge-ghost mx-2">2</span></span>
@@ -79,12 +82,11 @@
         <div class="modal-action">
             <form method="dialog">
                 <!-- if there is a button, it will close the modal -->
-                <button class="btn">Close</button>
+                <button type="button" class="btn">Close</button>
             </form>
         </div>
     </div>
 </dialog>
-
 {% else %}
 {% include '/components/project/inventory/InventoryIntroduction.html' %}
 {% endif %}

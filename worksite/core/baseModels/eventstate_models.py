@@ -101,7 +101,7 @@ class Event(BaseModel):
         else:
             pass
         
-    def update_event(self, event:str, event_date:str=''):
+    def update_event(self, event:str, event_date:str | None = None ):
         '''
         Uptates event date. If no date is provided will default to the current date.
         

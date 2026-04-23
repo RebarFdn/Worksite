@@ -159,13 +159,13 @@ class IncomeDataFrame(BaseModel):
         #print(df)
         f_name = 'heatmap.html'
         #file = file_path(f_name)
-        data=[[1, 25, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, 5, 20]]
+        
 
         fig = px.imshow([  list(item.month for item in df['date']),list(df['amount']), list(df['day']),  ],
             labels=dict(x="Date", y="Month", color="Amount"),
             
             template="simple_white",
-            width=self.chart_width, 
+            width=450, 
             height=self.chart_height 
         )
         fig.update_xaxes(side="top")

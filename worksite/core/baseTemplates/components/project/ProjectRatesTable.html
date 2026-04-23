@@ -1,4 +1,10 @@
-<table class="table table-xs">
+<table 
+    id="project-rates" 
+    class="table table-xs display"
+    data-order='[[ 1, "asc" ]]' 
+    data-page-length='25'
+    
+    >
     <thead>
         <tr>
 
@@ -15,22 +21,44 @@
         {% for rate in project.rates %}
         <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
 
-            <td class="cursor-pointer"
-                hx-get="/Project/{{project._id}}/rates/{{ rate._id }}" hx-target="#rates-console" hx-trigger="click">{{
-                rate.get('title') }} </td>
-            <td>{{ rate.get('description') }}
+            <td class="cursor-pointer" 
+                hx-get="/project/rate/{{project._id}}/{{ rate._id }}" 
+                hx-target="#project_rates"
+                hx-trigger="click">{{rate.title }} 
             </td>
-            <td>{{ rate.get('category') }}
-            </td>
-            <td>{{ rate.metric.price |
-                to_dollars }} /{{ rate.metric.unit }} </td>
-            <td>{{ rate.imperial.price |
-                to_dollars }} /{{ rate.imperial.unit }} </td>
-            <td>
-                <button class="btn btn-xs btn-secondary">Delete</button>
-            </td>
+                <td class="description">{{ rate.description }}</td>
+                <td class="category">{{ rate.category }}</td>
+                <td class="metric">{{ rate.metric.price | to_dollars }} /{{ rate.metric.unit }} </td>
+                <td class="imperial"> {{ rate.imperial.price | to_dollars }} /{{ rate.imperial.unit }} </td>
+                <td class="remove">
+                    <button class="btn btn-xs btn-secondary remove-item-btn">Delete</button>
+                </td>
         </tr>
         {% endfor %}
 
     </tbody>
 </table>
+
+{% block extra_scripts %}
+<script src="/static/node_modules/jszip/dist/jszip.js"></script>
+<script src="/static/node_modules/pdfmake/build/pdfmake.js"></script>
+
+<script>
+    
+    
+        var table = new DataTable('#project-rates', {
+            // options
+            paging: true,
+            scrollY: 400,
+            autoFill: true
+
+         });
+      
+    
+           
+       
+    
+    
+     
+</script>
+{% endblock %}

@@ -1,7 +1,7 @@
 <div class="breadcrumbs text-sm">
     <ul>
         <li>
-            <a hx-get="/project/{{project._id}}/rates/i" hx-target="#project_rates">
+            <a hx-get="/project/rates/{{project._id}}/all" hx-target="#project_rates">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     class="h-4 w-4 stroke-current job">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -24,7 +24,7 @@
                     style="position-anchor:--anchor-8">
                     <li><a>Rate Categories</a></li>
                     {% for item in project.rate_categories %}
-                    <li><a hx-get="/project/{{project._id}}/industryrates/{{item}}" hx-target="#industry_rates_Table"
+                    <li><a hx-get="/project/industryrates/{{project._id}}/{{item}}" hx-target="#industry_rates_Table"
                             hx-trigger="click">
                             <span class="text-xs bg-base-200 flex flex-row">{{ item }} </span>
                         </a></li>

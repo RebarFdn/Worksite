@@ -75,7 +75,7 @@
   </ul>
 </div>
 {% if project.state.active or project.state.complete or project.state.pause or project.state.terminate %}
-<div  id="jobs-index" class="overflow-y-auto sm:overflow-x-auto h-lvh ">  
+<div  id="jobs-index" class="overflow-y-auto sm:overflow-x-auto h-auto">  
     {% include 'components/project/job/JobsTable.html' %}   
 </div>  
 <dialog id="new_job" class="modal">
